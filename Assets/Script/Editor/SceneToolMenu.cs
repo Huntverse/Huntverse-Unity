@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityToolbarExtender;
 using Debug = UnityEngine.Debug;
 
+
 namespace Hades.Tool
 {
     [InitializeOnLoad]
