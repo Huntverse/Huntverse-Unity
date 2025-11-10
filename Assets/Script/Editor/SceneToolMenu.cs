@@ -59,7 +59,7 @@ namespace Hades.Tool
             }
             if (GUILayout.Button(new GUIContent("Menu", "open Menu scene"), commandButtonStyle))
             {
-                SceneHelper.OpenScene("Main_Menu");
+                SceneHelper.OpenScene("MainMenu");
             }
             if (GUILayout.Button(new GUIContent("Village", "open Village scene"), commandButtonStyle))
             {

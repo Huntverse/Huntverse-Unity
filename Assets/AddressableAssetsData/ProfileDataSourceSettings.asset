@@ -1,0 +1,64 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e3976da977cb49238499ea3b4c237ae, type: 3}
+  m_Name: ProfileDataSourceSettings
+  m_EditorClassIdentifier: 
+  profileGroupTypes:
+  - m_GroupTypePrefix: Automatic
+    m_Variables:
+    - m_Suffix: BuildPath
+      m_Value: CCDBuildData/ManagedEnvironment/ManagedBucket/ManagedBadge
+    - m_Suffix: EnvironmentName
+      m_Value: production
+    - m_Suffix: LoadPath
+      m_Value: https://9a597796-5740-46ff-a0b8-5f2270270461.client-api.unity3dusercontent.com/client_api/v1/environments/{CcdManager.EnvironmentName}/buckets/{CcdManager.BucketId}/release_by_badge/{CcdManager.Badge}/entry_by_path/content/?path=
+  - m_GroupTypePrefix: Automatic
+    m_Variables:
+    - m_Suffix: BuildPath
+      m_Value: CCDBuildData/8a98f1b3-e8cc-485a-b747-ac144bc5fb04/7b14c18c-78c1-421b-9bb2-4fb5bf2f9233/latest
+    - m_Suffix: CcdBadgeName
+      m_Value: latest
+    - m_Suffix: CcdBucketId
+      m_Value: 7b14c18c-78c1-421b-9bb2-4fb5bf2f9233
+    - m_Suffix: CcdBucketName
+      m_Value: StandaloneWindows64
+    - m_Suffix: Environmentid
+      m_Value: 8a98f1b3-e8cc-485a-b747-ac144bc5fb04
+    - m_Suffix: Environmentname
+      m_Value: hunt
+    - m_Suffix: LoadPath
+      m_Value: https://9a597796-5740-46ff-a0b8-5f2270270461.client-api.unity3dusercontent.com/client_api/v1/environments/hunt/buckets/7b14c18c-78c1-421b-9bb2-4fb5bf2f9233/release_by_badge/latest/entry_by_path/content/?path=
+    - m_Suffix: PromoteOnly
+      m_Value: False
+  - m_GroupTypePrefix: Built-In
+    m_Variables:
+    - m_Suffix: BuildPath
+      m_Value: '[UnityEngine.AddressableAssets.Addressables.BuildPath]/[BuildTarget]'
+    - m_Suffix: LoadPath
+      m_Value: '{UnityEngine.AddressableAssets.Addressables.RuntimePath}/[BuildTarget]'
+  environments:
+  - id: 6e60d997-68cb-4205-a701-661b0b8f3c54
+    projectId: 9a597796-5740-46ff-a0b8-5f2270270461
+    projectGenesisId: 9a597796-5740-46ff-a0b8-5f2270270461
+    name: production
+    isDefault: 1
+  - id: 8a98f1b3-e8cc-485a-b747-ac144bc5fb04
+    projectId: 9a597796-5740-46ff-a0b8-5f2270270461
+    projectGenesisId: 9a597796-5740-46ff-a0b8-5f2270270461
+    name: hunt
+    isDefault: 0
+  currentEnvironment:
+    id: 
+    projectId: 
+    projectGenesisId: 
+    name: 
+    isDefault: 0
