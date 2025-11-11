@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6182795703598168140}
   - component: {fileID: 7407218113612425151}
   m_Layer: 5
-  m_Name: Image
+  m_Name: ChannelNameArea
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -103,7 +103,7 @@ GameObject:
   - component: {fileID: 7238800729376895182}
   - component: {fileID: 638943950053439495}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: channelNameText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -239,7 +239,7 @@ GameObject:
   - component: {fileID: 6812999478408146824}
   - component: {fileID: 7646036676533472665}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: congestionText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -292,7 +292,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uD63C\uC7A1 "
+  m_text: "\uBCF4\uD1B5"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 05bac078f9fab5e44a3f5ec7beb33124, type: 2}
   m_sharedMaterial: {fileID: -4353287191784765855, guid: 05bac078f9fab5e44a3f5ec7beb33124, type: 2}
@@ -376,7 +376,7 @@ GameObject:
   - component: {fileID: 5087617289823629068}
   - component: {fileID: 7787861966896998647}
   m_Layer: 5
-  m_Name: Button
+  m_Name: SelectButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -496,7 +496,7 @@ GameObject:
   - component: {fileID: 1510237843019222479}
   - component: {fileID: 5502030770903395898}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: myCharacterText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -629,6 +629,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4872212571329443642}
+  - component: {fileID: 1220116086607438145}
   m_Layer: 5
   m_Name: ChannelField
   m_TagString: Untagged
@@ -656,6 +657,21 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1220116086607438145
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7098133712942444827}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0a40df884c4025479bc548cf6d6005a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  channelNameText: {fileID: 638943950053439495}
+  congestionText: {fileID: 7646036676533472665}
+  myCharCountText: {fileID: 5502030770903395898}
 --- !u!1 &7601148246445008559
 GameObject:
   m_ObjectHideFlags: 0
@@ -669,7 +685,7 @@ GameObject:
   - component: {fileID: 4710081782823616513}
   - component: {fileID: 6711218841644392045}
   m_Layer: 5
-  m_Name: Image (1)
+  m_Name: CongestionArea
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -716,7 +732,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.09803922}
+  m_Color: {r: 0.22748311, g: 0.4130909, b: 0.6792453, a: 0.34901962}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -760,7 +776,7 @@ GameObject:
   - component: {fileID: 2434168129233452702}
   - component: {fileID: 8360350750949927362}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Dummy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -928,7 +944,7 @@ GameObject:
   - component: {fileID: 4961658035750202615}
   - component: {fileID: 2423774696283613546}
   m_Layer: 5
-  m_Name: Image (2)
+  m_Name: MyCharacterCountArea
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
