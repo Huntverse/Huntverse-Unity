@@ -14,7 +14,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_GroupName: Audio
   m_GUID: f223624e6e3f5324796ded2913756569
-  m_SerializeEntries: []
+  m_SerializeEntries:
+  - m_GUID: 0bff44eb1855b19418430c12dfe21a27
+    m_Address: main_bgm@audio
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - audio
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d9753630d1a36b743ba0b6550e50aff1
+    m_Address: channel_sfx@audio
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - audio
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 10b69dd7fbc625d4892197727f109f12, type: 2}
   m_SchemaSet:
