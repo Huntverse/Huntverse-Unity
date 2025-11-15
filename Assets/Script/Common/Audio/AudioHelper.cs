@@ -58,7 +58,7 @@ namespace hunt
         }
         private AudioSource CreateSfxSource()
         {
-            GameObject sfxObject = new GameObject($"SFX{audioSfxPool}");
+            GameObject sfxObject = new GameObject($"SFX");
             sfxObject.transform.SetParent(this.transform);
             var sfxsource = sfxObject.AddComponent<AudioSource>();
             sfxsource.outputAudioMixerGroup = sfxGroup;
@@ -107,14 +107,6 @@ namespace hunt
 
         public void PlaySfx(string audioKey, float volumeScale = 1.0f)
         {
-            PlaySfxAsync(audioKey, volumeScale).Forget();
-        }
-
-        private async UniTaskVoid PlaySfxAsync(string audioKey, float volumeScale = 1.0f)
-        {
-            // Preload 완료 대기
-            await UniTask.WaitUntil(() => isPreloadComplete);
-
             if (!audioClipCache.TryGetValue(audioKey, out var clip))
             {
                 $"🔊 [AudioHelper] AudioClip not Find: {audioKey}".DError();
@@ -150,14 +142,6 @@ namespace hunt
 
         public void PlayBgm(string audioKey, bool loop = true, float fadeInDuration = 0f)
         {
-            PlayBgmAsync(audioKey, loop, fadeInDuration).Forget();
-        }
-
-        private async UniTaskVoid PlayBgmAsync(string audioKey, bool loop = true, float fadeInDuration = 0f)
-        {
-            // Preload 완료 대기
-            await UniTask.WaitUntil(() => isPreloadComplete);
-
             if (!audioClipCache.TryGetValue(audioKey, out var clip))
             {
                 $"🔊 [AudioHelper] BGM AudioClip not found: {audioKey}".DError();

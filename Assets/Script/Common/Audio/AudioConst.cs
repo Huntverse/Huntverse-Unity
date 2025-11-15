@@ -14,7 +14,7 @@ namespace hunt
     {
         private static readonly Dictionary<AudioType, string> sfxKeys = new Dictionary<AudioType, string>
         {
-            { AudioType.SFX_HOVER, "hover@audio" },
+            //{ AudioType.SFX_HOVER, "hover@audio" },
             { AudioType.SFX_CHANNEL_SELECT, "channel_sfx@audio" },
             { AudioType.BGM_MAIN, "main_bgm@audio" }
         };
