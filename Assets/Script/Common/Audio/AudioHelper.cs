@@ -107,10 +107,29 @@ namespace hunt
 
         public void PlaySfx(string audioKey, float volumeScale = 1.0f)
         {
+            PlaySfxAsync(audioKey, volumeScale).Forget();
+        }
+
+        private async UniTaskVoid PlaySfxAsync(string audioKey, float volumeScale = 1.0f)
+        {
+            // 캐시에 없으면 즉시 로드
             if (!audioClipCache.TryGetValue(audioKey, out var clip))
             {
-                $"🔊 [AudioHelper] AudioClip not Find: {audioKey}".DError();
-                return;
+                if (!isPreloadComplete)
+                {
+                    await UniTask.WaitUntil(() => isPreloadComplete);
+                    
+                    if (!audioClipCache.TryGetValue(audioKey, out clip))
+                    {
+                        $"🔊 [AudioHelper] AudioClip not Find: {audioKey}".DError();
+                        return;
+                    }
+                }
+                else
+                {
+                    $"🔊 [AudioHelper] AudioClip not Find: {audioKey}".DError();
+                    return;
+                }
             }
 
             if (!audioSfxPool.TryDequeue(out var sfxSource))
@@ -142,10 +161,29 @@ namespace hunt
 
         public void PlayBgm(string audioKey, bool loop = true, float fadeInDuration = 0f)
         {
+            PlayBgmAsync(audioKey, loop, fadeInDuration).Forget();
+        }
+
+        private async UniTaskVoid PlayBgmAsync(string audioKey, bool loop = true, float fadeInDuration = 0f)
+        {
+            // 캐시에 없으면 Preload 완료 대기
             if (!audioClipCache.TryGetValue(audioKey, out var clip))
             {
-                $"🔊 [AudioHelper] BGM AudioClip not found: {audioKey}".DError();
-                return;
+                if (!isPreloadComplete)
+                {
+                    await UniTask.WaitUntil(() => isPreloadComplete);
+                    
+                    if (!audioClipCache.TryGetValue(audioKey, out clip))
+                    {
+                        $"🔊 [AudioHelper] BGM AudioClip not found: {audioKey}".DError();
+                        return;
+                    }
+                }
+                else
+                {
+                    $"🔊 [AudioHelper] BGM AudioClip not found: {audioKey}".DError();
+                    return;
+                }
             }
 
             bgmSource.clip = clip;
