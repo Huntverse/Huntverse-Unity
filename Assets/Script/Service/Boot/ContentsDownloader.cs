@@ -1,15 +1,22 @@
 using Cysharp.Threading.Tasks;
 using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.IO;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using UnityEngine.AddressableAssets.Initialization;   
 using UnityEngine.ResourceManagement.AsyncOperations;
 
 namespace hunt
 {
     public class ContentsDownloader : MonoBehaviourSingleton<ContentsDownloader>
     {
+        private string envConfigFileName = "env_contents.json";
+
+        public float DownloadProgress { get; private set; }
+
+        private CcdEnvConfig cachedConfig;
+        private bool envConfigLoadAttempted;
+
         protected override bool DontDestroy => base.DontDestroy;
 
         protected override void Awake()
@@ -17,204 +24,263 @@ namespace hunt
             base.Awake();
         }
 
-        public async UniTask<bool> ResourceDownLoad()
+        /// <summary>
+        /// 외부에서 호출하는 진입점
+        /// </summary>
+        public async UniTask<bool> StartDownload()
         {
             try
             {
-                "📦 [ContentsDownloader] Addressables Initialize Start...".DLog();
-                
-                // 1. Addressables 초기화
-                var initHandle = Addressables.InitializeAsync();
-                
-                while (!initHandle.IsDone)
+                "📦 [Downloader] Start!!".DLog();
+
+                var config = LoadEnvConfig();
+                if (config == null)
                 {
-                    await UniTask.Yield();
-                }
-                
-                if (initHandle.Status != AsyncOperationStatus.Succeeded)
-                {
-                    $"📦 [ContentsDownloader] Addressables Initialize Failed! Status: {initHandle.Status}".DError();
-                    if (initHandle.OperationException != null)
-                    {
-                        $"📦 [ContentsDownloader] Exception: {initHandle.OperationException.Message}".DError();
-                    }
+                    "📦 [Downloader] Env config Load Fail".DError();
                     return false;
                 }
-                
-                "📦 [ContentsDownloader] Addressables Initialize Success!".DLog();
 
-                // 2. 카탈로그 업데이트 확인
-                "📦 [ContentsDownloader] Checking for catalog updates...".DLog();
-                var checkHandle = Addressables.CheckForCatalogUpdates(false);
-                
-                while (!checkHandle.IsDone)
+                if (string.IsNullOrWhiteSpace(config.remoteCatalogUrl))
                 {
-                    await UniTask.Yield();
+                    "📦 [Downloader] remoteCatalogUrl missing (env_contents.json)".DError();
+                    return false;
                 }
 
-                if (checkHandle.Status == AsyncOperationStatus.Succeeded)
+                if (string.IsNullOrWhiteSpace(config.downloadLabel))
                 {
-                    List<string> catalogs = checkHandle.Result;
-                    
-                    if (catalogs != null && catalogs.Count > 0)
-                    {
-                        $"📦 [ContentsDownloader] Found {catalogs.Count} catalog updates".DLog();
-                        
-                        // 3. 카탈로그 업데이트
-                        var updateHandle = Addressables.UpdateCatalogs(catalogs, false);
-                        
-                        while (!updateHandle.IsDone)
-                        {
-                            await UniTask.Yield();
-                        }
-                        
-                        if (updateHandle.Status == AsyncOperationStatus.Succeeded)
-                        {
-                            "📦 [ContentsDownloader] Catalog update success!".DLog();
-                        }
-                        else
-                        {
-                            $"📦 [ContentsDownloader] Catalog update failed! Status: {updateHandle.Status}".DError();
-                        }
-                        
-                        Addressables.Release(updateHandle);
-                    }
-                    else
-                    {
-                        "📦 [ContentsDownloader] No catalog updates available".DLog();
-                    }
-                }
-                else
-                {
-                    $"📦 [ContentsDownloader] Catalog check failed! Status: {checkHandle.Status}".DError();
-                }
-                
-                Addressables.Release(checkHandle);
-
-                // 4. 모든 리소스 다운로드 사이즈 확인 및 다운로드
-                "📦 [ContentsDownloader] Checking all resource locations...".DLog();
-                
-                // 모든 locator의 키를 가져오기
-                var locators = Addressables.ResourceLocators;
-                var locatorList = locators.ToList();
-                $"📦 [ContentsDownloader] Found {locatorList.Count} locator(s)".DLog();
-                
-                long totalDownloadSize = 0;
-                List<object> keysToDownload = new List<object>();
-                int totalKeyCount = 0;
-
-                foreach (var locator in locatorList)
-                {
-                    var keysList = locator.Keys.ToList();
-                    $"📦 [ContentsDownloader] Locator: {locator} has {keysList.Count} keys".DLog();
-                    
-                    foreach (var key in keysList)
-                    {
-                        totalKeyCount++;
-                        $"📦 [ContentsDownloader] Checking key [{totalKeyCount}]: {key}".DLog();
-                        
-                        var sizeHandle = Addressables.GetDownloadSizeAsync(key);
-                        
-                        while (!sizeHandle.IsDone)
-                        {
-                            await UniTask.Yield();
-                        }
-
-                        if (sizeHandle.Status == AsyncOperationStatus.Succeeded)
-                        {
-                            if (sizeHandle.Result > 0)
-                            {
-                                float sizeMB = sizeHandle.Result / (1024f * 1024f);
-                                totalDownloadSize += sizeHandle.Result;
-                                keysToDownload.Add(key);
-                                $"📦 [ContentsDownloader] ✅ Need download: {key} ({sizeMB:F2} MB)".DLog();
-                            }
-                            else
-                            {
-                                $"📦 [ContentsDownloader] ✓ Already cached: {key}".DLog();
-                            }
-                        }
-                        else
-                        {
-                            $"📦 [ContentsDownloader] ❌ Check failed: {key} - Status: {sizeHandle.Status}".DError();
-                        }
-
-                        Addressables.Release(sizeHandle);
-                    }
+                    "📦 [Downloader] downloadLabel missing (env_contents.json)".DError();
+                    return false;
                 }
 
-                $"📦 [ContentsDownloader] Total keys checked: {totalKeyCount}".DLog();
-                
-                if (totalDownloadSize > 0)
-                {
-                    float sizeMB = totalDownloadSize / (1024f * 1024f);
-                    $"📦 [ContentsDownloader] ========================================".DLog();
-                    $"📦 [ContentsDownloader] Total download size: {sizeMB:F2} MB".DLog();
-                    $"📦 [ContentsDownloader] Resources to download: {keysToDownload.Count}".DLog();
-                    $"📦 [ContentsDownloader] ========================================".DLog();
-                    
-                    // 5. 모든 리소스 다운로드
-                    $"📦 [ContentsDownloader] Target Path: {Application.persistentDataPath}".DLog();
-                    "📦 [ContentsDownloader] Starting download...".DLog();
+                // 0. CCD 런타임 프로퍼티 세팅 (RemoteLoadPath 안의 {CcdManager.*} 치환용)
+                ApplyCcdRuntimeProperties(config);
 
-                    int currentIndex = 0;
-                    foreach (var key in keysToDownload)
-                    {
-                        currentIndex++;
-                        $"📦 [ContentsDownloader] [{currentIndex}/{keysToDownload.Count}] Downloading: {key}".DLog();
-                        
-                        var downloadHandle = Addressables.DownloadDependenciesAsync(key);
-                        
-                        float lastProgress = 0f;
-                        while (!downloadHandle.IsDone)
-                        {
-                            float progress = downloadHandle.PercentComplete;
-                            if (progress - lastProgress >= 0.1f) // 10%마다 로그
-                            {
-                                $"📦 [ContentsDownloader]    Progress: {progress * 100:F1}%".DLog();
-                                lastProgress = progress;
-                            }
-                            await UniTask.Yield();
-                        }
-                        
-                        if (downloadHandle.Status == AsyncOperationStatus.Succeeded)
-                        {
-                            $"📦 [ContentsDownloader] ✅ [{currentIndex}/{keysToDownload.Count}] Complete: {key}".DLog();
-                        }
-                        else
-                        {
-                            $"📦 [ContentsDownloader] ❌ [{currentIndex}/{keysToDownload.Count}] Failed: {key} - Status: {downloadHandle.Status}".DError();
-                        }
-                        
-                        Addressables.Release(downloadHandle);
-                    }
+                // 1. Remote 카탈로그 로드
+                if (!await LoadRemoteCatalog(config.remoteCatalogUrl))
+                    return false;
 
-                    "📦 [ContentsDownloader] ========================================".DLog();
-                    $"📦 [ContentsDownloader] All {keysToDownload.Count} resources downloaded!".DLog();
-                    "📦 [ContentsDownloader] ========================================".DLog();
-                }
-                else
-                {
-                    "📦 [ContentsDownloader] ========================================".DLog();
-                    "📦 [ContentsDownloader] No resources to download".DLog();
-                    "📦 [ContentsDownloader] All resources already cached in PersistentDataPath".DLog();
-                    "📦 [ContentsDownloader] ========================================".DLog();
-                }
-                
-                "📦 [ContentsDownloader] Resource download complete!".DLog();
+                // 2. Catalog 업데이트
+                if (!await UpdateCatalog())
+                    return false;
+
+                // 3. Addressables 다운로드 (라벨 기준 -> default 라벨을 가지고있어야만 다운로드가 가능한 에셋)
+                if (!await DownloadAddressablesByLabel(config.downloadLabel))
+                    return false;
+
+                "📦 [Downloader] All Complete!".DLog();
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                $"📦 [ContentsDownloader] Error: {ex.Message}".DError();
-                $"📦 [ContentsDownloader] StackTrace: {ex.StackTrace}".DError();
+                $"📦 [Downloader] ERROR: {e}".DError();
                 return false;
             }
         }
 
-        protected override void OnDestroy()
+        #region Catalog
+
+        private async UniTask<bool> LoadRemoteCatalog(string catalogUrl)
         {
-            base.OnDestroy();
+            if (string.IsNullOrWhiteSpace(catalogUrl))
+            {
+                "📦 [Downloader] remoteCatalogUrl missing (env_contents.json)".DError();
+                return false;
+            }
+
+            var catalogHandle = Addressables.LoadContentCatalogAsync(catalogUrl, true);
+            await catalogHandle.Task;
+
+            if (catalogHandle.Status != AsyncOperationStatus.Succeeded)
+            {
+                "📦 [Downloader] Failed to load catalog".DError();
+                return false;
+            }
+            return true;
         }
+
+        private async UniTask<bool> UpdateCatalog()
+        {
+            "📦 [Downloader] Checking catalog updates...".DLog();
+
+            var checkHandle = Addressables.CheckForCatalogUpdates(false);
+            await checkHandle.Task;
+
+            if (checkHandle.Status != AsyncOperationStatus.Succeeded)
+            {
+                $"📦 [Downloader] Catalog check failed : {checkHandle.OperationException}".DError();
+                
+                Addressables.Release(checkHandle);
+                return false;
+            }
+
+            var catalogs = checkHandle.Result;
+            Addressables.Release(checkHandle);
+
+            if (catalogs == null)
+            {
+                "📦 [Downloader] Catalog list is null.".DError();
+                return false;
+            }
+
+            if (catalogs.Count == 0)
+            {
+                "📦 [Downloader] Already catalog updates".DLog();
+                return true;
+            }
+
+            $"📦 [Downloader] Found {catalogs.Count} catalog updates".DLog();
+
+            var updateHandle = Addressables.UpdateCatalogs(catalogs, false);
+            await updateHandle.Task;
+
+            if (updateHandle.Status != AsyncOperationStatus.Succeeded)
+            {
+                $"📦 [Downloader] Catalog update failed : {updateHandle.OperationException}".DError();
+                Addressables.Release(updateHandle);
+                return false;
+            }
+
+            "📦 [Downloader] Catalog update success".DLog();
+            Addressables.Release(updateHandle);
+
+            return true;
+        }
+
+        #endregion
+
+        #region Download
+
+        private async UniTask<bool> DownloadAddressablesByLabel(string label)
+        {
+            if (string.IsNullOrWhiteSpace(label))
+            {
+                "📦 [Downloader] downloadLabel 비어있음".DError();
+                return false;
+            }
+
+            $"📦 [Downloader] Calc download size for label: {label}".DLog();
+
+            var sizeHandle = Addressables.GetDownloadSizeAsync(label);
+            await sizeHandle.Task;
+
+            if (sizeHandle.Status != AsyncOperationStatus.Succeeded)
+            {
+                $"📦 [Downloader] GetDownloadSize failed for label: {label} - {sizeHandle.OperationException}".DError();
+                
+                Addressables.Release(sizeHandle);
+                return false;
+            }
+
+            long size = sizeHandle.Result;
+            Addressables.Release(sizeHandle);
+
+            if (size <= 0)
+            {
+                $"📦 [Downloader] No download needed for label '{label}'.".DLog();
+                return true;
+            }
+
+            $"📦 [Downloader] Download size for '{label}': {size / (1024f * 1024f):F2} MB".DLog();
+
+            var downloadHandle = Addressables.DownloadDependenciesAsync(label, true);
+
+            while (!downloadHandle.IsDone)
+            {
+                DownloadProgress = downloadHandle.PercentComplete;
+                await UniTask.Yield();
+            }
+
+            if (downloadHandle.Status != AsyncOperationStatus.Succeeded)
+            {
+                $"📦 [Downloader] Download FAILED for label '{label}' - {downloadHandle.OperationException}".DError();
+                Addressables.Release(downloadHandle);
+                return false;
+            }
+
+            $"📦 [Downloader] Download Complete for '{label}'".DLog();
+            Addressables.Release(downloadHandle);
+            return true;
+        }
+
+        #endregion
+
+        #region CCD Runtime Properties
+
+        private void ApplyCcdRuntimeProperties(CcdEnvConfig config = null)
+        {
+            config ??= LoadEnvConfig();
+            if (config == null)
+            {
+                Debug.LogError("📦 [Downloader] Env config not found or invalid. Unable to set CCD runtime properties.");
+                return;
+            }
+
+            AddressablesRuntimeProperties.SetPropertyValue("CcdManager.EnvironmentId", config.environmentId);
+            AddressablesRuntimeProperties.SetPropertyValue("CcdManager.EnvironmentName", config.environmentName);
+            AddressablesRuntimeProperties.SetPropertyValue("CcdManager.BucketId", config.bucketId);
+            AddressablesRuntimeProperties.SetPropertyValue("CcdManager.BucketName", config.bucketName);
+            AddressablesRuntimeProperties.SetPropertyValue("CcdManager.Badge", config.badge);
+
+            "CCD Runtime Properties Set:".DLog();
+            $"Env   = {AddressablesRuntimeProperties.EvaluateString("{CcdManager.EnvironmentName}")}".DLog();
+            $"Bucket= {AddressablesRuntimeProperties.EvaluateString("{CcdManager.BucketId}")}".DLog();
+            $"Badge = {AddressablesRuntimeProperties.EvaluateString("{CcdManager.Badge}")}".DLog();
+        }
+
+        private CcdEnvConfig LoadEnvConfig()
+        {
+            if (cachedConfig != null || envConfigLoadAttempted)
+                return cachedConfig;
+
+            envConfigLoadAttempted = true;
+
+            if (string.IsNullOrWhiteSpace(envConfigFileName))
+            {
+                "📦 [Downloader] Env config filename is empty. Skipping config load.".DError();
+                return null;
+            }
+
+            string configPath = Path.Combine(Application.streamingAssetsPath, "aa",envConfigFileName);
+
+            if (!File.Exists(configPath))
+            {
+                $"📦 [Downloader] Env config not found at {configPath}".DError();
+                return null;
+            }
+
+            try
+            {
+                string json = File.ReadAllText(configPath);
+                cachedConfig = JsonUtility.FromJson<CcdEnvConfig>(json);
+                if (cachedConfig == null)
+                {
+                    $"📦 [Downloader] Failed to parse env config at {configPath}".DError();
+                }
+                else
+                {
+                    $"📦 [Downloader] Env config loaded from {configPath}".DLog();
+                }
+            }
+            catch (Exception e)
+            {
+                $"📦 [Downloader] Failed to read env config. Path: {configPath}, Error: {e.Message}".DError();
+            }
+
+            return cachedConfig;
+        }
+
+        [Serializable]
+        private class CcdEnvConfig
+        {
+            public string environmentId;
+            public string environmentName;
+            public string bucketId;
+            public string bucketName;
+            public string badge;
+            public string remoteCatalogUrl;
+            public string downloadLabel;
+        }
+
+        #endregion
     }
 }

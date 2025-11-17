@@ -1,3 +1,4 @@
+using System;
 using Cysharp.Threading.Tasks;
 using hunt;
 using UnityEngine;
@@ -20,7 +21,7 @@ public class SystemBoot : MonoBehaviourSingleton<SystemBoot>
         await UniTask.WaitUntil(() => ContentsDownloader.Shared != null);
         $"[Boot] : ContentsDownloader Ready!".DLog();
         
-        bool downloadSuccess = await ContentsDownloader.Shared.ResourceDownLoad();
+        bool downloadSuccess = await ContentsDownloader.Shared.StartDownload();
         if (!downloadSuccess)
         {
             $"[Boot] : Resource Download Failed!".DError();
@@ -31,8 +32,18 @@ public class SystemBoot : MonoBehaviourSingleton<SystemBoot>
         await UniTask.WaitUntil(() => UserAuth.Shared != null);
         $"[Boot] : UserAuth Ready!".DLog();
 
-        await UniTask.WaitUntil(() => SteamManager.Initialized);
-        $"[Boot] : SteamManager Initialized!".DLog();
+        $"[Boot] : Waiting SteamManager Initialized...".DLog();
+        int steamWaitSeconds = 0;
+        while (!SteamManager.Initialized)
+        {
+            await UniTask.Delay(TimeSpan.FromSeconds(1));
+            steamWaitSeconds++;
+            if (steamWaitSeconds % 5 == 0)
+            {
+                $"[Boot] : SteamManager not ready yet ({steamWaitSeconds}s). SteamAPI_Init 실패 여부 확인 필요".DLog();
+            }
+        }
+        $"[Boot] : SteamManager Initialized after {steamWaitSeconds}s".DLog();
 
         UserAuth.Shared.Initialize();
 
