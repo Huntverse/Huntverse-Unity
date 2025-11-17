@@ -10,6 +10,8 @@ namespace hunt
 {
     public class ContentsDownloader : MonoBehaviourSingleton<ContentsDownloader>
     {
+        [SerializeField] private Canvas loadingCanvas;
+        private LoadingIndicator loadingIndicator;
         private string envConfigFileName = "env_contents.json";
 
         public float DownloadProgress { get; private set; }
@@ -21,6 +23,11 @@ namespace hunt
 
         protected override void Awake()
         {
+            if (loadingCanvas != null)
+            {
+                loadingIndicator = loadingCanvas.GetComponent<LoadingIndicator>();
+                UpdateLoadingUI(0f);
+            }
             base.Awake();
         }
 
@@ -39,6 +46,7 @@ namespace hunt
                     "📦 [Downloader] Env config Load Fail".DError();
                     return false;
                 }
+                UpdateLoadingUI(0f);
 
                 if (string.IsNullOrWhiteSpace(config.remoteCatalogUrl))
                 {
@@ -54,18 +62,22 @@ namespace hunt
 
                 // 0. CCD 런타임 프로퍼티 세팅 (RemoteLoadPath 안의 {CcdManager.*} 치환용)
                 ApplyCcdRuntimeProperties(config);
+                UpdateLoadingUI(0.1f);
 
                 // 1. Remote 카탈로그 로드
                 if (!await LoadRemoteCatalog(config.remoteCatalogUrl))
                     return false;
+                UpdateLoadingUI(0.2f);
 
                 // 2. Catalog 업데이트
                 if (!await UpdateCatalog())
                     return false;
+                UpdateLoadingUI(0.3f);
 
                 // 3. Addressables 다운로드 (라벨 기준 -> default 라벨을 가지고있어야만 다운로드가 가능한 에셋)
                 if (!await DownloadAddressablesByLabel(config.downloadLabel))
                     return false;
+                UpdateLoadingUI(1f);
 
                 "📦 [Downloader] All Complete!".DLog();
                 return true;
@@ -187,6 +199,7 @@ namespace hunt
             while (!downloadHandle.IsDone)
             {
                 DownloadProgress = downloadHandle.PercentComplete;
+                UpdateLoadingUI(DownloadProgress);
                 await UniTask.Yield();
             }
 
@@ -199,6 +212,7 @@ namespace hunt
 
             $"📦 [Downloader] Download Complete for '{label}'".DLog();
             Addressables.Release(downloadHandle);
+            UpdateLoadingUI(1f);
             return true;
         }
 
@@ -267,6 +281,11 @@ namespace hunt
             }
 
             return cachedConfig;
+        }
+
+        private void UpdateLoadingUI(float normalizedValue)
+        {
+            loadingIndicator?.UpdateProgress(Mathf.Clamp01(normalizedValue));
         }
 
         [Serializable]
