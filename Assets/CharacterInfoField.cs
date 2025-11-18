@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Cysharp.Threading.Tasks;
 
 namespace hunt
 {
@@ -26,10 +27,6 @@ namespace hunt
             get => nameText.text;
             set => nameText.text = value;
         }
-        private void Awake()
-        {
-            
-        }
         public void InitField(bool iscreated)
         {
             isCreated = iscreated;
@@ -41,7 +38,7 @@ namespace hunt
         public void SetLevelFieldValue(int level) => Level = level;
         public void SetNameFieldValue(string name) => Name = name;
 
-        public void Bind(CharacterModel model)
+        public async void Bind(CharacterModel model)
         {
             var created = model?.IsCreated == true;
             InitField(created);
@@ -60,18 +57,59 @@ namespace hunt
 
             SetLevelFieldValue(model.level);
             SetNameFieldValue(model.name);
+
             if (professionIcon != null)
             {
-                if (model.icon != null)
+                await LoadProfessionIcon(model.profession);
+            }
+        }
+
+        private async UniTask LoadProfessionIcon(ProfessionType profession)
+        {
+            if (AbLoader.Shared == null)
+            {
+                "🖼️ [CharacterInfoField] AbLoader.Shared is null".DError();
+                return;
+            }
+
+            string iconKey = GetProfessionIconKey(profession);
+            if (string.IsNullOrEmpty(iconKey))
+            {
+                professionIcon.enabled = false;
+                return;
+            }
+
+            try
+            {
+                var sprite = await AbLoader.Shared.LoadAssetAsync<Sprite>(iconKey);
+                if (sprite != null)
                 {
-                    professionIcon.sprite = model.icon;
+                    professionIcon.sprite = sprite;
                     professionIcon.enabled = true;
+                    $"🖼️ [CharacterInfoField] Icon loaded: {iconKey}".DLog();
                 }
                 else
                 {
                     professionIcon.enabled = false;
+                    $"🖼️ [CharacterInfoField] Failed to load icon: {iconKey}".DError();
                 }
             }
+            catch (System.Exception ex)
+            {
+                $"🖼️ [CharacterInfoField] Error loading icon: {ex.Message}".DError();
+                professionIcon.enabled = false;
+            }
+        }
+
+        private string GetProfessionIconKey(ProfessionType profession)
+        {
+            return profession switch
+            {
+                ProfessionType.Worrior => HuntKeyConst.Ks_Profession_Worrior,
+                ProfessionType.Magician => HuntKeyConst.Ks_Profession_Magician,
+                ProfessionType.Tanker => HuntKeyConst.Ks_Profession_Tanker,
+                _ => string.Empty
+            };
         }
     }
 }
