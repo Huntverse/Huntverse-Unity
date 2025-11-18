@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 namespace hunt
 {
@@ -7,6 +6,7 @@ namespace hunt
     {
         [Header("Channel Field")]
         [SerializeField] private List<GameChannelField> gameChannelFields;
+
         protected override bool DontDestroy => base.DontDestroy;
         
         protected override void Awake()
@@ -16,7 +16,7 @@ namespace hunt
 
         public void OnRecvChannelViewUpdate(ChannelListRequest res)
         {
-            Debug.Log($"[Channel] OnRecvChannelViewUpdate");
+            $"[Channel] OnRecvChannelViewUpdate".DLog();
             
             if (res?.channels == null || gameChannelFields == null) return;
             
@@ -24,7 +24,7 @@ namespace hunt
             {
                 if (gameChannelFields[i] == null) continue;
                 var model = ChannelModel.FromPayload(res.channels[i]);
-                Debug.Log($"[Channel] model : {model}");
+                $"[Channel] model : {model.ChannelName}, Count: {model.MyCharacterCount}".DLog();
                 gameChannelFields[i].Bind(model);
             }
         }

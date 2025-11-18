@@ -1,5 +1,7 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
+
 namespace hunt
 {
     public class GameChannelField : MonoBehaviour
@@ -7,25 +9,52 @@ namespace hunt
         [SerializeField] private TextMeshProUGUI channelNameText;
         [SerializeField] private TextMeshProUGUI congestionText;
         [SerializeField] private TextMeshProUGUI myCharCountText;
+        [SerializeField] private Button channelButton;
 
-        // Color ¸ÅÇÎ ÇÊ¿ä
+        private ChannelModel channelModel;
+
+        private void Awake()
+        {
+            if (channelButton != null)
+            {
+                channelButton.onClick.AddListener(OnChannelClicked);
+            }
+        }
+
+        private void OnDestroy()
+        {
+            if (channelButton != null)
+            {
+                channelButton.onClick.RemoveListener(OnChannelClicked);
+            }
+        }
+
+        // Color 
         private string GetCongestionString(int value)
         {
             return value switch
             {
-                0 => "¿øÈ°",
-                1 => "º¸Åë",
-                2 => "È¥Àâ",
-                3 => "Æ÷È­",
-                _ => "º¸Åë" // µ¥ÀÌÅÍ ´©¶ô ¹× ¾Ë¼ö¾øÀ» ‹š
+                0 => "ì¾Œì ",
+                1 => "ì›í™œ",
+                2 => "ë³´í†µ",
+                3 => "í˜¼ìž¡",
+                _ => "ë³´í†µ" 
             };
         }
 
         public void Bind(ChannelModel model)
         {
+            channelModel = model;
             channelNameText.text = model.ChannelName;
             congestionText.text = GetCongestionString(model.Congestion);
             myCharCountText.text = model.MyCharacterCount.ToString();
+        }
+
+        private void OnChannelClicked()
+        {
+            if (channelModel == null) return;
+            
+            CharacterCreateController.Shared?.UpdateCharacterSlots(channelModel.ChannelName, channelModel.MyCharacterCount);
         }
     }
 }

@@ -8,6 +8,7 @@ namespace hunt
         public string channelName;
         public int congestion;
         public int myCharacterCount;
+        public List<CharacterInfoPayload> characters;
     }
 
     [Serializable]
