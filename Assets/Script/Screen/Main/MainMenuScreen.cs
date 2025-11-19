@@ -7,8 +7,8 @@ namespace hunt
     public class MainMenuScreen : MonoBehaviour
     {
         [Header("HUDS")]
-        [SerializeField] Canvas mainHud;
-        [SerializeField] Canvas characterSelectHud;
+        [SerializeField] GameObject mainHud;
+        [SerializeField] GameObject characterSelectHud;
 
 
         private async void Start()
@@ -20,14 +20,14 @@ namespace hunt
 
         public void OnViewCharacterSelectHud()
         {
-            if (mainHud.gameObject.activeSelf) mainHud.gameObject.SetActive(false);
-            if (!characterSelectHud.gameObject.activeSelf) characterSelectHud.gameObject.SetActive(true);
+            if (mainHud.activeSelf) mainHud.SetActive(false);
+            if (!characterSelectHud.activeSelf) characterSelectHud.SetActive(true);
         }
 
         public void OnViewMainHud()
         {
-            if (characterSelectHud.gameObject.activeSelf) characterSelectHud.gameObject.SetActive(false);
-            if (!mainHud.gameObject.activeSelf) mainHud.gameObject.SetActive(true);
+            if (characterSelectHud.activeSelf) characterSelectHud.SetActive(false);
+            if (!mainHud.activeSelf) mainHud.SetActive(true);
         }
         public void EnterChracterSelect()
         {

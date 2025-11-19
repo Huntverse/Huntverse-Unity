@@ -2,6 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Cysharp.Threading.Tasks;
+using System.ComponentModel.Design;
 
 namespace hunt
 {
@@ -15,17 +16,44 @@ namespace hunt
         [SerializeField] private Image professionIcon;
         [SerializeField] private TextMeshProUGUI levelText;
         [SerializeField] private TextMeshProUGUI nameText;
+        [SerializeField] private TextMeshProUGUI savePointText;
+        [SerializeField] private Button selectButton;
+        private Animator animator;
+        private void Awake()
+        {
+            animator = GetComponent<Animator>();
+        }
 
+        private void OnEnable()
+        {
+            if (selectButton != null)
+            {
+                selectButton.onClick.AddListener(OnClickField);
+            }
+        }
+
+        private void OnDisable()
+        {
+            if (selectButton != null)
+            {
+                selectButton.onClick.RemoveListener(OnClickField);
+            }
+        }
         public int Level
         {
             get => int.Parse(levelText.text);
             set => levelText.text = value.ToString();
-            
+
         }
         public string Name
         {
             get => nameText.text;
             set => nameText.text = value;
+        }
+        public string SavePoint
+        {
+            get => savePointText.text;
+            set => savePointText.text = value;
         }
         public void InitField(bool iscreated)
         {
@@ -35,9 +63,10 @@ namespace hunt
             userInfoPannel.SetActive(isCreated);
         }
 
+
         public void SetLevelFieldValue(int level) => Level = level;
         public void SetNameFieldValue(string name) => Name = name;
-
+        public void SetSavePointFieldValie(string savepoint) => SavePoint = savepoint;
         public async void Bind(CharacterModel model)
         {
             var created = model?.IsCreated == true;
@@ -47,6 +76,7 @@ namespace hunt
             {
                 SetLevelFieldValue(0);
                 SetNameFieldValue(string.Empty);
+                SetSavePointFieldValie(string.Empty);
                 if (professionIcon != null)
                 {
                     professionIcon.sprite = null;
@@ -57,6 +87,7 @@ namespace hunt
 
             SetLevelFieldValue(model.level);
             SetNameFieldValue(model.name);
+            SetSavePointFieldValie(model.savepoint);
 
             if (professionIcon != null)
             {
@@ -110,6 +141,16 @@ namespace hunt
                 ProfessionType.Tanker => HuntKeyConst.Ks_Profession_Tanker,
                 _ => string.Empty
             };
+        }
+
+        public void OnClickField()
+        {
+            CharacterCreateController.Shared.OnSelectCharacterField(this);
+        }
+        public void HightlightField(bool active)
+        {
+            if (animator == null) return;
+            animator.SetBool("IsSelect", active);
         }
     }
 }

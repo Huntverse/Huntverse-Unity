@@ -1,5 +1,6 @@
-using UnityEngine;
+using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
+using UnityEngine;
 namespace hunt
 {
     public class CharacterCreateController : MonoBehaviourSingleton<CharacterCreateController>
@@ -53,6 +54,7 @@ namespace hunt
                     characterInfoField[i].InitField(false);
                     characterInfoField[i].SetLevelFieldValue(0);
                     characterInfoField[i].SetNameFieldValue(string.Empty);
+                    characterInfoField[i].SetSavePointFieldValie(string.Empty);
                 }
             }
         }
@@ -77,6 +79,46 @@ namespace hunt
                 characterInfoField[i].Bind(model);
             }
         }
+
+        public void OnSelectCharacterField(CharacterInfoField selected)
+        {
+            if (selected == null) return;
+
+            if (characterInfoField != null)
+            {
+                foreach (var field in characterInfoField)
+                {
+                    if (field == null || field == selected) continue;
+                    field.HightlightField(false);
+                }
+            }
+
+            selected.HightlightField(true);
+        }
+
+        private async void OnEnable()
+        {
+            await UniTask.Yield(PlayerLoopTiming.PostLateUpdate);
+            ResetSelectionState();
+        }
+
+        private void OnDisable()
+        {
+            ResetSelectionState();
+        }
+
+        private void ResetSelectionState()
+        {
+            if (characterInfoField == null) return;
+
+            foreach (var field in characterInfoField)
+            {
+                if (field == null) continue;
+                field.HightlightField(false);
+            }
+        }
+
+
 
         protected override void OnDestroy()
         {

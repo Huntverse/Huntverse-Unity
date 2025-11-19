@@ -10,6 +10,7 @@ namespace hunt
         public ProfessionType professiontype;
         public string name;
         public int level;
+        public string savepoint;
     }
     [Serializable]
     public class CharacterFieldListRequst
