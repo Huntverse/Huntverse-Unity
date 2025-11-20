@@ -131,14 +131,24 @@ namespace hunt
                 professionIcon.enabled = false;
             }
         }
-
+    
         private string GetProfessionIconKey(ProfessionType profession)
         {
             return profession switch
             {
-                ProfessionType.Worrior => HuntKeyConst.Ks_Profession_Worrior,
-                ProfessionType.Magician => HuntKeyConst.Ks_Profession_Magician,
-                ProfessionType.Tanker => HuntKeyConst.Ks_Profession_Tanker,
+                ProfessionType.Sword => HuntKeyConst.Ks_Profession_Worrior,
+                ProfessionType.Archer => HuntKeyConst.Ks_Profession_Magician,
+                ProfessionType.Fighter => HuntKeyConst.Ks_Profession_Tanker,
+                _ => string.Empty
+            };
+        }
+        private string GetProfessionIllustKey(ProfessionType profession)
+        {
+            return profession switch
+            {
+                ProfessionType.Sword => HuntKeyConst.Ks_Illust_Astera,
+                ProfessionType.Archer => HuntKeyConst.Ks_Illust_Sable,
+                ProfessionType.Fighter => HuntKeyConst.Ks_Illust_Brunt,
                 _ => string.Empty
             };
         }
@@ -152,5 +162,7 @@ namespace hunt
             if (animator == null) return;
             animator.SetBool("IsSelect", active);
         }
+
+
     }
 }

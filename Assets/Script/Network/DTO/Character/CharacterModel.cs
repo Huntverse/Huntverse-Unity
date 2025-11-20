@@ -9,9 +9,9 @@ namespace hunt
     [JsonConverter(typeof(StringEnumConverter))]
     public enum ProfessionType
     {
-        Worrior,
-        Magician,
-        Tanker,
+        Sword,
+        Archer,
+        Fighter,
         Unknwon
 
     }

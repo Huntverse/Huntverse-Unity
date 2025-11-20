@@ -12,5 +12,9 @@ namespace hunt
         public static readonly string Ks_Profession_Worrior = "worrior_pf@sprite";
         public static readonly string Ks_Profession_Magician = "magician_pf@sprite";
         public static readonly string Ks_Profession_Tanker = "tanker_pf@sprite";
+
+        public static readonly string Ks_Illust_Astera = "astera@sprite";
+        public static readonly string Ks_Illust_Brunt = "brunt@sprite";
+        public static readonly string Ks_Illust_Sable = "sable@sprite";
     }
 }

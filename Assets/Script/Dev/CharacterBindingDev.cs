@@ -11,9 +11,9 @@ namespace hunt.dev
             {
                 chfields = new List<CharacterInfoPayload>
                 {
-                    new(){ professiontype = ProfessionType.Worrior, name = "공안의 그림자", level = 50,savepoint="일루네스의 상념정"},
-                    new(){ professiontype = ProfessionType.Magician, name = "헌터버스", level = 35,savepoint="서광잔영의 숲" },
-                    new(){ professiontype = ProfessionType.Tanker, name = "pj002321", level = 42 ,savepoint="레미나의 잠경촌"}
+                    new(){ professiontype = ProfessionType.Sword, name = "공안의 그림자", level = 50,savepoint="일루네스의 상념정"},
+                    new(){ professiontype = ProfessionType.Archer, name = "헌터버스", level = 35,savepoint="서광잔영의 숲" },
+                    new(){ professiontype = ProfessionType.Fighter, name = "pj002321", level = 42 ,savepoint="레미나의 잠경촌"}
                 }
             };
             $"dummy character count: {dummy.chfields.Count}".DLog();
