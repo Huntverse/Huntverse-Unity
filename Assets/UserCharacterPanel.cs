@@ -41,6 +41,7 @@ namespace hunt
             string savepoint=null,
             string characterProfession="")
         {
+            gameObject.SetActive(false);
             gameObject.SetActive(true);
             config.Level= level;
             levelText.text = $"레벨 : "+config.Level.ToString();

@@ -52,31 +52,27 @@ namespace hunt
 
                 if (hasCharacter && i < cachedCharacters.Count && cachedCharacters[i] != null)
                 {
-                    // 캐시된 캐릭터 데이터가 있으면 바인딩
                     characterInfoFields[i].Bind(cachedCharacters[i]);
                 }
                 else if (hasCharacter)
                 {
-                    // 캐릭터 슬롯은 있지만 데이터가 없는 경우
-                    // 이미 필드에 데이터가 있는지 확인
+
                     if (characterInfoFields[i].HasCharacterData)
                     {
-                        // 기존 데이터가 있으면 유지 (재바인딩하지 않음)
                         $"???? [Character] Field {i} already has character data, keeping existing".DLog();
                     }
                     else
                     {
-                        // 데이터가 없으면 빈 필드로 초기화
                         characterInfoFields[i].InitField(true);
                     }
                 }
                 else
                 {
-                    // 캐릭터 슬롯이 없는 경우
                     characterInfoFields[i].InitField(false);
                     characterInfoFields[i].SetLevelFieldValue(0);
                     characterInfoFields[i].SetNameFieldValue(string.Empty);
                     characterInfoFields[i].SetSavePointFieldValie(string.Empty);
+                    userCharacterPanel.gameObject.SetActive(false);
                 }
             }
         }
@@ -201,7 +197,7 @@ namespace hunt
         }
         public void OnCreateNewCharacter(ProfessionType profession)
         {
-            $"ĳ���� ����".DLog();
+            $"캐릭터 생성".DLog();
         }
 
         private async void OnEnable()
