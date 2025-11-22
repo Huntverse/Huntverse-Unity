@@ -13,9 +13,9 @@ namespace hunt
         {
             if (attack <= 0 || defense <= 0 || movespeed <= 0 || hp <= 0 || agility <= 0)
             {
-                pentagonBalanceUI.SetStats(0.5f, 0.5f, 0.5f, 0.5f, 0.5f);
+                pentagonBalanceUI.AnimateStatsFromZero(0.5f, 0.5f, 0.5f, 0.5f, 0.5f,1f);
             }
-            pentagonBalanceUI.SetStats(attack, defense, movespeed, hp, agility);
+            pentagonBalanceUI.AnimateStatsFromZero(attack, defense, movespeed, hp, agility, 1f);
         }
         public float[] GetStats(float attack, float defense, float movespeed, float hp, float agility)
         {

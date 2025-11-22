@@ -22,6 +22,7 @@ namespace hunt
         [JsonProperty("name")] public string name;
         [JsonProperty("level")] public int level;
         [JsonProperty("savepoint")] public string savepoint;
+        [JsonProperty("stats")] public float[] stats;
 
         [JsonIgnore] public Sprite icon;
         [JsonIgnore] public bool IsCreated => !string.IsNullOrEmpty(name);
@@ -35,6 +36,7 @@ namespace hunt
                 profession = p.professiontype,
                 icon = p.icon,
                 savepoint = p.savepoint,
+                stats = p.stats
             };
 
 

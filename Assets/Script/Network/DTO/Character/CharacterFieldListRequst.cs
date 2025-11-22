@@ -11,6 +11,7 @@ namespace hunt
         public string name;
         public int level;
         public string savepoint;
+        public float[] stats;
     }
     [Serializable]
     public class CharacterFieldListRequst

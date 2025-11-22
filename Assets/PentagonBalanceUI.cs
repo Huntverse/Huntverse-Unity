@@ -17,15 +17,15 @@ namespace hunt
         [Range(0f, 1f)] public float stat4 = 1f;
         [Range(0f, 1f)] public float stat5 = 1f;
 
-        [Header("¿É¼Ç")]
+        [Header("ï¿½É¼ï¿½")]
         public float padding = 10f;
         public bool drawOutline = true;
         public float outlineThickness = 2f;
         public Color outlineColor = Color.black;
 
-        [Header("¶óº§ ¿É¼Ç")]
-        public TextMeshProUGUI[] labels;   // 5°³ ³Ö¾îµÎ±â
-        public float labelOffset = 15f;    // Æú¸®°ï ¹ÛÀ¸·Î ¾ó¸¶³ª ¶ç¿ïÁö
+        [Header("ï¿½ï¿½ ï¿½É¼ï¿½")]
+        public TextMeshProUGUI[] labels;   // 5ï¿½ï¿½ ï¿½Ö¾ï¿½Î±ï¿½
+        public float labelOffset = 15f;    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ó¸¶³ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½
 
         public void SetStats(float s1, float s2, float s3, float s4, float s5)
         {
@@ -39,9 +39,11 @@ namespace hunt
         private Coroutine animateRoutine;
         public void AnimateStatsFromZero(float s1, float s2, float s3, float s4, float s5, float duration)
         {
-            if (animateRoutine == null)
+            
+            if (animateRoutine != null)
             {
                 StopCoroutine(animateRoutine);
+                animateRoutine = null;
             }
 
             animateRoutine = StartCoroutine(AnimateStatsRoutine(
@@ -54,11 +56,11 @@ namespace hunt
         }
         private IEnumerator AnimateStatsRoutine(float t1, float t2, float t3, float t4, float t5, float duration)
         {
-            float s1 = 0f;
-            float s2 = 0f;
-            float s3 = 0f;
-            float s4 = 0f;
-            float s5 = 0f;
+            float start1 = stat1;
+            float start2 = stat2;
+            float start3 = stat3;
+            float start4 = stat4;
+            float start5 = stat5;
 
             float time = 0f;
             while (time < duration)
@@ -66,21 +68,23 @@ namespace hunt
                 time += Time.deltaTime;
                 float t = Mathf.Clamp01(time / duration);
 
-                s1 = Mathf.Lerp(s1, t1, t);
-                s2 = Mathf.Lerp(s2, t2, t);
-                s3 = Mathf.Lerp(s3, t3, t);
-                s4 = Mathf.Lerp(s4, t4, t);
-                s5 = Mathf.Lerp(s5, t5, t);
+                // ë©¤ë²„ ë³€ìˆ˜ë¥¼ ì§ì ‘ ì—…ë°ì´íŠ¸í•´ì•¼ OnPopulateMeshì—ì„œ ë°˜ì˜ë¨
+                stat1 = Mathf.Lerp(start1, t1, t);
+                stat2 = Mathf.Lerp(start2, t2, t);
+                stat3 = Mathf.Lerp(start3, t3, t);
+                stat4 = Mathf.Lerp(start4, t4, t);
+                stat5 = Mathf.Lerp(start5, t5, t);
 
                 SetVerticesDirty();
                 yield return null;
             }
 
-            s1 = t1;
-            s2 = t2;
-            s3 = t3;
-            s4 = t4;
-            s5 = t5;
+            // ìµœì¢… ê°’ ì„¤ì •
+            stat1 = t1;
+            stat2 = t2;
+            stat3 = t3;
+            stat4 = t4;
+            stat5 = t5;
 
             SetVerticesDirty();
             animateRoutine = null;
@@ -92,7 +96,7 @@ namespace hunt
             vh.Clear();
 
             Rect rect = rectTransform.rect;
-            Vector2 center = rect.center; // º¸Åë (0,0)
+            Vector2 center = rect.center; // ï¿½ï¿½ï¿½ï¿½ (0,0)
             float maxRadius = Mathf.Min(rect.width, rect.height) * 0.5f - padding;
 
             float[] stats = { stat1, stat2, stat3, stat4, stat5 };
@@ -101,7 +105,7 @@ namespace hunt
 
             float angleStep = 360f / count;
 
-            // ²ÀÁþÁ¡ ÁÂÇ¥ °è»ê
+            // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ç¥ ï¿½ï¿½ï¿½
             for (int i = 0; i < count; i++)
             {
                 float angle = (90f - angleStep * i) * Mathf.Deg2Rad;
@@ -110,7 +114,7 @@ namespace hunt
                 points[i] = center + dir * radius;
             }
 
-            // ==== ³»ºÎ Æú¸®°ï ±×¸®±â (»ý·« °¡´É, ±×´ë·Î) ====
+            // ==== ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½×¸ï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½, ï¿½×´ï¿½ï¿½) ====
             int centerIndex = 0;
             UIVertex vert = UIVertex.simpleVert;
             vert.color = color;
@@ -132,10 +136,10 @@ namespace hunt
                 vh.AddTriangle(i0, i1, i2);
             }
 
-            // ==== ¶óº§ À§Ä¡ ¾÷µ¥ÀÌÆ® ====
+            // ==== ï¿½ï¿½ ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ====
             UpdateLabels(center, maxRadius, angleStep);
 
-            // ==== ¿Ü°û¼± ±×¸®±â (±âÁ¸ ÄÚµå) ====
+            // ==== ï¿½Ü°ï¿½ï¿½ï¿½ ï¿½×¸ï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½ ï¿½Úµï¿½) ====
             if (!drawOutline || outlineThickness <= 0f) return;
 
             int outlineStartIndex = vh.currentVertCount;
@@ -176,7 +180,7 @@ namespace hunt
             {
                 if (labels[i] == null) continue;
 
-                // ¶óº§Àº Ç×»ó °¡Àå ¹Ù±ùÂÊ ±âÁØ + offset
+                // ï¿½ï¿½ï¿½ï¿½ ï¿½×»ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ù±ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ + offset
                 float angle = (90f - angleStep * i) * Mathf.Deg2Rad;
                 float radius = maxRadius + labelOffset;
 

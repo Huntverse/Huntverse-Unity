@@ -9,6 +9,7 @@ namespace hunt
     public class CharacterInfoField : MonoBehaviour
     {
         private bool isCreated = false;
+        private CharacterModel currentModel;
 
         [SerializeField] private GameObject createPannel;
         [SerializeField] private GameObject userInfoPannel;
@@ -55,6 +56,22 @@ namespace hunt
             get => savePointText.text;
             set => savePointText.text = value;
         }
+
+        /// <summary>
+        /// 현재 필드에 바인딩된 캐릭터 모델을 반환합니다.
+        /// </summary>
+        public CharacterModel CurrentModel => currentModel;
+
+        /// <summary>
+        /// 현재 필드에 캐릭터 데이터가 존재하는지 확인합니다.
+        /// </summary>
+        public bool HasCharacterData => currentModel != null && currentModel.IsCreated;
+
+        /// <summary>
+        /// 현재 필드에 직업 아이콘이 로드되어 있는지 확인합니다.
+        /// </summary>
+        public bool HasProfessionIcon => professionIcon != null && professionIcon.enabled && professionIcon.sprite != null;
+
         public void InitField(bool iscreated)
         {
             isCreated = iscreated;
@@ -69,6 +86,7 @@ namespace hunt
         public void SetSavePointFieldValie(string savepoint) => SavePoint = savepoint;
         public async void Bind(CharacterModel model)
         {
+            currentModel = model;
             var created = model?.IsCreated == true;
             InitField(created);
 
@@ -142,13 +160,26 @@ namespace hunt
                 _ => string.Empty
             };
         }
-        private string GetProfessionIllustKey(ProfessionType profession)
+        /// <summary>
+        /// 직업에 해당하는 일러스트 키를 반환합니다.
+        /// </summary>
+        public string GetProfessionIllustKey(ProfessionType profession)
         {
             return profession switch
             {
                 ProfessionType.Sword => HuntKeyConst.Ks_Illust_Astera,
                 ProfessionType.Archer => HuntKeyConst.Ks_Illust_Sable,
                 ProfessionType.Fighter => HuntKeyConst.Ks_Illust_Brunt,
+                _ => string.Empty
+            };
+        }
+        public string GetProfessionMatchName(ProfessionType profession)
+        {
+            return profession switch
+            {
+                ProfessionType.Sword => "아스트라",
+                ProfessionType.Archer => "세이블",
+                ProfessionType.Fighter => "브런트",
                 _ => string.Empty
             };
         }

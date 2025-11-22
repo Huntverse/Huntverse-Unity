@@ -13,7 +13,7 @@ namespace hunt
         [SerializeField] private Button nextButton;
         [SerializeField] private Button prevButton;
         [SerializeField] private GenerationCharacterPanel generationcharacterPanel;
-        [SerializeField] private GameObject loadCreatedCharacterPanel;
+        [SerializeField] private UserCharacterPanel userCharacterPanel;
 
         private string currentChannelName;
         private int currentCharacterCount;
@@ -27,6 +27,7 @@ namespace hunt
             base.Awake();
             nextButton.onClick.AddListener(() => OnShowChracterInfo(1));
             prevButton.onClick.AddListener(() => OnShowChracterInfo(-1));
+            userCharacterPanel.gameObject.SetActive(false);
         }
 
 
@@ -51,23 +52,53 @@ namespace hunt
 
                 if (hasCharacter && i < cachedCharacters.Count && cachedCharacters[i] != null)
                 {
-
+                    // 캐시된 캐릭터 데이터가 있으면 바인딩
                     characterInfoFields[i].Bind(cachedCharacters[i]);
                 }
                 else if (hasCharacter)
                 {
-
-                    characterInfoFields[i].InitField(true);
+                    // 캐릭터 슬롯은 있지만 데이터가 없는 경우
+                    // 이미 필드에 데이터가 있는지 확인
+                    if (characterInfoFields[i].HasCharacterData)
+                    {
+                        // 기존 데이터가 있으면 유지 (재바인딩하지 않음)
+                        $"???? [Character] Field {i} already has character data, keeping existing".DLog();
+                    }
+                    else
+                    {
+                        // 데이터가 없으면 빈 필드로 초기화
+                        characterInfoFields[i].InitField(true);
+                    }
                 }
                 else
                 {
-
+                    // 캐릭터 슬롯이 없는 경우
                     characterInfoFields[i].InitField(false);
                     characterInfoFields[i].SetLevelFieldValue(0);
                     characterInfoFields[i].SetNameFieldValue(string.Empty);
                     characterInfoFields[i].SetSavePointFieldValie(string.Empty);
                 }
             }
+        }
+
+        /// <summary>
+        /// 특정 인덱스의 CharacterInfoField가 이미 캐릭터 데이터를 가지고 있는지 확인합니다.
+        /// </summary>
+        public bool HasCharacterDataAt(int index)
+        {
+            if (index < 0 || index >= characterInfoFields.Count) return false;
+            if (characterInfoFields[index] == null) return false;
+            return characterInfoFields[index].HasCharacterData;
+        }
+
+        /// <summary>
+        /// 특정 인덱스의 CharacterInfoField에서 현재 바인딩된 CharacterModel을 가져옵니다.
+        /// </summary>
+        public CharacterModel GetCharacterModelAt(int index)
+        {
+            if (index < 0 || index >= characterInfoFields.Count) return null;
+            if (characterInfoFields[index] == null) return null;
+            return characterInfoFields[index].CurrentModel;
         }
 
         public void OnRecvCharacterFieldViewUpdate(CharacterFieldListRequst res)
@@ -91,7 +122,7 @@ namespace hunt
             }
         }
 
-        public void OnSelectCharacterField(CharacterInfoField selected)
+        public async void OnSelectCharacterField(CharacterInfoField selected)
         {
             if (selected == null) return;
 
@@ -105,6 +136,30 @@ namespace hunt
             }
 
             selected.HightlightField(true);
+
+   
+            if (selected.HasCharacterData && userCharacterPanel != null)
+            {
+                
+                var model = selected.CurrentModel;
+                if (model != null)
+                {
+                   
+                    string illustKey = selected.GetProfessionIllustKey(model.profession);
+                    string characterName = selected.GetProfessionMatchName(model.profession);
+                   
+                    await userCharacterPanel.HandleUpdateConfig(
+                        level: model.level,
+                        name: model.name,
+                        stats: model.stats,
+                        illustKey: illustKey,
+                        savepoint: model.savepoint,
+                        characterProfession: characterName
+                    );
+
+                    $"✅ [Character] Updated userCharacterPanel with character: {model.name} (Level: {model.level})".DLog();
+                }
+            }
         }
         public void OnShowChracterInfo(int index)
         {
@@ -143,17 +198,10 @@ namespace hunt
             {
                 nextButton.interactable = currentGenerationCharacterIndex < newCharacterInfoFields.Count-1;
             }
-
-      
-            // next, prev��ư�� ���������� 
-            // newCharacterInfoFields�� �ε����� �ٲ�� Ȱ��ȭ �Ǹ�  NewCharacterInfoPannel �� ������ �ٲ�
-            // Ȱ��ȭ�� ������ �ε����� ��Ȱ��ȭ�Ѵ�.
-
-
         }
         public void OnCreateNewCharacter(ProfessionType profession)
         {
-            $"ĳ���� ����".DLog();
+            $"ĳ���� ����".DLog();
         }
 
         private async void OnEnable()
