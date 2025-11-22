@@ -13,7 +13,7 @@ namespace hunt
         [SerializeField] private float fillSpeed = 0.5f;
         [SerializeField] private float finishDelay = 0.8f;
         private float textTimer = 0f;
-        private const float TextRotateInterval = 1f;
+        private const float TextRotateInterval = 2f;
         private float displayedProgress = 0f;
         private float targetProgress = 0f;
         private bool finishRequested = false;
