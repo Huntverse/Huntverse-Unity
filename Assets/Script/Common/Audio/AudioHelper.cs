@@ -24,7 +24,7 @@ namespace hunt
         private AudioSource bgmSource;
         private bool isPreloadComplete = false;
 
-        protected override bool DontDestroy => base.DontDestroy;
+        protected override bool DontDestroy => true;
         protected override void Awake()
         {
             base.Awake();

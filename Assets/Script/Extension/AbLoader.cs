@@ -12,7 +12,7 @@ namespace hunt
         private Dictionary<string, AsyncOperationHandle> assetHandlers = new Dictionary<string, AsyncOperationHandle>();
         private Dictionary<string, int> assetReferenceCounts = new Dictionary<string, int>();
         private Dictionary<GameObject, string> instantiatedObjects = new Dictionary<GameObject, string>();
-        protected override bool DontDestroy => base.DontDestroy;
+        protected override bool DontDestroy => true;
         protected override void Awake()
         {
             base.Awake();

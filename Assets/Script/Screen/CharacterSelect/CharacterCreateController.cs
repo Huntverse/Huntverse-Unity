@@ -20,7 +20,7 @@ namespace hunt
         private List<CharacterModel> cachedCharacters = new List<CharacterModel>();
 
         private int currentGenerationCharacterIndex = 0;
-        protected override bool DontDestroy => base.DontDestroy;
+        protected override bool DontDestroy => false;
 
         protected override void Awake()
         {

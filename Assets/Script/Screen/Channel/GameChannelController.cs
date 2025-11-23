@@ -7,7 +7,7 @@ namespace hunt
         [Header("Channel Field")]
         [SerializeField] private List<GameChannelField> gameChannelFields;
 
-        protected override bool DontDestroy => base.DontDestroy;
+        protected override bool DontDestroy => false;
         
         protected override void Awake()
         {

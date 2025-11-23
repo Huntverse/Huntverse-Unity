@@ -17,5 +17,12 @@ namespace hunt
         public static readonly string Ks_Illust_Astera = "astera@sprite";
         public static readonly string Ks_Illust_Brunt = "brunt@sprite";
         public static readonly string Ks_Illust_Sable = "sable@sprite";
+
+        // Player
+        public static readonly string Kp_Model_Seible = "seible@model";
+
+
+
+
     }
 }
