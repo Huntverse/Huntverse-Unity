@@ -37,6 +37,19 @@ namespace hunt.Net
             return m_loginConnection.SyncConn("127.0.0.1", 9000);
         }
 
+        public void StartLoginServer()
+        {
+            m_loginConnection.Start();
+        }
+
+        public void DisConnLoginServer()
+        {
+            m_loginConnection.Stop();
+        }
+
+        public void SendToLogin<ProtoT>(Hunt.Common.PacketType type, ProtoT data) where ProtoT : Google.Protobuf.IMessage
+            => m_loginConnection.Send(type, data);
+
         public bool IsExistConnection(UInt64 key)
         {
             return m_tcpConnections.ContainsKey(key);

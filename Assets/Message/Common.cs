@@ -26,8 +26,9 @@ namespace Hunt.Common {
           string.Concat(
             "Cgxjb21tb24ucHJvdG8SC0h1bnQuQ29tbW9uIlsKClNlcnZlckluZm8SDAoE",
             "bmFtZRgBIAEoCRIlCgRUeXBlGAIgASgLMhcuSHVudC5Db21tb24uU2VydmVy",
-            "SW5mbxIKCgJpcBgDIAEoCRIMCgRwb3J0GAQgASgHKioKClNlcnZlclR5cGUS",
-            "CAoETk9ORRAAEggKBEdBTUUQARIICgRSQUlEEAJiBnByb3RvMw=="));
+            "SW5mbxIKCgJpcBgDIAEoCRIMCgRwb3J0GAQgASgHKjQKClNlcnZlclR5cGUS",
+            "CAoETk9ORRAAEggKBEdBTUUQARIICgRSQUlEEAISCAoEQ0hBVBADYgZwcm90",
+            "bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Hunt.Common.ServerType), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -42,6 +43,7 @@ namespace Hunt.Common {
     [pbr::OriginalName("NONE")] None = 0,
     [pbr::OriginalName("GAME")] Game = 1,
     [pbr::OriginalName("RAID")] Raid = 2,
+    [pbr::OriginalName("CHAT")] Chat = 3,
   }
 
   #endregion

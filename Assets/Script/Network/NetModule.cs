@@ -11,6 +11,7 @@ using NUnit.Framework.Constraints;
 using System.IO;
 using Steamworks;
 using Mirror.BouncyCastle.Bcpg;
+using System.Collections.Generic;
 
 
 //using Google.Protobuf.Serialize;
@@ -61,6 +62,10 @@ namespace hunt.Net
         private CancellationTokenSource m_stopToken;
         private ServiceType m_type;
 
+        private Task m_sendTask = null;
+        private Task m_recvTask = null;
+        private bool m_isStoped = false;
+
         //연결 성공,실패에 대한 호출 핸들
         public NetModule(ServiceType type, Action<NetModule.ERROR, string>? disconnectHandler, Action connSuccessHandler, Action<SocketException> connFailHandler)
         {
@@ -72,6 +77,8 @@ namespace hunt.Net
             m_disconnectHandler = disconnectHandler;
             m_type = type;
             m_sendContext = new SendContext(BitConverter.IsLittleEndian);//바이트 오더는 실제로 send/recv에서 활용
+            m_tcpClient = new TcpClient();
+            m_isStoped = false;
         }
 
         public bool SyncConn(string ip, int port)
@@ -107,24 +114,67 @@ namespace hunt.Net
 
         public void Start()
         {
+            m_isStoped = false;
             m_stream = m_tcpClient.GetStream();
-            _ = RunningSend(m_stopToken.Token);
-            _ = RunningRecv(m_stopToken.Token);
+            m_stopToken = new CancellationTokenSource();
+            m_sendTask = RunningSend(m_stopToken.Token);
+            m_recvTask = RunningRecv(m_stopToken.Token);
+        }
+
+        public void Stop()
+        {
+            if (m_isStoped)
+            {
+                return;
+            }
+            m_isStoped = true;
+            m_stopToken.Cancel();
+            _ = CleanUpAsync();
+        }
+
+        private async Task CleanUpAsync()
+        {
+            try
+            {
+                // Task 완료 대기
+                var tasks = new List<Task>();
+                if (m_sendTask != null) tasks.Add(m_sendTask);
+                if (m_recvTask != null) tasks.Add(m_recvTask);
+
+                if (tasks.Count > 0)
+                {
+                    await Task.WhenAny(Task.WhenAll(tasks), Task.Delay(2000));
+                }
+            }
+            catch { }
+            finally
+            {
+                // 리소스 정리
+                m_stopToken?.Dispose();
+                m_stopToken = null;
+                m_stream?.Close();
+                m_stream = null;
+                m_tcpClient?.Close();
+                m_tcpClient = null;
+            }
+
+            m_sendTask = null;
+            m_recvTask = null;
         }
 
         private async Task RunningSend(CancellationToken token)
         {
             while (!token.IsCancellationRequested)//진행해도 되는지 확인
             {
-                byte[] sendData = m_sendContext.GetSendAbleData();
-                if (sendData.Length == 0)
+                var sendData = m_sendContext.GetSendAbleData();
+                if (sendData.GetLength() == 0)
                 {
                     await Task.Delay(50, token);///공회전 막고 싶은데, 이거 나중에 atomic으로 최적화하자
                     continue;
                 }
                 try
                 {
-                    await m_stream.WriteAsync(sendData);
+                    await m_stream.WriteAsync(sendData.GetData(), 0, (int)sendData.GetLength());
                     await m_stream.FlushAsync(token);//flush할건데, 클라가 종료나 이런 경우에 취소를 시키는 기능
                 }
                 catch (SocketException ex)
@@ -178,7 +228,7 @@ namespace hunt.Net
                     {
                         ushort packetSize = (ushort)((buffer[processSize] << 8) | buffer[processSize + 1]);//빅엔디안으로 들어옴
                         Debug.Log($"PacketSize: {packetSize}");//테스트만하고 삭제
-                        if (packetSize + 2 <= totalByte - processSize)//현재 완료 가능한 패킷의 사이즈가 총 인풋보다 작은 경우만 완성된 패킷이 됩니다
+                        if (packetSize <= totalByte - processSize)//현재 완료 가능한 패킷의 사이즈가 총 인풋보다 작은 경우만 완성된 패킷이 됩니다
                         {
                             byte[] packet = new byte[packetSize];
                             Array.Copy(buffer, processSize + 2, packet, 0, packetSize); // 헤더 2바이트 건너뜀
@@ -220,37 +270,42 @@ namespace hunt.Net
         private void OnRecv(byte[] data, int len)
         {
             //data: msgId + payload
-
-            PacketHeader header = PacketHeader.Parser.ParseFrom(data); //Msg Type to MessageId
-            //handler(): Message to Call ParseFrom(), Proccess To Logic
+            UInt32 packetType = 0;
+            if (BitConverter.IsLittleEndian)
+            {
+                packetType = ((uint)data[0] << 24) |
+                             ((uint)data[1] << 16) |
+                             ((uint)data[2] << 8) |
+                             ((uint)data[3]);
+            }
 
             if ((m_type & ServiceType.Common) != ServiceType.None)
             {
                 Debug.Assert(CommonMsgDispacher.Shared != null);
-                var handler = CommonMsgDispacher.Shared.Gethandler(header.Type);
-                handler(data, header.CalculateSize(), len);// header 크기만큼이 오프셋
+                var handler = CommonMsgDispacher.Shared.Gethandler((PacketType)packetType);
+                handler(data, sizeof(UInt32), len);// header 크기만큼이 오프셋
                 return;
             }
             if ((m_type & ServiceType.Game) != ServiceType.None)
             {
                 Debug.Assert(GameMsgDispatcher.Shared != null);
-                var handler = GameMsgDispatcher.Shared.Gethandler(header.Type);
-                handler(data, header.CalculateSize(), len);// header 크기만큼이 오프셋
+                var handler = GameMsgDispatcher.Shared.Gethandler((PacketType)packetType);
+                handler(data, sizeof(UInt32), len);// header 크기만큼이 오프셋
                 return;
             }
             if ((m_type & ServiceType.Login) != ServiceType.None)
             {
                 Debug.Assert(LoginMsgDispatcher.Shared != null);
-                var handler = LoginMsgDispatcher.Shared.Gethandler(header.Type);
-                handler(data, header.CalculateSize(), len);// header 크기만큼이 오프셋
+                var handler = LoginMsgDispatcher.Shared.Gethandler((PacketType)packetType);
+                handler(data, sizeof(UInt32), len);// header 크기만큼이 오프셋
                 return;
             }
 #if UNITY_EDITOR
             if ((m_type & ServiceType.Cheat) != ServiceType.None)
             {
                 Debug.Assert(CheatMsgDispacher.Shared != null);
-                var handler = CheatMsgDispacher.Shared.Gethandler(header.Type);
-                handler(data, header.CalculateSize(), len);// header 크기만큼이 오프셋
+                var handler = CheatMsgDispacher.Shared.Gethandler((PacketType)packetType);
+                handler(data, sizeof(UInt32), len);// header 크기만큼이 오프셋
                 return;
             }
 #endif
@@ -259,13 +314,9 @@ namespace hunt.Net
 
         public void Send<ProtoT>(PacketType msgId, ProtoT data) where ProtoT : Google.Protobuf.IMessage
         {
-            PacketHeader header = new PacketHeader();
-            header.Type = msgId;
-            var serHead = header.ToByteArray();
-
             var serData = data.ToByteArray();
 
-            m_sendContext.Send(serHead, (UInt16)serHead.Length, serData, (UInt16)data.CalculateSize());
+            m_sendContext.Send((UInt32)msgId, serData, (UInt16)data.CalculateSize());
         }
     }
 }

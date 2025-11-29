@@ -19,7 +19,7 @@ namespace hunt.Net
         byte[] m_data;
         UInt32 m_size = 0;
         UInt32 m_cap = 0;
-        InternalSendBuffer()
+        public InternalSendBuffer()
         {
             m_data = new byte[2000];
             m_cap = 2000;
@@ -39,6 +39,7 @@ namespace hunt.Net
 
             //버퍼에 복사
             Buffer.BlockCopy(writeData, 0, m_data, (int)m_size, (int)len);
+            m_size += len;
         }
         public void Clear()
         {
@@ -49,46 +50,58 @@ namespace hunt.Net
         {
             return m_data;
         }
+
+        public UInt32 GetLength()
+        {
+            return m_size;
+        }
     }
 
     class SendContext
     {
         private readonly object m_lock = new object(); // Mutex보다 lock이 더 가볍고 안전
-        InternalSendBuffer[] m_sendBuffers = new InternalSendBuffer[2];
+        InternalSendBuffer[] m_sendBuffers;
         int m_writeAbleIdx = 0;
         bool m_isLittleEndian = false;
 
         public SendContext(bool isLittleEndian)
         {
             m_isLittleEndian = isLittleEndian;
+            m_sendBuffers = new InternalSendBuffer[2];
+            m_sendBuffers[0] = new InternalSendBuffer();
+            m_sendBuffers[1] = new InternalSendBuffer();
         }
 
-        public void Send(byte[] writeData1, UInt16 len1, byte[] writeData2, UInt16 len2) //writeableIdx 버퍼에 write작업
+        public void Send(UInt32 msgId, byte[] writeData2, UInt16 len2) //writeableIdx 버퍼에 write작업
         {
             //totalSize는 TCP는 Stream형태이기때문에, 하나의 패킷의 경계를 알 수 없기때문에, 크기를 보내야함
-            var totalSize = (len1 + len2 + sizeof(UInt16));
+            UInt16 totalSize = (UInt16)(sizeof(UInt32) + len2 + sizeof(UInt16));
             Debug.Assert(totalSize < UInt16.MaxValue);
 
-            var bytes = BitConverter.GetBytes(totalSize);
+            var sizeSerialize = BitConverter.GetBytes(totalSize);
+            var msgIdSerialize = BitConverter.GetBytes(msgId);
             if (m_isLittleEndian)//little endianness -> big endianness(network byte order)
             {
 
-                var arr = bytes.Reverse();
-                bytes = arr.ToArray();
+                var arr = sizeSerialize.Reverse();
+                sizeSerialize = arr.ToArray();
+
+                var arr2 = msgIdSerialize.Reverse();
+                msgIdSerialize = arr2.ToArray();
             }
 
             lock (m_lock)
             {
                 //total Len: (sizeof(Uint16) + sizeof(msgId) + sizeof(payload))
-                m_sendBuffers[m_writeAbleIdx].Write(bytes, sizeof(UInt16));
+                m_sendBuffers[m_writeAbleIdx].Write(sizeSerialize, sizeof(UInt16));
                 //Msg Id
-                m_sendBuffers[m_writeAbleIdx].Write(writeData1, len1);
+                m_sendBuffers[m_writeAbleIdx].Write(msgIdSerialize, sizeof(UInt32));
                 //payload
                 m_sendBuffers[m_writeAbleIdx].Write(writeData2, len2);
             }
         }
         //writeableIdx를 바꾸고, 더 이상 write할일 없는 prev에 대해서 전송 버퍼로 활용
-        public byte[] GetSendAbleData()//writeableIdx를 교체, 지금까지 쓰여지던 버퍼는 send, 안쓰던 버퍼는 write작업으로
+        public InternalSendBuffer GetSendAbleData()//writeableIdx를 교체, 지금까지 쓰여지던 버퍼는 send, 안쓰던 버퍼는 write작업으로
         {
             var prev = 0;
             lock (m_lock)
@@ -97,7 +110,7 @@ namespace hunt.Net
                 m_writeAbleIdx = (m_writeAbleIdx + 1) & 1;//알아서 0, 1 변경 됨
                 m_sendBuffers[m_writeAbleIdx].Clear();//쉬던 버퍼를 클리어 -> 이제 이 버퍼에 write작업이 들어감
             }
-            return m_sendBuffers[prev].GetData();//지금까지 send하기 모아온 데이터를 리턴
+            return m_sendBuffers[prev];//지금까지 send하기 모아온 데이터를 리턴
         }
     }
 }
