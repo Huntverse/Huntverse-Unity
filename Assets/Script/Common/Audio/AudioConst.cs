@@ -8,6 +8,7 @@ namespace hunt
         SFX_HOVER,
         SFX_CHANNEL_SELECT,
         BGM_MAIN,
+        BGM_VILLAGE,
     }
 
     public static class AudioConst 
@@ -16,7 +17,8 @@ namespace hunt
         {
             //{ AudioType.SFX_HOVER, "hover@audio" },
             { AudioType.SFX_CHANNEL_SELECT, "channel_sfx@audio" },
-            { AudioType.BGM_MAIN, "main_bgm@audio" }
+            { AudioType.BGM_MAIN, "main_bgm@audio" },
+            { AudioType.BGM_VILLAGE, "village_bgm@audio" }
         };
 
         public static string GetSfxKey(AudioType sfxType)
