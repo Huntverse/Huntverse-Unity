@@ -60,9 +60,10 @@ namespace hunt.Net
     class SendContext
     {
         private readonly object m_lock = new object(); // Mutex보다 lock이 더 가볍고 안전
-        InternalSendBuffer[] m_sendBuffers;
-        int m_writeAbleIdx = 0;
-        bool m_isLittleEndian = false;
+        private InternalSendBuffer[] m_sendBuffers;
+        private int m_writeAbleIdx = 0;
+        private AutoResetEvent m_signal = new AutoResetEvent(false);
+        private bool m_isLittleEndian = false;
 
         public SendContext(bool isLittleEndian)
         {
@@ -99,10 +100,13 @@ namespace hunt.Net
                 //payload
                 m_sendBuffers[m_writeAbleIdx].Write(writeData2, len2);
             }
+            m_signal.Set();//send할게 생기면 set
         }
         //writeableIdx를 바꾸고, 더 이상 write할일 없는 prev에 대해서 전송 버퍼로 활용
         public InternalSendBuffer GetSendAbleData()//writeableIdx를 교체, 지금까지 쓰여지던 버퍼는 send, 안쓰던 버퍼는 write작업으로
         {
+            m_signal.WaitOne(Timeout.Infinite);//Send할게 생길 때까지 대기, 어차피 Send는 async로 동작되는
+            // m_signal.Reset();
             var prev = 0;
             lock (m_lock)
             {

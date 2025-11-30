@@ -43,14 +43,9 @@ namespace hunt.Net
             Login = 2,
             Game = 4,
             Cheat = 8,
-            //CL = Common | Login,
-            //CG = Common | Game,
-            //CLG = Common | Login | Game,
-            //CLC = CL | Cheat,
-            //CGC = CG | Cheat,
-            //CLGC = CLG | Cheat,
         }
-
+        private static readonly int PacketHeaderSize = 2;//c++서버 sh::IO_Engine에서 TCP 패킷 길이를 의미하는 패킷 헤더의 사이즈는 ushort로 2바이트
+        private static readonly int MsgIdSize = sizeof(UInt32);//c++서버 huntverse의 메세지 id는 4바이트 고정입니다.
         private TcpClient m_tcpClient;
         private SendContext m_sendContext;
 
@@ -224,15 +219,16 @@ namespace hunt.Net
                     }
                     var totalByte = ioByte + remainSize;
                     var processSize = 0;
-                    while (totalByte - processSize >= 2)
+                    while (totalByte - processSize >= PacketHeaderSize)//패킷의 사이즈를 알 수 있는 패킷 헤더가 완전히 존재해야합니다
                     {
                         ushort packetSize = (ushort)((buffer[processSize] << 8) | buffer[processSize + 1]);//빅엔디안으로 들어옴
                         Debug.Log($"PacketSize: {packetSize}");//테스트만하고 삭제
                         if (packetSize <= totalByte - processSize)//현재 완료 가능한 패킷의 사이즈가 총 인풋보다 작은 경우만 완성된 패킷이 됩니다
                         {
-                            byte[] packet = new byte[packetSize];
-                            Array.Copy(buffer, processSize + 2, packet, 0, packetSize); // 헤더 2바이트 건너뜀
-                            OnRecv(packet, packetSize - 2);//완성된 패킷에 대한 호출
+                            var payloadSize = packetSize - PacketHeaderSize;
+                            byte[] packet = new byte[payloadSize];
+                            Array.Copy(buffer, processSize + 2, packet, 0, payloadSize); // 헤더 2바이트 건너뜀
+                            OnRecv(packet, payloadSize);//완성된 패킷에 대한 호출
                             processSize += (packetSize);//헤더 + msgId + payload 크기 만큼 미루기
                         }
                         else
@@ -304,7 +300,7 @@ namespace hunt.Net
             {
                 Debug.Log("Not Exist Handler");
             }
-            handler(data, sizeof(UInt32), len - sizeof(UInt32));// header 크기만큼이 오프셋
+            handler(data, MsgIdSize, len - MsgIdSize);// header 크기만큼이 오프셋
         }
 
         public void Send<ProtoT>(PacketType msgId, ProtoT data) where ProtoT : Google.Protobuf.IMessage
@@ -315,59 +311,3 @@ namespace hunt.Net
         }
     }
 }
-
-/*
- private void RecvThread()
-        {
-            try
-            {
-                NetworkStream stream = m_tcpClient.GetStream();
-                byte[] buffer = new byte[4096];
-                //stream.ReadAsync();
-                while (m_recvRunning)
-                {
-                    int bytesRead = stream.Read(buffer, 0, buffer.Length); // 여기서 블로킹
-
-                    if (bytesRead == 0)
-                    {
-                        // 서버가 소켓 정리 (정상 종료)
-                        m_disconnectHandler();
-                        break;
-                    }
-
-                    // 받은 데이터 처리
-                    OnRecv(buffer, bytesRead);
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"RecvThread 예외: {ex.Message}");
-            }
-            finally
-            {
-                m_recvRunning = false;
-            }
-        }
-
-        private void SendThread()
-        {
-            try
-            {
-                NetworkStream stream = m_tcpClient.GetStream();
-                while (m_sendRunning)
-                {
-                    var sendData = m_sendContext.GetSendData();//한번에 모아서 Send 합니다.
-                    stream.Write(sendData, 0, sendData.Length);
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.Log($"SendThread 예외: {ex.Message}");
-                m_disconnectHandler();//Send도 연결이 끊겼을 때, 알아챌 수 있지 않나?
-            }
-            finally
-            {
-                m_sendRunning = false;
-            }
-        } 
- */
