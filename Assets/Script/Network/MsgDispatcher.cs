@@ -16,10 +16,25 @@ namespace hunt.Net
         //delegate: byte[], int => payload, offset, len
         private Dictionary<Hunt.Common.PacketType, Action<byte[], int, int>> m_handlers;
 
-        public void AddHandler(Hunt.Common.PacketType type, Action<byte[], int, int> handle)
+        public MsgDispatcherBase()
+        {
+            m_handlers = new Dictionary<Hunt.Common.PacketType, Action<byte[], int, int>>();
+        }
+
+        public virtual bool Init()
+        {
+            return false;
+        }
+
+        protected bool AddHandler(Hunt.Common.PacketType type, Action<byte[], int, int> handle)
         {
             Debug.Assert(!m_handlers.ContainsKey(type));//duplicate Key
+            if (m_handlers.ContainsKey(type))
+            {
+                return false;
+            }
             m_handlers.Add(type, handle);
+            return true;
         }
 
         public bool GetHandler(Hunt.Common.PacketType type, out Action<byte[], int, int> outHandle)
@@ -36,22 +51,35 @@ namespace hunt.Net
     }
 
     /*
-        치트 패킷에 대한 핸들러 집합 (모든 몬스터 죽이기, 테스트 하기 위한 패킷)
+        공용적인 패킷에 대한 핸들러 집합
     */
-    class CheatMsgDispacher : MonoBehaviourSingleton<CheatMsgDispacher>
+    class CommonMsgDispatcher : MsgDispatcherBase
     {
-        private MsgDispatcherBase m_dispatcher;
-
-        public Action<byte[], int, int> Gethandler(Hunt.Common.PacketType type)
-         => m_dispatcher.GetHandler(type);
-
-        protected override void Awake()
+        public CommonMsgDispatcher()
         {
-            base.Awake();
-            m_dispatcher.AddHandler(PacketType.LoginTestAns, CheatMsgDispacher.OnLoginTestReq);
+        }
+        public override bool Init()
+        {
+            return true;
+        }
+    }
+
+    /*
+        로그인 관련 패킷에 대한 핸들러 집합 
+    */
+    class LoginMsgDispatcher : MsgDispatcherBase
+    {
+        public LoginMsgDispatcher()
+        {
         }
 
-        static void OnLoginTestReq(byte[] payload, int offset, int len)
+        public override bool Init()
+        {
+            AddHandler(PacketType.LoginTestAns, OnLoginTestAns);
+            return true;
+        }
+
+        static void OnLoginTestAns(byte[] payload, int offset, int len)
         {
             var testReq = LoginTestAns.Parser.ParseFrom(payload, offset, len);
             Debug.Log($"Recv: {testReq.Data}");
@@ -59,49 +87,33 @@ namespace hunt.Net
     }
 
     /*
-        공용적인 패킷에 대한 핸들러 집합
+        이동 전투와 같은 게임 관련 패킷입니다.
     */
-    class CommonMsgDispacher : MonoBehaviourSingleton<CommonMsgDispacher>
+
+    class GameMsgDispatcher : MsgDispatcherBase
     {
-        private MsgDispatcherBase m_dispatcher;
-
-        public Action<byte[], int, int> Gethandler(Hunt.Common.PacketType type)
-         => m_dispatcher.GetHandler(type);
-
-        protected override void Awake()
+        public GameMsgDispatcher()
         {
-            base.Awake();
+        }
 
+        public override bool Init()
+        {
+            return true;
         }
     }
 
     /*
-        로그인 관련 패킷에 대한 핸들러 집합 
-    */
-    class LoginMsgDispatcher : MonoBehaviourSingleton<LoginMsgDispatcher>
+    치트 패킷에 대한 핸들러 집합 (모든 몬스터 죽이기, 테스트 하기 위한 패킷)
+*/
+    class CheatMsgDispatcher : MsgDispatcherBase
     {
-        private MsgDispatcherBase m_dispatcher;
-
-        public Action<byte[], int, int> Gethandler(Hunt.Common.PacketType type)
-         => m_dispatcher.GetHandler(type);
-
-        protected override void Awake()
+        public CheatMsgDispatcher()
         {
-            base.Awake();
-
         }
-    }
-    class GameMsgDispatcher : MonoBehaviourSingleton<GameMsgDispatcher>
-    {
-        private MsgDispatcherBase m_dispatcher;
 
-        public Action<byte[], int, int> Gethandler(Hunt.Common.PacketType type)
-         => m_dispatcher.GetHandler(type);
-
-        protected override void Awake()
+        public override bool Init()
         {
-            base.Awake();
-
+            return true;
         }
     }
 }

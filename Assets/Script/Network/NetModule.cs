@@ -196,7 +196,7 @@ namespace hunt.Net
                 {
                     // 예상치 못한 모든 예외
                     Debug.LogError($"예상치 못한 오류: {ex.GetType().Name} - {ex.Message}");
-                    if (!token.IsCancellationRequested)
+                    if (token.IsCancellationRequested)
                     {
                         m_stopToken.Cancel();
                         m_disconnectHandler(ERROR.Cancel, ex.Message);
@@ -232,8 +232,8 @@ namespace hunt.Net
                         {
                             byte[] packet = new byte[packetSize];
                             Array.Copy(buffer, processSize + 2, packet, 0, packetSize); // 헤더 2바이트 건너뜀
-                            OnRecv(packet, packetSize);//완성된 패킷에 대한 호출
-                            processSize += (packetSize + 2);//헤더 + msgId + payload 크기 만큼 미루기
+                            OnRecv(packet, packetSize - 2);//완성된 패킷에 대한 호출
+                            processSize += (packetSize);//헤더 + msgId + payload 크기 만큼 미루기
                         }
                         else
                         {
@@ -257,7 +257,7 @@ namespace hunt.Net
                 }
                 catch (Exception e)
                 {
-                    if (!token.IsCancellationRequested)
+                    if (token.IsCancellationRequested)
                     {
                         m_stopToken.Cancel();
                         m_disconnectHandler(ERROR.Cancel, e.Message);
@@ -279,37 +279,32 @@ namespace hunt.Net
                              ((uint)data[3]);
             }
 
+
+            Action<byte[], int, int> handler = null;
             if ((m_type & ServiceType.Common) != ServiceType.None)
             {
-                Debug.Assert(CommonMsgDispacher.Shared != null);
-                var handler = CommonMsgDispacher.Shared.Gethandler((PacketType)packetType);
-                handler(data, sizeof(UInt32), len);// header 크기만큼이 오프셋
-                return;
+                handler = NetworkManager.Shared.GetDispatcher(ServiceType.Common, (PacketType)packetType);
             }
             if ((m_type & ServiceType.Game) != ServiceType.None)
             {
-                Debug.Assert(GameMsgDispatcher.Shared != null);
-                var handler = GameMsgDispatcher.Shared.Gethandler((PacketType)packetType);
-                handler(data, sizeof(UInt32), len);// header 크기만큼이 오프셋
-                return;
+                handler = NetworkManager.Shared.GetDispatcher(ServiceType.Game, (PacketType)packetType);
             }
             if ((m_type & ServiceType.Login) != ServiceType.None)
             {
-                Debug.Assert(LoginMsgDispatcher.Shared != null);
-                var handler = LoginMsgDispatcher.Shared.Gethandler((PacketType)packetType);
-                handler(data, sizeof(UInt32), len);// header 크기만큼이 오프셋
-                return;
+                handler = NetworkManager.Shared.GetDispatcher(ServiceType.Login, (PacketType)packetType);
             }
 #if UNITY_EDITOR
             if ((m_type & ServiceType.Cheat) != ServiceType.None)
             {
-                Debug.Assert(CheatMsgDispacher.Shared != null);
-                var handler = CheatMsgDispacher.Shared.Gethandler((PacketType)packetType);
-                handler(data, sizeof(UInt32), len);// header 크기만큼이 오프셋
-                return;
+                handler = NetworkManager.Shared.GetDispatcher(ServiceType.Cheat, (PacketType)packetType);
             }
 #endif
-            Debug.Assert(false, "Not exist Handler!!");
+            Debug.Assert(handler != null);
+            if (handler == null)
+            {
+                Debug.Log("Not Exist Handler");
+            }
+            handler(data, sizeof(UInt32), len - sizeof(UInt32));// header 크기만큼이 오프셋
         }
 
         public void Send<ProtoT>(PacketType msgId, ProtoT data) where ProtoT : Google.Protobuf.IMessage

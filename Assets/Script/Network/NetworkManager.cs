@@ -14,6 +14,7 @@ namespace hunt.Net
         private NetModule m_loginConnection;
         //k: ip<<32 | port, v: netModule
         private Dictionary<UInt64, NetModule> m_tcpConnections;
+        private Dictionary<NetModule.ServiceType, MsgDispatcherBase> m_dispatchers;
 
         public NetModule MakeNetModule(ServiceType type, Action<NetModule.ERROR, string>? disconnectHandler, Action connSuccessHandler, Action<SocketException> connFailHandler)
         {
@@ -23,6 +24,19 @@ namespace hunt.Net
         protected override void Awake()
         {
             base.Awake();
+            m_dispatchers = new Dictionary<NetModule.ServiceType, MsgDispatcherBase>();
+            //치트는 에디터에서만 가능
+#if UNITY_EDITOR
+            m_dispatchers.Add(ServiceType.Cheat, new CheatMsgDispatcher());
+#endif
+            m_dispatchers.Add(ServiceType.Login, new LoginMsgDispatcher());
+            m_dispatchers.Add(ServiceType.Common, new CommonMsgDispatcher());
+            m_dispatchers.Add(ServiceType.Game, new GameMsgDispatcher());
+            foreach (var dispatcher in m_dispatchers.Values)
+            {
+                var suc = dispatcher.Init();
+                Debug.Assert(suc);
+            }
         }
 
         public async Task<bool> ConnLoginServer(Action<NetModule.ERROR, string>? disconnectHandler, Action connSuccessHandler, Action<SocketException> connFailHandler)
@@ -65,5 +79,10 @@ namespace hunt.Net
             return suc;
         }
 
+        public Action<byte[], int, int> GetDispatcher(NetModule.ServiceType serviceType, Hunt.Common.PacketType packetType)
+        {
+            m_dispatchers.TryGetValue(serviceType, out var dispatcher);
+            return dispatcher.GetHandler(packetType);
+        }
     }
 }
