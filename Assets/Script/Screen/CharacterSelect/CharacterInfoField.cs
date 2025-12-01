@@ -121,7 +121,7 @@ namespace hunt
                 return;
             }
 
-            string iconKey = GetProfessionIconKey(profession);
+            string iconKey = BindKeyConst.GetProfessionIconKey(profession);
             if (string.IsNullOrEmpty(iconKey))
             {
                 professionIcon.enabled = false;
@@ -149,40 +149,6 @@ namespace hunt
                 professionIcon.enabled = false;
             }
         }
-    
-        private string GetProfessionIconKey(ProfessionType profession)
-        {
-            return profession switch
-            {
-                ProfessionType.Sword => HuntKeyConst.Ks_Profession_Worrior,
-                ProfessionType.Archer => HuntKeyConst.Ks_Profession_Magician,
-                ProfessionType.Fighter => HuntKeyConst.Ks_Profession_Tanker,
-                _ => string.Empty
-            };
-        }
-        /// <summary>
-        /// 직업에 해당하는 일러스트 키를 반환합니다.
-        /// </summary>
-        public string GetProfessionIllustKey(ProfessionType profession)
-        {
-            return profession switch
-            {
-                ProfessionType.Sword => HuntKeyConst.Ks_Illust_Astera,
-                ProfessionType.Archer => HuntKeyConst.Ks_Illust_Sable,
-                ProfessionType.Fighter => HuntKeyConst.Ks_Illust_Brunt,
-                _ => string.Empty
-            };
-        }
-        public string GetProfessionMatchName(ProfessionType profession)
-        {
-            return profession switch
-            {
-                ProfessionType.Sword => "아스트라",
-                ProfessionType.Archer => "세이블",
-                ProfessionType.Fighter => "브런트",
-                _ => string.Empty
-            };
-        }
 
         public void OnClickField()
         {
@@ -191,7 +157,7 @@ namespace hunt
         public void HightlightField(bool active)
         {
             if (animator == null) return;
-            animator.SetBool("IsSelect", active);
+            animator.SetBool(AniKeyConst.k_bSelect, active);
         }
 
 

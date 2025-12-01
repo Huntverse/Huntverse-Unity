@@ -10,7 +10,6 @@ namespace hunt
         [SerializeField] GameObject mainHud;
         [SerializeField] GameObject characterSelectHud;
 
-
         private async void Start()
         {
             await UniTask.WaitUntil(() => AudioHelper.Shared);

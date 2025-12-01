@@ -30,12 +30,28 @@ namespace hunt
             characterStoryText.text = s;
         }
 
-        public (string, float[] f) OnSetFieldValue(string stroy, float[] f)
+        /// <summary>
+        /// 필드의 스토리와 스탯 값을 설정합니다.
+        /// </summary>
+        /// <param name="story">캐릭터 스토리 텍스트</param>
+        /// <param name="stats">스탯 배열 (5개: ATT, DEF, SDP, LUK, AGI)</param>
+        /// <returns>설정된 스토리와 스탯 배열</returns>
+        public (string, float[] f) OnSetFieldValue(string story, float[] stats)
         {
+            SetStroyText(GetStoryText(story));
             
-            SetStroyText(GetStoryText(stroy));
-            SetStats(0.8f, 0.6f, 0.2f, 0.6f, 0.5f);
-            return (GetStoryText(stroy), GetStats(0.8f, 0.6f, 0.2f, 0.6f, 0.5f));
+            // 전달받은 스탯 배열 사용 (5개 값이 있어야 함)
+            if (stats != null && stats.Length >= 5)
+            {
+                SetStats(stats[0], stats[1], stats[2], stats[3], stats[4]);
+            }
+            else
+            {
+                // 기본값 사용
+                SetStats(0.5f, 0.5f, 0.5f, 0.5f, 0.5f);
+            }
+            
+            return (GetStoryText(story), stats ?? new float[] { 0.5f, 0.5f, 0.5f, 0.5f, 0.5f });
         }
     }
 }

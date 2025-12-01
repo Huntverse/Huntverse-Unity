@@ -9,24 +9,24 @@ namespace hunt
     public class GenerationCharacterInfoField : MonoBehaviour
     {
         [SerializeField] private Button selectButton;
-        [SerializeField] private ProfessionType professionType;
-        [SerializeField] private string characterName;
+        public ProfessionType professionType;
+        public string characterName => BindKeyConst.GetProfessionMatchName(professionType);
         public List<float> stats = new List<float>(5);
         public string storyString;
         private void OnEnable()
         {
-            selectButton.onClick.AddListener(() => OnClickField());
+            selectButton.onClick.AddListener(() => OnClickCreateCharacter());
         }
         private void OnDisable()
         {
-            selectButton.onClick.AddListener(() => OnClickField());
+            selectButton.onClick.RemoveListener(() => OnClickCreateCharacter());
 
         }
-        public void OnClickField()
+        public void OnClickCreateCharacter()
         {
             CharacterCreateController.Shared.OnCreateNewCharacter(this.professionType);
         }
+      
 
-       
     }
 }

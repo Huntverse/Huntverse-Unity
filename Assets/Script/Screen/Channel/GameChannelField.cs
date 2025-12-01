@@ -54,6 +54,8 @@ namespace hunt
         {
             if (channelModel == null) return;
             
+            // 채널 클릭 시 해당 채널의 캐릭터 리스트를 요청하는 로직이 여기 들어가야 함
+            // 현재는 캐시된 데이터를 사용하여 UI 업데이트
             CharacterCreateController.Shared?.UpdateCharacterSlots(channelModel.ChannelName, channelModel.MyCharacterCount);
         }
     }

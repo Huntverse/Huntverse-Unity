@@ -5,16 +5,7 @@ using UnityEngine;
 
 namespace hunt
 {
-    [Serializable]
-    [JsonConverter(typeof(StringEnumConverter))]
-    public enum ProfessionType
-    {
-        Sword,
-        Archer,
-        Fighter,
-        Unknwon
-
-    }
+    
 
     public class CharacterModel
     {

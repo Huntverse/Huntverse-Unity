@@ -136,7 +136,7 @@ namespace hunt
         public void HandleAttack()
         {
             if(!canControl) return;
-            animator?.SetTrigger(AniKeyConst.ka_tAttack);
+            animator?.SetTrigger(AniKeyConst.K_tAttack);
         }
 
         public void HandleJump()
@@ -145,7 +145,7 @@ namespace hunt
 
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
             coyoteTimeCounter = 0f;
-            animator?.SetBool(AniKeyConst.ka_IsGround, true);
+            animator?.SetBool(AniKeyConst.k_bGround, true);
         }
 
         #region Update
@@ -154,7 +154,7 @@ namespace hunt
             if (animator == null) return;
 
             var speed = Mathf.Abs(moveInput.x);
-            animator.SetBool(AniKeyConst.ka_IsMove, speed > 0.1f && isGrounded);
+            animator.SetBool(AniKeyConst.k_bMove, speed > 0.1f && isGrounded);
         }
 
         private void UpdateTimers()
@@ -195,7 +195,7 @@ namespace hunt
 
         private void OnLanded()
         {
-            animator?.SetBool(AniKeyConst.ka_IsGround, false);
+            animator?.SetBool(AniKeyConst.k_bGround, false);
         }
 
 
