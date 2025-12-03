@@ -2,7 +2,7 @@ using System.Threading;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace hunt
+namespace Hunt
 {
     [RequireComponent(typeof(Rigidbody2D))]
     [RequireComponent(typeof(Collider2D))]

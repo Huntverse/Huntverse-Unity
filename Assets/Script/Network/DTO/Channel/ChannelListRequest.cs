@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-namespace hunt
+namespace Hunt
 {
     [Serializable]
     public class ChannelInfoPayload

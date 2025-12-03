@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace hunt
+namespace Hunt
 {
     public interface IPlayer
     {

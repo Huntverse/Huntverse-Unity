@@ -5,7 +5,7 @@ using Unity.Jobs.LowLevel.Unsafe;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace hunt
+namespace Hunt
 {
     public class UserCharacterPanel : MonoBehaviour
     {

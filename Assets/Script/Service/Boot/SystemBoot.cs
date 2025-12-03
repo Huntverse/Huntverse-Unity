@@ -1,14 +1,19 @@
 using System;
 using Cysharp.Threading.Tasks;
-using hunt;
+using Hunt;
 using UnityEngine;
 
 public class SystemBoot : MonoBehaviourSingleton<SystemBoot>
 {
+    [Header("LogIn Window")]
+    [SerializeField] private Canvas LogInCanvas;
+
+    public bool isSystemContinue = false;
     protected override bool DontDestroy => base.DontDestroy;
     protected override void Awake()
     {
         base.Awake();
+        LogInCanvas.gameObject.SetActive(false);
         Initialize().Forget();
     }
 
@@ -51,7 +56,15 @@ public class SystemBoot : MonoBehaviourSingleton<SystemBoot>
         $"[Boot] : Initialize Success".DLog();
         if (isInit)
         {
-            SceneLoadHelper.Shared?.LoadSceneSingleMode(ResourceKeyConst.Ks_Mainmenu);
+            if (!isSystemContinue)
+            {
+                ContentsDownloader.Shared.loadingCanvas.gameObject.SetActive(false);
+                LogInCanvas.gameObject.SetActive(true);
+            }
+            else
+            {
+                SceneLoadHelper.Shared?.LoadSceneSingleMode(ResourceKeyConst.Ks_Mainmenu);
+            }
         }
     }
     private void Start()

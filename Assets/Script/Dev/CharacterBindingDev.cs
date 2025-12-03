@@ -1,6 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
-namespace hunt.dev
+namespace Hunt.dev
 {
     /// <summary>
     /// 채널별 캐릭터 리스트를 더미 데이터로 전송하는 Dev 스크립트

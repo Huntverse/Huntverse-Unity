@@ -1,7 +1,7 @@
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-namespace hunt
+namespace Hunt
 {
 
     public class MainMenuScreen : MonoBehaviour

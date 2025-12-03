@@ -4,7 +4,7 @@ using UnityEngine.UI;
 using Cysharp.Threading.Tasks;
 using System.ComponentModel.Design;
 
-namespace hunt
+namespace Hunt
 {
     public class CharacterInfoField : MonoBehaviour
     {

@@ -2,7 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
-namespace hunt
+namespace Hunt
 {
     public class LoadingIndicator : MonoBehaviour
     {

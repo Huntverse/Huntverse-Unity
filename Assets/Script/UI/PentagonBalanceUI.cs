@@ -5,7 +5,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace hunt
+namespace Hunt
 {
 
     [RequireComponent(typeof(RectTransform))]

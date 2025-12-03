@@ -6,7 +6,7 @@ using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.ResourceProviders;
 using UnityEngine.SceneManagement;
 
-namespace hunt
+namespace Hunt
 {
     public class SceneLoadHelper : MonoBehaviourSingleton<SceneLoadHelper>
     {

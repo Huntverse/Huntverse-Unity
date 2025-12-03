@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace hunt
+namespace Hunt
 {
     [Serializable]
     [JsonConverter(typeof(StringEnumConverter))]
@@ -42,6 +42,8 @@ namespace hunt
         public static readonly int k_bMove = Animator.StringToHash("IsMove");
         public static readonly int k_bGround = Animator.StringToHash("IsGround");
         public static readonly int k_bSelect = Animator.StringToHash("IsSelect");
+        public static readonly int k_bValid = Animator.StringToHash("IsVaild");
+        public static readonly int k_tFail = Animator.StringToHash("tFail");
     }
     public enum AudioType
     {

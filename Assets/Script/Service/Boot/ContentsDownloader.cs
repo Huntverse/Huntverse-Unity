@@ -6,11 +6,11 @@ using UnityEngine.AddressableAssets;
 using UnityEngine.AddressableAssets.Initialization;   
 using UnityEngine.ResourceManagement.AsyncOperations;
 
-namespace hunt
+namespace Hunt
 {
     public class ContentsDownloader : MonoBehaviourSingleton<ContentsDownloader>
     {
-        [SerializeField] private Canvas loadingCanvas;
+        public Canvas loadingCanvas;
         private LoadingIndicator loadingIndicator;
         private string envConfigFileName = "env_contents.json";
 

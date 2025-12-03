@@ -2,7 +2,7 @@
 using TMPro;
 using UnityEngine;
 
-namespace hunt
+namespace Hunt
 {
     public class GenerationCharacterPanel : MonoBehaviour
     {

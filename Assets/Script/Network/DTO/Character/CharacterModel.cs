@@ -3,7 +3,7 @@ using Newtonsoft.Json.Converters;
 using System;
 using UnityEngine;
 
-namespace hunt
+namespace Hunt
 {
     
 

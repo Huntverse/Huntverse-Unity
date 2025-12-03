@@ -5,7 +5,7 @@ using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using System;
 
-namespace hunt
+namespace Hunt
 {
     public class AbLoader : MonoBehaviourSingleton<AbLoader>
     {

@@ -1,6 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
-namespace hunt.dev
+namespace Hunt.dev
 {
 
     public class ChannelBindingDev : MonoBehaviour

@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 using System.Collections.Generic;
-namespace hunt
+namespace Hunt
 {
     [Serializable]
     public class CharacterInfoPayload

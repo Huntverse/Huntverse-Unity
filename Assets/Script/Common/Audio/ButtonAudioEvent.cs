@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace hunt
+namespace Hunt
 {
     [RequireComponent(typeof(Button))]
     public class ButtonAudioEvent : MonoBehaviour

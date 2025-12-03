@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace hunt
+namespace Hunt
 {
     public class CharacterCreateController : MonoBehaviourSingleton<CharacterCreateController>
     {

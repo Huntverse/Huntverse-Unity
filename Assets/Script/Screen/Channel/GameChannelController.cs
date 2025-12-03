@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
-namespace hunt
+namespace Hunt
 {
     public class GameChannelController : MonoBehaviourSingleton<GameChannelController>
     {
