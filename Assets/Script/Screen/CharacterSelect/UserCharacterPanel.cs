@@ -23,7 +23,7 @@ namespace hunt
         }
         private async UniTask EnterVillage()
         {
-            await SceneLoadHelper.Shared.LoadSceneAdditiveMode(HuntKeyConst.Ks_Village);
+            await SceneLoadHelper.Shared.LoadSceneAdditiveMode(ResourceKeyConst.Ks_Village);
         }
         private async UniTask sendMsg()
         {

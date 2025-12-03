@@ -51,7 +51,7 @@ public class SystemBoot : MonoBehaviourSingleton<SystemBoot>
         $"[Boot] : Initialize Success".DLog();
         if (isInit)
         {
-            SceneLoadHelper.Shared?.LoadSceneSingleMode(HuntKeyConst.Ks_Mainmenu);
+            SceneLoadHelper.Shared?.LoadSceneSingleMode(ResourceKeyConst.Ks_Mainmenu);
         }
     }
     private void Start()

@@ -27,7 +27,7 @@ namespace hunt
 
         private void OnButtonClick()
         {
-            string audioKey = AudioConst.GetSfxKey(sfxType);
+            string audioKey = AudioKeyConst.GetSfxKey(sfxType);
             AudioHelper.Shared.PlaySfx(audioKey, volumeScale);
         }
     }

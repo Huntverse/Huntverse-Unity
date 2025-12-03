@@ -21,7 +21,7 @@ namespace hunt
                 characterAction.enabled = false;
             }
 
-            SetUp(HuntKeyConst.Kp_Model_Seible, Vector3.zero).Forget();
+            SetUp(ResourceKeyConst.Kp_Model_Seible, Vector3.zero).Forget();
         }
         private async UniTask SetUp(string characterKey, Vector3 saveposition)
         {

@@ -74,7 +74,7 @@ namespace hunt
 
             List<UniTask> loadTasks = new List<UniTask>();
 
-            foreach (var audioKey in AudioConst.GetAllSfxKeys())
+            foreach (var audioKey in AudioKeyConst.GetAllSfxKeys())
             {
                 if (!string.IsNullOrEmpty(audioKey))
                 {

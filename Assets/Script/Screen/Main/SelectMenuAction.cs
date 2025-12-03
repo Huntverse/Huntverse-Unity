@@ -12,7 +12,7 @@ namespace hunt.ui
     {
         [Header("Menu Items")]
         [SerializeField] private List<GameObject> menuFields = new List<GameObject>();
-        private string selectedBoolName = HuntKeyConst.Ka_isActive;
+        private string selectedBoolName = ResourceKeyConst.Ka_isActive;
         private int initialIndex = 0;
 
         private int currentIndex = -1;

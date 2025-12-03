@@ -13,7 +13,7 @@ namespace hunt
         private async void Start()
         {
             await UniTask.WaitUntil(() => AudioHelper.Shared);
-            AudioHelper.Shared.PlayBgm(AudioConst.GetSfxKey(AudioType.BGM_MAIN));
+            AudioHelper.Shared.PlayBgm(AudioKeyConst.GetSfxKey(AudioType.BGM_MAIN));
             OnViewMainHud();
         }
 
