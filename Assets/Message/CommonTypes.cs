@@ -24,15 +24,19 @@ namespace Hunt.Common {
     static CommonTypesReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "ChJjb21tb25fdHlwZXMucHJvdG8SC0h1bnQuQ29tbW9uKmsKClBhY2tldFR5",
-            "cGUSCwoHSU5WQUxJRBAAEgoKBlNZU1RFTRABEg0KCUxPR0lOX1JFURACEg0K",
-            "CUxPR0lOX0FOUxADEhIKDkxPR0lOX1RFU1RfUkVREAQSEgoOTE9HSU5fVEVT",
-            "VF9BTlMQBSpvCglFcnJvclR5cGUSCwoHRVJSX05PThAAEhsKF0VSUl9JTlZB",
-            "TElEX1BBQ0tFVF9UWVBFEAESCgoGRVJSX0RCEAISGQoVRVJSX0FDQ09VTlRf",
-            "Tk9UX0VYSVNUEAMSEQoNRVJSX0RVUF9MT0dJThAEYgZwcm90bzM="));
+            "ChJjb21tb25fdHlwZXMucHJvdG8SC0h1bnQuQ29tbW9uKssBCgpQYWNrZXRU",
+            "eXBlEgsKB0lOVkFMSUQQABIKCgZTWVNURU0QARINCglMT0dJTl9SRVEQAhIN",
+            "CglMT0dJTl9BTlMQAxIUChBMT0dJTl9CWV9LRVlfUkVREAQSFAoQTE9HSU5f",
+            "QllfS0VZX0FOUxAFEhcKE1JFVFVSTl9UT19MT0dJTl9SRVEQBhIXChNSRVRV",
+            "Uk5fVE9fTE9HSU5fQU5TEAcSEwoOTE9HSU5fVEVTVF9SRVEQj04SEwoOTE9H",
+            "SU5fVEVTVF9BTlMQkE4qbwoJRXJyb3JUeXBlEgsKB0VSUl9OT04QABIbChdF",
+            "UlJfSU5WQUxJRF9QQUNLRVRfVFlQRRABEgoKBkVSUl9EQhACEhkKFUVSUl9B",
+            "Q0NPVU5UX05PVF9FWElTVBADEhEKDUVSUl9EVVBfTE9HSU4QBCo+Cg5Db25n",
+            "ZXN0aW9uVHlwZRINCglDT05fTElHSFQQABIOCgpDT05fTk9STUFMEAESDQoJ",
+            "Q09OX0hFQVZZEAJiBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
-          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Hunt.Common.PacketType), typeof(global::Hunt.Common.ErrorType), }, null, null));
+          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Hunt.Common.PacketType), typeof(global::Hunt.Common.ErrorType), typeof(global::Hunt.Common.CongestionType), }, null, null));
     }
     #endregion
 
@@ -52,8 +56,14 @@ namespace Hunt.Common {
     /// 서버 응답
     /// </summary>
     [pbr::OriginalName("LOGIN_ANS")] LoginAns = 3,
-    [pbr::OriginalName("LOGIN_TEST_REQ")] LoginTestReq = 4,
-    [pbr::OriginalName("LOGIN_TEST_ANS")] LoginTestAns = 5,
+    /// <summary>
+    /// </summary>
+    [pbr::OriginalName("LOGIN_BY_KEY_REQ")] LoginByKeyReq = 4,
+    [pbr::OriginalName("LOGIN_BY_KEY_ANS")] LoginByKeyAns = 5,
+    [pbr::OriginalName("RETURN_TO_LOGIN_REQ")] ReturnToLoginReq = 6,
+    [pbr::OriginalName("RETURN_TO_LOGIN_ANS")] ReturnToLoginAns = 7,
+    [pbr::OriginalName("LOGIN_TEST_REQ")] LoginTestReq = 9999,
+    [pbr::OriginalName("LOGIN_TEST_ANS")] LoginTestAns = 10000,
   }
 
   /// <summary>
@@ -77,6 +87,12 @@ namespace Hunt.Common {
     ///중복 로그인인 경우
     /// </summary>
     [pbr::OriginalName("ERR_DUP_LOGIN")] ErrDupLogin = 4,
+  }
+
+  public enum CongestionType {
+    [pbr::OriginalName("CON_LIGHT")] ConLight = 0,
+    [pbr::OriginalName("CON_NORMAL")] ConNormal = 1,
+    [pbr::OriginalName("CON_HEAVY")] ConHeavy = 2,
   }
 
   #endregion
