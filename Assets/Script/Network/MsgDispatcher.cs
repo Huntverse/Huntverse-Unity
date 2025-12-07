@@ -1,24 +1,23 @@
 ﻿using System.Collections.Generic;
 using System;
 using UnityEngine;
+using JetBrains.Annotations;
+using UnityEngine.XR;
 
 using Hunt.Common;
-using JetBrains.Annotations;
-using hunt.Net;
 using Hunt.Login;
 
-
-namespace hunt.Net
+namespace Hunt.Net
 {
     //: MonoBehaviourSingleton<MsgDispatcherBase>
     class MsgDispatcherBase
     {
         //delegate: byte[], int => payload, offset, len
-        private Dictionary<Hunt.Common.PacketType, Action<byte[], int, int>> m_handlers;
+        private Dictionary<Hunt.Common.MsgId, Action<byte[], int, int>> m_handlers;
 
         public MsgDispatcherBase()
         {
-            m_handlers = new Dictionary<Hunt.Common.PacketType, Action<byte[], int, int>>();
+            m_handlers = new Dictionary<Common.MsgId, Action<byte[], int, int>>();
         }
 
         public virtual bool Init()
@@ -26,7 +25,7 @@ namespace hunt.Net
             return false;
         }
 
-        protected bool AddHandler(Hunt.Common.PacketType type, Action<byte[], int, int> handle)
+        protected bool AddHandler(Hunt.Common.MsgId type, Action<byte[], int, int> handle)
         {
             Debug.Assert(!m_handlers.ContainsKey(type));//duplicate Key
             if (m_handlers.ContainsKey(type))
@@ -37,13 +36,13 @@ namespace hunt.Net
             return true;
         }
 
-        public bool GetHandler(Hunt.Common.PacketType type, out Action<byte[], int, int> outHandle)
+        public bool GetHandler(Hunt.Common.MsgId type, out Action<byte[], int, int> outHandle)
 
         {
             return m_handlers.TryGetValue(type, out outHandle);
         }
 
-        public Action<byte[], int, int> GetHandler(Hunt.Common.PacketType type)
+        public Action<byte[], int, int> GetHandler(Hunt.Common.MsgId type)
         {
             m_handlers.TryGetValue(type, out var outHandle);
             return outHandle;
@@ -75,7 +74,8 @@ namespace hunt.Net
 
         public override bool Init()
         {
-            AddHandler(PacketType.LoginTestAns, OnLoginTestAns);
+            AddHandler(MsgId.LoginTestAns, OnLoginTestAns);
+            AddHandler(MsgId.LoginAns, OnLoginAns);
             return true;
         }
 
@@ -83,6 +83,12 @@ namespace hunt.Net
         {
             var testReq = LoginTestAns.Parser.ParseFrom(payload, offset, len);
             Debug.Log($"Recv: {testReq.Data}");
+        }
+
+        static void OnLoginAns(byte[] payload, int offset, int len)
+        {
+            var testReq = LoginAns.Parser.ParseFrom(payload, offset, len);
+            Debug.Log($"OnLoginAns Recv: {testReq.ErrType}");
         }
     }
 

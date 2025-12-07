@@ -3,14 +3,9 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.UIElements;
 using Google.Protobuf;
-using Unity.VisualScripting;
 using Hunt.Common;
-using NUnit.Framework.Constraints;
 using System.IO;
-using Steamworks;
-using Mirror.BouncyCastle.Bcpg;
 using System.Collections.Generic;
 
 
@@ -25,7 +20,7 @@ using System.Collections.Generic;
  * 
  */
 
-namespace hunt.Net
+namespace Hunt.Net
 {
     public class NetModule
     {
@@ -112,8 +107,8 @@ namespace hunt.Net
             m_isStoped = false;
             m_stream = m_tcpClient.GetStream();
             m_stopToken = new CancellationTokenSource();
-            m_sendTask = RunningSend(m_stopToken.Token);
-            m_recvTask = RunningRecv(m_stopToken.Token);
+            m_sendTask = Task.Run(() => RunningSend(m_stopToken.Token));
+            m_recvTask = Task.Run(() => RunningRecv(m_stopToken.Token));
         }
 
         public void Stop()
@@ -279,20 +274,20 @@ namespace hunt.Net
             Action<byte[], int, int> handler = null;
             if ((m_type & ServiceType.Common) != ServiceType.None)
             {
-                handler = NetworkManager.Shared.GetDispatcher(ServiceType.Common, (PacketType)packetType);
+                handler = NetworkManager.Shared.GetDispatcher(ServiceType.Common, (Common.MsgId)packetType);
             }
             if ((m_type & ServiceType.Game) != ServiceType.None)
             {
-                handler = NetworkManager.Shared.GetDispatcher(ServiceType.Game, (PacketType)packetType);
+                handler = NetworkManager.Shared.GetDispatcher(ServiceType.Game, (Common.MsgId)packetType);
             }
             if ((m_type & ServiceType.Login) != ServiceType.None)
             {
-                handler = NetworkManager.Shared.GetDispatcher(ServiceType.Login, (PacketType)packetType);
+                handler = NetworkManager.Shared.GetDispatcher(ServiceType.Login, (Common.MsgId)packetType);
             }
 #if UNITY_EDITOR
             if ((m_type & ServiceType.Cheat) != ServiceType.None)
             {
-                handler = NetworkManager.Shared.GetDispatcher(ServiceType.Cheat, (PacketType)packetType);
+                handler = NetworkManager.Shared.GetDispatcher(ServiceType.Cheat, (Common.MsgId)packetType);
             }
 #endif
             Debug.Assert(handler != null);
@@ -303,7 +298,7 @@ namespace hunt.Net
             handler(data, MsgIdSize, len - MsgIdSize);// header 크기만큼이 오프셋
         }
 
-        public void Send<ProtoT>(PacketType msgId, ProtoT data) where ProtoT : Google.Protobuf.IMessage
+        public void Send<ProtoT>(Common.MsgId msgId, ProtoT data) where ProtoT : Google.Protobuf.IMessage
         {
             var serData = data.ToByteArray();
 

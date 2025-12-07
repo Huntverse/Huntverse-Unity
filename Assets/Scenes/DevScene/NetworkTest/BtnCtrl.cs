@@ -14,7 +14,7 @@ public class BtnCtrl : MonoBehaviour
     {
 
     }
-    void OnDisconn(hunt.Net.NetModule.ERROR e, string msg)
+    void OnDisconn(Hunt.Net.NetModule.ERROR e, string msg)
     {
         Debug.Log(msg);
     }
@@ -31,22 +31,30 @@ public class BtnCtrl : MonoBehaviour
     public void OnConnBtn()
     {
         Debug.Log("On ConnBtn");
-        hunt.Net.NetworkManager.Shared.ConnLoginServerSync(OnDisconn, OnConnSucc, OnConnFail);
-        hunt.Net.NetworkManager.Shared.StartLoginServer();
+        Hunt.Net.NetworkManager.Shared.ConnLoginServerSync(OnDisconn, OnConnSucc, OnConnFail);
+        Hunt.Net.NetworkManager.Shared.StartLoginServer();
     }
 
+    public void OnDisConnBtn()
+    {
+        Debug.Log("On DisConnBtn");
+        Hunt.Net.NetworkManager.Shared.DisConnLoginServer();
+    }
     public void OnSendBtn()
     {
         Debug.Log("On SendBtn");
         Hunt.Login.LoginTestReq req = new Hunt.Login.LoginTestReq();
         req.Data = "안녕하세요";
         req.Num = 1;
-        hunt.Net.NetworkManager.Shared.SendToLogin(Hunt.Common.PacketType.LoginTestReq, req);
+        Hunt.Net.NetworkManager.Shared.SendToLogin(Hunt.Common.MsgId.LoginTestReq, req);
     }
 
-    public void OnDisConnBtn()
+    public void OnSendLoginReq()
     {
-        Debug.Log("On DisConnBtn");
-        hunt.Net.NetworkManager.Shared.DisConnLoginServer();
+        Hunt.Login.LoginReq req = new Hunt.Login.LoginReq();
+        req.Id = "t1";
+        req.Pw = "hle";
+        Hunt.Net.NetworkManager.Shared.SendToLogin(Hunt.Common.MsgId.LoginReq, req);
     }
+
 }
