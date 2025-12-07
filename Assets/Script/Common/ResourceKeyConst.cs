@@ -34,6 +34,8 @@ namespace Hunt
 
         // Player
         public static readonly string Kp_Model_Seible = "seible@model";
+        public static readonly string Kp_Model_Astera = "astera@model";
+        public static readonly string Kp_Model_Brunt = "brunt@model";
     }
     public static class AniKeyConst
     {
@@ -107,5 +109,19 @@ namespace Hunt
                 _ => string.Empty
             };
         }
+
+        public static string GetProfessionModelkey(ProfessionType profession)
+        {
+            return profession switch
+            {
+                ProfessionType.Sword => ResourceKeyConst.Kp_Model_Astera,
+                ProfessionType.Archer => ResourceKeyConst.Kp_Model_Seible,
+                ProfessionType.Fighter => ResourceKeyConst.Kp_Model_Brunt,
+
+                _ => string.Empty
+            };
+
+        }
+
     }
 }
