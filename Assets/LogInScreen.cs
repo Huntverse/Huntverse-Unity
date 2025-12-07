@@ -1,5 +1,3 @@
-using Mirror;
-using Mirror.BouncyCastle.Security;
 using System.Runtime.InteropServices;
 using TMPro;
 using UnityEngine;
@@ -10,20 +8,25 @@ namespace Hunt
 {
     public class LogInScreen : MonoBehaviour
     {
+
+        #region Field
         [SerializeField] private TMP_InputField idInput;
         [SerializeField] private TMP_InputField pwInput;
         [SerializeField] private Button confirmButton;
+        [SerializeField] private Button pwVisButton;
         [SerializeField] private Animator animator;
-        [SerializeField] private GameObject caplockVisual;
-        
+        [SerializeField] private GameObject caplockVis;
+        private bool isPasswordVisible = false;
         [DllImport("user32.dll")]
         private static extern short GetKeyState(int keyCode);
         private const int VK_CAPITAL = 0x14;
+        #endregion
+
         private void Start()
         {
 
             confirmButton.onClick.AddListener(ReqAuthVaild);
-
+            pwVisButton.onClick.AddListener(TogglePasswordVisibility);
             idInput.onSubmit.AddListener(OnIdSubmit);
             pwInput.onSubmit.AddListener(OnPwSubmit);
 
@@ -57,10 +60,17 @@ namespace Hunt
             }
 
             bool isCapsLockOn = (GetKeyState(VK_CAPITAL) & 0x0001) != 0;
-            caplockVisual.SetActive(isCapsLockOn);
+            caplockVis.SetActive(isCapsLockOn);
 
         }
 
+        private void TogglePasswordVisibility()
+        {
+            isPasswordVisible = !isPasswordVisible;
+
+            pwInput.contentType =  isPasswordVisible? TMP_InputField.ContentType.Standard : TMP_InputField.ContentType.Password;
+            pwInput.ForceLabelUpdate();
+        }
         private void OnIdSubmit(string _)
         {
             pwInput.Select();
@@ -76,7 +86,6 @@ namespace Hunt
             var (id, pw) = ReturnInputResult();
 
             // 클라에서 검증된 id, pw 서버로 요청
-
         }
 
         private (string, string) ReturnInputResult()
@@ -95,16 +104,25 @@ namespace Hunt
 
         private bool IsValid(string id, string pw)
         {
-            if (id.Contains('-') || id.Contains("#") || id.Contains(' ')
-                || pw.Contains('-') || pw.Contains("#") || pw.Contains(' ')
-                || id.IsNullOrEmpty() || pw.IsNullOrEmpty())
+            char[] invalidChars = { '-', '#', ' ' };
+
+            bool isValid = !id.IsNullOrEmpty()
+                           && !pw.IsNullOrEmpty()
+                           && id.IndexOfAny(invalidChars) == -1
+                           && pw.IndexOfAny(invalidChars) == -1;
+
+            if (isValid)
             {
-                $"Field Value Is Valid {false}".DError();
-                animator.SetTrigger(AniKeyConst.k_tFail);
-                return false;
+                animator.SetBool(AniKeyConst.k_bValid, true); 
+                $"Field Value Is Valid {true}".DLog();
             }
-            $"Field Value Is Valid {true}".DLog();
-            return true;
+            else
+            {
+                animator.SetTrigger(AniKeyConst.k_tFail);
+                $"Field Value Is Valid {false}".DError();
+            }
+
+            return isValid;
         }
 
 

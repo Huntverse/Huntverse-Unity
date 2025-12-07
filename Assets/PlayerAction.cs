@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using System.Threading;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -22,6 +23,7 @@ namespace Hunt
         [SerializeField] private Transform groundCheckPoint;
         [SerializeField] private float groundCheckDistance = 0.1f;
         [SerializeField] private LayerMask groundLayer;
+        #region Private Field
 
         private Rigidbody2D rb;
         private Animator animator;
@@ -35,10 +37,12 @@ namespace Hunt
         private SpriteRenderer spriteRenderer;
 
         private GameObject model;
-        private InputSystem_Actions inputKey;
+        private InputManager inputKey;
+        #endregion
         private void Awake()
         {
-            inputKey = new InputSystem_Actions();
+            UniTask.WaitUntil(() => !InputManager.Shared);
+            inputKey = InputManager.Shared;
             inputKey.Player.Jump.performed += OnJumpPerformed;
             inputKey.Player.Attack.performed += OnAttackPerformed;
 
@@ -73,35 +77,15 @@ namespace Hunt
             UpdateGroundCheck();
             UpdateTimers();
             UpdateAnimator();
-        }
-        
-        // 추가된 부분: 자식 모델의 스케일이 멋대로 바뀌는 것을 방지
-        private void LateUpdate()
-        {
-            if (model != null)
-            {
-                // 모델은 항상 (1, 1, 1)을 유지해야 부모의 스케일 방향을 그대로 따름
-                if (model.transform.localScale.x != 1f)
-                {
-                    model.transform.localScale = Vector3.one;
-                }
-            }
-        }
-
-        // Sync NetWork
-        private void FixedUpdate()
-        {
-            if (!canControl) return;
-
             HandleMovement();
-
         }
+
+
 
         public void HandleInput()
         {
+            if (isAttacking) return;
             moveInput = inputKey.Player.Move.ReadValue<Vector2>();
-
-            // 부모(PlayerAction)의 스케일을 변경하여 방향 제어
             if (moveInput.x > 0.1f)
             {
                 transform.localScale = new Vector3(1, 1, 1);
@@ -111,22 +95,27 @@ namespace Hunt
                 transform.localScale = new Vector3(-1, 1, 1);
             }
         }
+
+        public bool isJumpping = false;
         private void OnJumpPerformed(InputAction.CallbackContext context)
         {
             if (!canControl) return;
             jumpBufferCounter = jumpBufferTime;
         }
+
+        public bool isAttacking = false;
         private void OnAttackPerformed(InputAction.CallbackContext context)
         {
             if (!canControl) return;
             HandleAttack();
 
         }
+      
 
         // Sync NetWork
         public void HandleMovement()
         {
-
+            if (isAttacking) return;
             float velx = moveInput.x * moveSpeed;
             rb.linearVelocity = new Vector2(velx, rb.linearVelocity.y);
 
@@ -135,13 +124,14 @@ namespace Hunt
         // Sync NetWork
         public void HandleAttack()
         {
-            if(!canControl) return;
+            if(!canControl || isAttacking) return;
+            isAttacking = true;
             animator?.SetTrigger(AniKeyConst.K_tAttack);
         }
 
         public void HandleJump()
         {
-            if(!canControl) return;
+            if(!canControl || isAttacking) return;
 
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
             coyoteTimeCounter = 0f;
@@ -216,7 +206,7 @@ namespace Hunt
             {
                 inputKey.Player.Jump.performed -= OnJumpPerformed;
                 inputKey.Player.Attack.performed -= OnAttackPerformed;
-                inputKey.Dispose();
+                inputKey.Action.Dispose();
             }
         }
     }
