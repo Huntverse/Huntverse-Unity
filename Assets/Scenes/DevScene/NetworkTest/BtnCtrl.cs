@@ -35,6 +35,11 @@ public class BtnCtrl : MonoBehaviour
         Hunt.Net.NetworkManager.Shared.StartLoginServer();
     }
 
+    public void OnDisConnBtn()
+    {
+        Debug.Log("On DisConnBtn");
+        Hunt.Net.NetworkManager.Shared.DisConnLoginServer();
+    }
     public void OnSendBtn()
     {
         Debug.Log("On SendBtn");
@@ -44,9 +49,12 @@ public class BtnCtrl : MonoBehaviour
         Hunt.Net.NetworkManager.Shared.SendToLogin(Hunt.Common.MsgId.LoginTestReq, req);
     }
 
-    public void OnDisConnBtn()
+    public void OnSendLoginReq()
     {
-        Debug.Log("On DisConnBtn");
-        Hunt.Net.NetworkManager.Shared.DisConnLoginServer();
+        Hunt.Login.LoginReq req = new Hunt.Login.LoginReq();
+        req.Id = "t1";
+        req.Pw = "hle";
+        Hunt.Net.NetworkManager.Shared.SendToLogin(Hunt.Common.MsgId.LoginReq, req);
     }
+
 }

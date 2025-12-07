@@ -75,6 +75,7 @@ namespace Hunt.Net
         public override bool Init()
         {
             AddHandler(MsgId.LoginTestAns, OnLoginTestAns);
+            AddHandler(MsgId.LoginAns, OnLoginAns);
             return true;
         }
 
@@ -82,6 +83,12 @@ namespace Hunt.Net
         {
             var testReq = LoginTestAns.Parser.ParseFrom(payload, offset, len);
             Debug.Log($"Recv: {testReq.Data}");
+        }
+
+        static void OnLoginAns(byte[] payload, int offset, int len)
+        {
+            var testReq = LoginAns.Parser.ParseFrom(payload, offset, len);
+            Debug.Log($"OnLoginAns Recv: {testReq.ErrType}");
         }
     }
 

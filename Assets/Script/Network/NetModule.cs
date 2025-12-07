@@ -3,14 +3,9 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.UIElements;
 using Google.Protobuf;
-using Unity.VisualScripting;
 using Hunt.Common;
-using NUnit.Framework.Constraints;
 using System.IO;
-using Steamworks;
-using Mirror.BouncyCastle.Bcpg;
 using System.Collections.Generic;
 
 
@@ -112,8 +107,8 @@ namespace Hunt.Net
             m_isStoped = false;
             m_stream = m_tcpClient.GetStream();
             m_stopToken = new CancellationTokenSource();
-            m_sendTask = RunningSend(m_stopToken.Token);
-            m_recvTask = RunningRecv(m_stopToken.Token);
+            m_sendTask = Task.Run(() => RunningSend(m_stopToken.Token));
+            m_recvTask = Task.Run(() => RunningRecv(m_stopToken.Token));
         }
 
         public void Stop()
