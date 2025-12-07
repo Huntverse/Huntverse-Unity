@@ -1,5 +1,6 @@
 using Cysharp.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Hunt
 {
@@ -9,14 +10,18 @@ namespace Hunt
         [Header("HUDS")]
         [SerializeField] GameObject mainHud;
         [SerializeField] GameObject characterSelectHud;
-
-        private async void Start()
+        [SerializeField] Button enterVillageButton;
+        private async void Awake()
         {
             await UniTask.WaitUntil(() => AudioHelper.Shared);
             AudioHelper.Shared.PlayBgm(AudioKeyConst.GetSfxKey(AudioType.BGM_MAIN));
+            enterVillageButton.onClick.AddListener(() => EnterVillage().Forget());
             OnViewMainHud();
         }
-
+        private async UniTask EnterVillage()
+        {
+            await SceneLoadHelper.Shared.LoadSceneSingleMode(ResourceKeyConst.Ks_Village);
+        }
         public void OnViewCharacterSelectHud()
         {
             if (mainHud.activeSelf) mainHud.SetActive(false);
@@ -45,5 +50,9 @@ namespace Hunt
 #endif
         }
 
+        private void OnDestroy()
+        {
+            enterVillageButton.onClick.RemoveAllListeners();
+        }
     }
 }

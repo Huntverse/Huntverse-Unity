@@ -58,7 +58,6 @@ namespace Hunt
             inputKey?.Player.Enable();
         }
 
-        // ̰ ߰!!!
         private void OnDisable()
         {
             inputKey?.Player.Disable();
@@ -79,9 +78,6 @@ namespace Hunt
             UpdateAnimator();
             HandleMovement();
         }
-
-
-
         public void HandleInput()
         {
             if (isAttacking) return;
@@ -110,7 +106,7 @@ namespace Hunt
             HandleAttack();
 
         }
-      
+
 
         // Sync NetWork
         public void HandleMovement()
@@ -124,14 +120,14 @@ namespace Hunt
         // Sync NetWork
         public void HandleAttack()
         {
-            if(!canControl || isAttacking) return;
+            if (!canControl || isAttacking) return;
             isAttacking = true;
             animator?.SetTrigger(AniKeyConst.K_tAttack);
         }
 
         public void HandleJump()
         {
-            if(!canControl || isAttacking) return;
+            if (!canControl || isAttacking) return;
 
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
             coyoteTimeCounter = 0f;
@@ -152,13 +148,13 @@ namespace Hunt
             coyoteTimeCounter -= Time.deltaTime;
             jumpBufferCounter -= Time.deltaTime;
 
-            if(jumpBufferCounter > 0f && coyoteTimeCounter >0f)
+            if (jumpBufferCounter > 0f && coyoteTimeCounter > 0f)
             {
                 HandleJump();
                 jumpBufferCounter = 0f;
             }
         }
-        
+
         private void UpdateGroundCheck()
         {
             wasGrounded = isGrounded;
@@ -172,12 +168,12 @@ namespace Hunt
 
             isGrounded = hit.collider != null;
 
-            if(isGrounded)
+            if (isGrounded)
             {
                 coyoteTimeCounter = coyoteTime;
             }
 
-            if(!wasGrounded && isGrounded)
+            if (!wasGrounded && isGrounded)
             {
                 OnLanded();
             }
@@ -202,7 +198,7 @@ namespace Hunt
 
         private void OnDestroy()
         {
-            if(inputKey != null)
+            if (inputKey != null)
             {
                 inputKey.Player.Jump.performed -= OnJumpPerformed;
                 inputKey.Player.Attack.performed -= OnAttackPerformed;

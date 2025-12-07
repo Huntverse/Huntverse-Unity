@@ -9,6 +9,8 @@ namespace Hunt
         public InputSystem_Actions.PlayerActions Player;
         protected override void Awake()
         {
+            Action = new InputSystem_Actions();
+            Player = Action.Player;
             base.Awake();
         }
 

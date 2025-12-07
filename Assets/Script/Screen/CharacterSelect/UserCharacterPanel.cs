@@ -16,15 +16,7 @@ namespace Hunt
         [SerializeField] private Image illustImg;
         [SerializeField] private TextMeshProUGUI savePointText;
         [SerializeField] private TextMeshProUGUI professionText;
-        [SerializeField] private Button enterButton;
-        private void Awake()
-        {
-            enterButton.onClick.AddListener(() => EnterVillage().Forget());
-        }
-        private async UniTask EnterVillage()
-        {
-            await SceneLoadHelper.Shared.LoadSceneAdditiveMode(ResourceKeyConst.Ks_Village);
-        }
+       
         private async UniTask sendMsg()
         {
 
