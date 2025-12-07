@@ -63,7 +63,7 @@ public class SystemBoot : MonoBehaviourSingleton<SystemBoot>
             }
             else
             {
-                SceneLoadHelper.Shared?.LoadSceneSingleMode(ResourceKeyConst.Ks_Mainmenu);
+                SceneLoadHelper.Shared?.LoadSceneSingleMode(ResourceKeyConst.Ks_Mainmenu,false);
             }
         }
     }
