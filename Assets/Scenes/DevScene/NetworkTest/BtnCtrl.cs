@@ -14,7 +14,7 @@ public class BtnCtrl : MonoBehaviour
     {
 
     }
-    void OnDisconn(hunt.Net.NetModule.ERROR e, string msg)
+    void OnDisconn(Hunt.Net.NetModule.ERROR e, string msg)
     {
         Debug.Log(msg);
     }
@@ -31,8 +31,8 @@ public class BtnCtrl : MonoBehaviour
     public void OnConnBtn()
     {
         Debug.Log("On ConnBtn");
-        hunt.Net.NetworkManager.Shared.ConnLoginServerSync(OnDisconn, OnConnSucc, OnConnFail);
-        hunt.Net.NetworkManager.Shared.StartLoginServer();
+        Hunt.Net.NetworkManager.Shared.ConnLoginServerSync(OnDisconn, OnConnSucc, OnConnFail);
+        Hunt.Net.NetworkManager.Shared.StartLoginServer();
     }
 
     public void OnSendBtn()
@@ -41,12 +41,12 @@ public class BtnCtrl : MonoBehaviour
         Hunt.Login.LoginTestReq req = new Hunt.Login.LoginTestReq();
         req.Data = "안녕하세요";
         req.Num = 1;
-        hunt.Net.NetworkManager.Shared.SendToLogin(Hunt.Common.PacketType.LoginTestReq, req);
+        Hunt.Net.NetworkManager.Shared.SendToLogin(Hunt.Common.MsgId.LoginTestReq, req);
     }
 
     public void OnDisConnBtn()
     {
         Debug.Log("On DisConnBtn");
-        hunt.Net.NetworkManager.Shared.DisConnLoginServer();
+        Hunt.Net.NetworkManager.Shared.DisConnLoginServer();
     }
 }

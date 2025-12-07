@@ -24,19 +24,17 @@ namespace Hunt.Common {
     static CommonReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "Cgxjb21tb24ucHJvdG8SC0h1bnQuQ29tbW9uGhJjb21tb25fdHlwZXMucHJv",
-            "dG8icAoOU2VydmVyRW5kcG9pbnQSDAoEbmFtZRgBIAEoCRIlCgRUeXBlGAIg",
-            "ASgOMhcuSHVudC5Db21tb24uU2VydmVyVHlwZRIPCgd3b3JsZElkGAMgASgH",
-            "EgoKAmlwGAQgASgJEgwKBHBvcnQYBSABKAciKgoJV29ybGRJbmZvEg8KB3dv",
-            "cmxkSWQYASABKAcSDAoEbmFtZRgCIAEoCSJDCg9Mb2dpbkJ5VG9rZW5SZXES",
-            "EQoJYWNjb3VudElkGAEgASgGEg0KBXRva2VuGAIgASgGEg4KBmNoYXJJZBgD",
-            "IAEoBiI6Cg9Mb2dpbkJ5VG9rZW5BbnMSJwoHZXJyVHlwZRgBIAEoDjIWLkh1",
-            "bnQuQ29tbW9uLkVycm9yVHlwZSpfCgpTZXJ2ZXJUeXBlEgsKB1NUX05PTkUQ",
-            "ABIOCgpTVF9WSUxJQUdFEAESCwoHU1RfUkFJRBACEgsKB1NUX0NIQVQQAxIM",
-            "CghTVF9MT0dJThAEEgwKCHNUX0xPQ0FMEAViBnByb3RvMw=="));
+            "Cgxjb21tb24ucHJvdG8SC0h1bnQuQ29tbW9uGhFjb21tb25fdHlwZS5wcm90",
+            "bxoOZXJyX3R5cGUucHJvdG8icAoOU2VydmVyRW5kcG9pbnQSDAoEbmFtZRgB",
+            "IAEoCRIlCgRUeXBlGAIgASgOMhcuSHVudC5Db21tb24uU2VydmVyVHlwZRIP",
+            "Cgd3b3JsZElkGAMgASgHEgoKAmlwGAQgASgJEgwKBHBvcnQYBSABKAciKgoJ",
+            "V29ybGRJbmZvEg8KB3dvcmxkSWQYASABKAcSDAoEbmFtZRgCIAEoCSJDCg9M",
+            "b2dpbkJ5VG9rZW5SZXESEQoJYWNjb3VudElkGAEgASgGEg0KBXRva2VuGAIg",
+            "ASgGEg4KBmNoYXJJZBgDIAEoBiI6Cg9Mb2dpbkJ5VG9rZW5BbnMSJwoHZXJy",
+            "VHlwZRgBIAEoDjIWLkh1bnQuQ29tbW9uLkVycm9yVHlwZWIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
-          new pbr::FileDescriptor[] { global::Hunt.Common.CommonTypesReflection.Descriptor, },
-          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Hunt.Common.ServerType), }, null, new pbr::GeneratedClrTypeInfo[] {
+          new pbr::FileDescriptor[] { global::Hunt.Common.CommonTypeReflection.Descriptor, global::Hunt.Common.ErrTypeReflection.Descriptor, },
+          new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Hunt.Common.ServerEndpoint), global::Hunt.Common.ServerEndpoint.Parser, new[]{ "Name", "Type", "WorldId", "Ip", "Port" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Hunt.Common.WorldInfo), global::Hunt.Common.WorldInfo.Parser, new[]{ "WorldId", "Name" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Hunt.Common.LoginByTokenReq), global::Hunt.Common.LoginByTokenReq.Parser, new[]{ "AccountId", "Token", "CharId" }, null, null, null, null),
@@ -46,21 +44,6 @@ namespace Hunt.Common {
     #endregion
 
   }
-  #region Enums
-  public enum ServerType {
-    [pbr::OriginalName("ST_NONE")] StNone = 0,
-    [pbr::OriginalName("ST_VILIAGE")] StViliage = 1,
-    [pbr::OriginalName("ST_RAID")] StRaid = 2,
-    [pbr::OriginalName("ST_CHAT")] StChat = 3,
-    [pbr::OriginalName("ST_LOGIN")] StLogin = 4,
-    /// <summary>
-    ///로컬 서버
-    /// </summary>
-    [pbr::OriginalName("sT_LOCAL")] STLocal = 5,
-  }
-
-  #endregion
-
   #region Messages
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class ServerEndpoint : pb::IMessage<ServerEndpoint>

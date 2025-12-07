@@ -25,7 +25,7 @@ using System.Collections.Generic;
  * 
  */
 
-namespace hunt.Net
+namespace Hunt.Net
 {
     public class NetModule
     {
@@ -279,20 +279,20 @@ namespace hunt.Net
             Action<byte[], int, int> handler = null;
             if ((m_type & ServiceType.Common) != ServiceType.None)
             {
-                handler = NetworkManager.Shared.GetDispatcher(ServiceType.Common, (PacketType)packetType);
+                handler = NetworkManager.Shared.GetDispatcher(ServiceType.Common, (Common.MsgId)packetType);
             }
             if ((m_type & ServiceType.Game) != ServiceType.None)
             {
-                handler = NetworkManager.Shared.GetDispatcher(ServiceType.Game, (PacketType)packetType);
+                handler = NetworkManager.Shared.GetDispatcher(ServiceType.Game, (Common.MsgId)packetType);
             }
             if ((m_type & ServiceType.Login) != ServiceType.None)
             {
-                handler = NetworkManager.Shared.GetDispatcher(ServiceType.Login, (PacketType)packetType);
+                handler = NetworkManager.Shared.GetDispatcher(ServiceType.Login, (Common.MsgId)packetType);
             }
 #if UNITY_EDITOR
             if ((m_type & ServiceType.Cheat) != ServiceType.None)
             {
-                handler = NetworkManager.Shared.GetDispatcher(ServiceType.Cheat, (PacketType)packetType);
+                handler = NetworkManager.Shared.GetDispatcher(ServiceType.Cheat, (Common.MsgId)packetType);
             }
 #endif
             Debug.Assert(handler != null);
@@ -303,7 +303,7 @@ namespace hunt.Net
             handler(data, MsgIdSize, len - MsgIdSize);// header 크기만큼이 오프셋
         }
 
-        public void Send<ProtoT>(PacketType msgId, ProtoT data) where ProtoT : Google.Protobuf.IMessage
+        public void Send<ProtoT>(Common.MsgId msgId, ProtoT data) where ProtoT : Google.Protobuf.IMessage
         {
             var serData = data.ToByteArray();
 

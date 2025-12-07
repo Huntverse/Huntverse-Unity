@@ -6,10 +6,10 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 using UnityEngine;
-using static hunt.Net.NetModule;
+
 //using hunt.Net;
 
-namespace hunt.Net
+namespace Hunt.Net
 {
     public class NetworkManager : MonoBehaviourSingleton<NetworkManager>
     {
@@ -27,11 +27,11 @@ namespace hunt.Net
             m_dispatchers = new Dictionary<NetModule.ServiceType, MsgDispatcherBase>();
             //치트는 에디터에서만 가능
 #if UNITY_EDITOR
-            m_dispatchers.Add(ServiceType.Cheat, new CheatMsgDispatcher());
+            m_dispatchers.Add(NetModule.ServiceType.Cheat, new CheatMsgDispatcher());
 #endif
-            m_dispatchers.Add(ServiceType.Login, new LoginMsgDispatcher());
-            m_dispatchers.Add(ServiceType.Common, new CommonMsgDispatcher());
-            m_dispatchers.Add(ServiceType.Game, new GameMsgDispatcher());
+            m_dispatchers.Add(NetModule.ServiceType.Login, new LoginMsgDispatcher());
+            m_dispatchers.Add(NetModule.ServiceType.Common, new CommonMsgDispatcher());
+            m_dispatchers.Add(NetModule.ServiceType.Game, new GameMsgDispatcher());
             foreach (var dispatcher in m_dispatchers.Values)
             {
                 var suc = dispatcher.Init();
@@ -41,13 +41,13 @@ namespace hunt.Net
 
         public async Task<bool> ConnLoginServer(Action<NetModule.ERROR, string>? disconnectHandler, Action connSuccessHandler, Action<SocketException> connFailHandler)
         {
-            m_loginConnection = new NetModule(ServiceType.Login, disconnectHandler, connSuccessHandler, connFailHandler);
+            m_loginConnection = new NetModule(NetModule.ServiceType.Login, disconnectHandler, connSuccessHandler, connFailHandler);
             return await m_loginConnection.AsyncConn("127.0.0.1", 9000);
         }
 
         public bool ConnLoginServerSync(Action<NetModule.ERROR, string>? disconnectHandler, Action connSuccessHandler, Action<SocketException> connFailHandler)
         {
-            m_loginConnection = new NetModule(ServiceType.Login, disconnectHandler, connSuccessHandler, connFailHandler);
+            m_loginConnection = new NetModule(NetModule.ServiceType.Login, disconnectHandler, connSuccessHandler, connFailHandler);
             return m_loginConnection.SyncConn("127.0.0.1", 9000);
         }
 
@@ -61,10 +61,10 @@ namespace hunt.Net
             m_loginConnection.Stop();
         }
 
-        public void SendToLogin<ProtoT>(Hunt.Common.PacketType type, ProtoT data) where ProtoT : Google.Protobuf.IMessage
+        public void SendToLogin<ProtoT>(Hunt.Common.MsgId type, ProtoT data) where ProtoT : Google.Protobuf.IMessage
             => m_loginConnection.Send(type, data);
 
-        public NetModule MakeNetModule(ServiceType type, Action<NetModule.ERROR, string> disconnectHandler, Action connSuccessHandler, Action<SocketException> connFailHandler)
+        public NetModule MakeNetModule(NetModule.ServiceType type, Action<NetModule.ERROR, string> disconnectHandler, Action connSuccessHandler, Action<SocketException> connFailHandler)
         {
             return new NetModule(type, disconnectHandler, connSuccessHandler, connFailHandler);
         }
@@ -98,7 +98,7 @@ namespace hunt.Net
             return suc;
         }
 
-        public Action<byte[], int, int> GetDispatcher(NetModule.ServiceType serviceType, Hunt.Common.PacketType packetType)
+        public Action<byte[], int, int> GetDispatcher(NetModule.ServiceType serviceType, Hunt.Common.MsgId packetType)
         {
             m_dispatchers.TryGetValue(serviceType, out var dispatcher);
             return dispatcher.GetHandler(packetType);

@@ -12,7 +12,7 @@ using System.Linq;
 //읽기 버퍼를 가져가면, 더이상 읽기 버퍼는 상호배제 하지 않음
 //  send하는 동안 lock 잡으면 안되잖음.
 
-namespace hunt.Net
+namespace Hunt.Net
 {
     class InternalSendBuffer
     {
