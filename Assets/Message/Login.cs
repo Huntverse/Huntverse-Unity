@@ -28,27 +28,28 @@ namespace Hunt.Login {
             "cHJvdG8aDmVycl90eXBlLnByb3RvGgxjb21tb24ucHJvdG8aD0dhbWUvZ2Ft",
             "ZS5wcm90byJYChRTZXJ2ZXJDb25nZXN0aW9uSW5mbxIPCgd3b3JsZElkGAEg",
             "ASgHEi8KCmNvbmdlc3Rpb24YAyABKA4yGy5IdW50LkNvbW1vbi5Db25nZXN0",
-            "aW9uVHlwZSIiCghMb2dpblJlcRIKCgJpZBgBIAEoCRIKCgJwdxgCIAEoCSKK",
+            "aW9uVHlwZSIiCghMb2dpblJlcRIKCgJpZBgBIAEoCRIKCgJwdxgCIAEoCSKd",
             "AQoTU2ltcGxlQ2hhcmFjdGVySW5mbxIPCgd3b3JsZElkGAEgASgHEg4KBmNo",
-            "YXJJZBgCIAEoBhIMCgRuYW1lGAMgASgJEg0KBWxldmVsGAQgASgGEg0KBW1h",
-            "cElkGAUgASgGEiYKCXN0YXRJbmZvcxgGIAMoCzITLkh1bnQuR2FtZS5TdGF0",
-            "SW5mbyKHAgoITG9naW5BbnMSJwoHZXJyVHlwZRgBIAEoDjIWLkh1bnQuQ29t",
-            "bW9uLkVycm9yVHlwZRIqCgp3b3JsZEluZm9zGAIgASgLMhYuSHVudC5Db21t",
-            "b24uV29ybGRJbmZvEjgKDmNvZ2VzdGlvbkluZm9zGAMgAygLMiAuSHVudC5M",
-            "b2dpbi5TZXJ2ZXJDb25nZXN0aW9uSW5mbxIyCgljaGFySW5mb3MYBCADKAsy",
-            "Hy5IdW50LkxvZ2luLlNpbXBsZUNoYXJhY3RlckluZm8SOAoTc2VydmVyRW5k",
-            "UG9pbnRJbmZvcxgFIAMoCzIbLkh1bnQuQ29tbW9uLlNlcnZlckVuZHBvaW50",
-            "IjQKEFJldHVyblRvTG9naW5SZXESEQoJYWNjb3VudElkGAEgASgGEg0KBXRv",
-            "a2VuGAIgASgGIjsKEFJldHVyblRvTG9naW5BbnMSJwoHZXJyVHlwZRgBIAEo",
-            "DjIWLkh1bnQuQ29tbW9uLkVycm9yVHlwZSIpCgxMb2dpblRlc3RSZXESDAoE",
-            "ZGF0YRgBIAEoCRILCgNudW0YAiABKAciKQoMTG9naW5UZXN0QW5zEgwKBGRh",
-            "dGEYASABKAkSCwoDbnVtGAIgASgHYgZwcm90bzM="));
+            "YXJJZBgCIAEoBhIMCgRuYW1lGAMgASgJEhEKCWNsYXNzVHlwZRgEIAEoDRIN",
+            "CgVsZXZlbBgFIAEoBhINCgVtYXBJZBgGIAEoBhImCglzdGF0SW5mb3MYByAD",
+            "KAsyEy5IdW50LkdhbWUuU3RhdEluZm8ihwIKCExvZ2luQW5zEicKB2VyclR5",
+            "cGUYASABKA4yFi5IdW50LkNvbW1vbi5FcnJvclR5cGUSKgoKd29ybGRJbmZv",
+            "cxgCIAEoCzIWLkh1bnQuQ29tbW9uLldvcmxkSW5mbxI4Cg5jb2dlc3Rpb25J",
+            "bmZvcxgDIAMoCzIgLkh1bnQuTG9naW4uU2VydmVyQ29uZ2VzdGlvbkluZm8S",
+            "MgoJY2hhckluZm9zGAQgAygLMh8uSHVudC5Mb2dpbi5TaW1wbGVDaGFyYWN0",
+            "ZXJJbmZvEjgKE3NlcnZlckVuZFBvaW50SW5mb3MYBSADKAsyGy5IdW50LkNv",
+            "bW1vbi5TZXJ2ZXJFbmRwb2ludCI0ChBSZXR1cm5Ub0xvZ2luUmVxEhEKCWFj",
+            "Y291bnRJZBgBIAEoBhINCgV0b2tlbhgCIAEoBiI7ChBSZXR1cm5Ub0xvZ2lu",
+            "QW5zEicKB2VyclR5cGUYASABKA4yFi5IdW50LkNvbW1vbi5FcnJvclR5cGUi",
+            "KQoMTG9naW5UZXN0UmVxEgwKBGRhdGEYASABKAkSCwoDbnVtGAIgASgHIikK",
+            "DExvZ2luVGVzdEFucxIMCgRkYXRhGAEgASgJEgsKA251bRgCIAEoB2IGcHJv",
+            "dG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Hunt.Common.CommonTypeReflection.Descriptor, global::Hunt.Common.ErrTypeReflection.Descriptor, global::Hunt.Common.CommonReflection.Descriptor, global::Hunt.Game.GameReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Hunt.Login.ServerCongestionInfo), global::Hunt.Login.ServerCongestionInfo.Parser, new[]{ "WorldId", "Congestion" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Hunt.Login.LoginReq), global::Hunt.Login.LoginReq.Parser, new[]{ "Id", "Pw" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Hunt.Login.SimpleCharacterInfo), global::Hunt.Login.SimpleCharacterInfo.Parser, new[]{ "WorldId", "CharId", "Name", "Level", "MapId", "StatInfos" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Hunt.Login.SimpleCharacterInfo), global::Hunt.Login.SimpleCharacterInfo.Parser, new[]{ "WorldId", "CharId", "Name", "ClassType", "Level", "MapId", "StatInfos" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Hunt.Login.LoginAns), global::Hunt.Login.LoginAns.Parser, new[]{ "ErrType", "WorldInfos", "CogestionInfos", "CharInfos", "ServerEndPointInfos" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Hunt.Login.ReturnToLoginReq), global::Hunt.Login.ReturnToLoginReq.Parser, new[]{ "AccountId", "Token" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Hunt.Login.ReturnToLoginAns), global::Hunt.Login.ReturnToLoginAns.Parser, new[]{ "ErrType" }, null, null, null, null),
@@ -574,6 +575,7 @@ namespace Hunt.Login {
       worldId_ = other.worldId_;
       charId_ = other.charId_;
       name_ = other.name_;
+      classType_ = other.classType_;
       level_ = other.level_;
       mapId_ = other.mapId_;
       statInfos_ = other.statInfos_.Clone();
@@ -631,8 +633,23 @@ namespace Hunt.Login {
       }
     }
 
+    /// <summary>Field number for the "classType" field.</summary>
+    public const int ClassTypeFieldNumber = 4;
+    private uint classType_;
+    /// <summary>
+    ///직업 정보
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public uint ClassType {
+      get { return classType_; }
+      set {
+        classType_ = value;
+      }
+    }
+
     /// <summary>Field number for the "level" field.</summary>
-    public const int LevelFieldNumber = 4;
+    public const int LevelFieldNumber = 5;
     private ulong level_;
     /// <summary>
     ///렙
@@ -647,7 +664,7 @@ namespace Hunt.Login {
     }
 
     /// <summary>Field number for the "mapId" field.</summary>
-    public const int MapIdFieldNumber = 5;
+    public const int MapIdFieldNumber = 6;
     private ulong mapId_;
     /// <summary>
     ///viliage에서 마지막 맵 id
@@ -662,9 +679,9 @@ namespace Hunt.Login {
     }
 
     /// <summary>Field number for the "statInfos" field.</summary>
-    public const int StatInfosFieldNumber = 6;
+    public const int StatInfosFieldNumber = 7;
     private static readonly pb::FieldCodec<global::Hunt.Game.StatInfo> _repeated_statInfos_codec
-        = pb::FieldCodec.ForMessage(50, global::Hunt.Game.StatInfo.Parser);
+        = pb::FieldCodec.ForMessage(58, global::Hunt.Game.StatInfo.Parser);
     private readonly pbc::RepeatedField<global::Hunt.Game.StatInfo> statInfos_ = new pbc::RepeatedField<global::Hunt.Game.StatInfo>();
     /// <summary>
     ///가지고 있는 스탯의 정도들
@@ -693,6 +710,7 @@ namespace Hunt.Login {
       if (WorldId != other.WorldId) return false;
       if (CharId != other.CharId) return false;
       if (Name != other.Name) return false;
+      if (ClassType != other.ClassType) return false;
       if (Level != other.Level) return false;
       if (MapId != other.MapId) return false;
       if(!statInfos_.Equals(other.statInfos_)) return false;
@@ -706,6 +724,7 @@ namespace Hunt.Login {
       if (WorldId != 0) hash ^= WorldId.GetHashCode();
       if (CharId != 0UL) hash ^= CharId.GetHashCode();
       if (Name.Length != 0) hash ^= Name.GetHashCode();
+      if (ClassType != 0) hash ^= ClassType.GetHashCode();
       if (Level != 0UL) hash ^= Level.GetHashCode();
       if (MapId != 0UL) hash ^= MapId.GetHashCode();
       hash ^= statInfos_.GetHashCode();
@@ -739,12 +758,16 @@ namespace Hunt.Login {
         output.WriteRawTag(26);
         output.WriteString(Name);
       }
+      if (ClassType != 0) {
+        output.WriteRawTag(32);
+        output.WriteUInt32(ClassType);
+      }
       if (Level != 0UL) {
-        output.WriteRawTag(33);
+        output.WriteRawTag(41);
         output.WriteFixed64(Level);
       }
       if (MapId != 0UL) {
-        output.WriteRawTag(41);
+        output.WriteRawTag(49);
         output.WriteFixed64(MapId);
       }
       statInfos_.WriteTo(output, _repeated_statInfos_codec);
@@ -770,12 +793,16 @@ namespace Hunt.Login {
         output.WriteRawTag(26);
         output.WriteString(Name);
       }
+      if (ClassType != 0) {
+        output.WriteRawTag(32);
+        output.WriteUInt32(ClassType);
+      }
       if (Level != 0UL) {
-        output.WriteRawTag(33);
+        output.WriteRawTag(41);
         output.WriteFixed64(Level);
       }
       if (MapId != 0UL) {
-        output.WriteRawTag(41);
+        output.WriteRawTag(49);
         output.WriteFixed64(MapId);
       }
       statInfos_.WriteTo(ref output, _repeated_statInfos_codec);
@@ -797,6 +824,9 @@ namespace Hunt.Login {
       }
       if (Name.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(Name);
+      }
+      if (ClassType != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(ClassType);
       }
       if (Level != 0UL) {
         size += 1 + 8;
@@ -825,6 +855,9 @@ namespace Hunt.Login {
       }
       if (other.Name.Length != 0) {
         Name = other.Name;
+      }
+      if (other.ClassType != 0) {
+        ClassType = other.ClassType;
       }
       if (other.Level != 0UL) {
         Level = other.Level;
@@ -864,15 +897,19 @@ namespace Hunt.Login {
             Name = input.ReadString();
             break;
           }
-          case 33: {
-            Level = input.ReadFixed64();
+          case 32: {
+            ClassType = input.ReadUInt32();
             break;
           }
           case 41: {
+            Level = input.ReadFixed64();
+            break;
+          }
+          case 49: {
             MapId = input.ReadFixed64();
             break;
           }
-          case 50: {
+          case 58: {
             statInfos_.AddEntriesFrom(input, _repeated_statInfos_codec);
             break;
           }
@@ -907,15 +944,19 @@ namespace Hunt.Login {
             Name = input.ReadString();
             break;
           }
-          case 33: {
-            Level = input.ReadFixed64();
+          case 32: {
+            ClassType = input.ReadUInt32();
             break;
           }
           case 41: {
+            Level = input.ReadFixed64();
+            break;
+          }
+          case 49: {
             MapId = input.ReadFixed64();
             break;
           }
-          case 50: {
+          case 58: {
             statInfos_.AddEntriesFrom(ref input, _repeated_statInfos_codec);
             break;
           }
