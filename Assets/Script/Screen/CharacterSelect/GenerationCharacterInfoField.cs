@@ -9,7 +9,7 @@ namespace Hunt
     public class GenerationCharacterInfoField : MonoBehaviour
     {
         [SerializeField] private Button selectButton;
-        public ProfessionType professionType;
+        public ClassType professionType;
         public string characterName => BindKeyConst.GetProfessionMatchName(professionType);
         public List<float> stats = new List<float>(5);
         public string storyString;

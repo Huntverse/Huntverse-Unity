@@ -133,34 +133,24 @@ namespace Hunt
         /// </summary>
         /// <param name="channelName">채널 이름</param>
         /// <param name="res">캐릭터 필드 리스트</param>
-        public void OnRecvCharacterFieldViewUpdate(string channelName, CharacterFieldListRequst res)
+        public void OnRecvCharacterList(string channelName, List<CharacterModel> characters)
         {
-            if (res?.chfields == null)
+            if (characters == null)
             {
-                "[Character] OnRecvCharacterFieldViewUpdate - res is null".DLog();
+                "[Character] OnRecvCharacterList - character is null".DLog();
                 return;
             }
 
             if (string.IsNullOrEmpty(channelName))
             {
-                "[Character] OnRecvCharacterFieldViewUpdate - Invalid channel name".DLog();
+                "[Character] OnRecvCharacterList - Invalid channel name".DLog();
                 return;
             }
 
-            $"[Character] OnRecvCharacterFieldViewUpdate - Channel: {channelName}, Count: {res.chfields.Count}".DLog();
+            $"[Character] OnRecvCharacterList - Channel: {channelName}, Count: {characters.Count}".DLog();
 
-            
-            var models = new List<CharacterModel>();
-            for (int i = 0; i < res.chfields.Count && i < characterInfoFields.Count; i++)
-            {
-                if (characterInfoFields[i] == null) continue;
-
-                var model = CharacterModel.FromPayload(res.chfields[i]);
-                models.Add(model);
-            }
-
-            channelCharacterCache[channelName] = models;
-            $"[Character] Cached characters for channel: {channelName}, Count: {models.Count}".DLog();
+            channelCharacterCache[channelName] = characters;
+            $"[Character] Cached characters for channel: {channelName}, Count: {characters.Count}".DLog();
         }
 
         /// <summary>
@@ -191,17 +181,27 @@ namespace Hunt
                 var model = selected.CurrentModel;
                 if (model != null)
                 {
+                    var simpleChar = GameSession.Shared.CharacterInfos?.Find(c=>c.Name==model.name);
+                    if (simpleChar != null)
+                    {
+                        GameSession.Shared.SelectCharacter(simpleChar);
+                        $"[Character] GameSession에 저장 : {simpleChar.Name} (CharId: {simpleChar.CharId}".DLog();
+                    }
+                    else
+                    {
+                        GameSession.Shared.SelectCharacterModel(model);
+                        $"⚠ [Character] SimpleCharacterInfo를 찾을 수 없음 : {model.name}".DError();
+                    }
+                    string illustKey = BindKeyConst.GetIllustKeyByProfession(model.classtype);
                    
-                    string illustKey = BindKeyConst.GetProfessionIllustKey(model.profession);
-                    string characterName = BindKeyConst.GetProfessionMatchName(model.profession);
                    
                     await userCharacterPanel.HandleUpdateConfig(
                         level: model.level,
                         name: model.name,
                         stats: model.stats,
                         illustKey: illustKey,
-                        savepoint: model.savepoint,
-                        characterProfession: characterName
+                        mapId: model.mapId,
+                        characterProfession: model.classtype
                     );
 
                     $"✅ [Character] Updated userCharacterPanel with character: {model.name} (Level: {model.level})".DLog();
@@ -266,7 +266,7 @@ namespace Hunt
                 nextButton.interactable = currentGenerationCharacterIndex < newCharacterInfoFields.Count - 1;
             }
         }
-        public void OnCreateNewCharacter(ProfessionType profession)
+        public void OnCreateNewCharacter(ClassType profession)
         {
             $"캐릭터 생성".DLog();
         }

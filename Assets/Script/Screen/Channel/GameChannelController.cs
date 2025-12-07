@@ -23,8 +23,8 @@ namespace Hunt
             for (int i = 0; i < res.channels.Count && i < gameChannelFields.Count; i++)
             {
                 if (gameChannelFields[i] == null) continue;
-                var model = ChannelModel.FromPayload(res.channels[i]);
-                $"[Channel] model : {model.ChannelName}, Count: {model.MyCharacterCount}".DLog();
+                var model = res.channels[i];
+                $"[Channel] model: {model.channelName}, Count: {model.myCharacterCount}".DLog();
                 gameChannelFields[i].Bind(model);
             }
         }
