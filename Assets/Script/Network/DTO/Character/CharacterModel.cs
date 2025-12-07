@@ -3,24 +3,17 @@ using Newtonsoft.Json.Converters;
 using System;
 using UnityEngine;
 
-namespace hunt
+namespace Hunt
 {
-    [Serializable]
-    [JsonConverter(typeof(StringEnumConverter))]
-    public enum ProfessionType
-    {
-        Worrior,
-        Magician,
-        Tanker,
-        Unknwon
-
-    }
+    
 
     public class CharacterModel
     {
         [JsonProperty("profession")] public ProfessionType profession;
         [JsonProperty("name")] public string name;
         [JsonProperty("level")] public int level;
+        [JsonProperty("savepoint")] public string savepoint;
+        [JsonProperty("stats")] public float[] stats;
 
         [JsonIgnore] public Sprite icon;
         [JsonIgnore] public bool IsCreated => !string.IsNullOrEmpty(name);
@@ -32,7 +25,9 @@ namespace hunt
                 level = p.level,
                 name = p.name,
                 profession = p.professiontype,
-                icon = p.icon
+                icon = p.icon,
+                savepoint = p.savepoint,
+                stats = p.stats
             };
 
 

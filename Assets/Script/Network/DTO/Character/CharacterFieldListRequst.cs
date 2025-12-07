@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 using System.Collections.Generic;
-namespace hunt
+namespace Hunt
 {
     [Serializable]
     public class CharacterInfoPayload
@@ -10,6 +10,8 @@ namespace hunt
         public ProfessionType professiontype;
         public string name;
         public int level;
+        public string savepoint;
+        public float[] stats;
     }
     [Serializable]
     public class CharacterFieldListRequst

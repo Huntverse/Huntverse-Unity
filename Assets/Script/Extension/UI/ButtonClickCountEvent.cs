@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-namespace hunt
+namespace Hunt
 {
     [RequireComponent(typeof(Button))]
     public class ButtonClickCountEvent : MonoBehaviour

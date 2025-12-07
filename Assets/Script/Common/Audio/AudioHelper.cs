@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
 
-namespace hunt
+namespace Hunt
 {
     public class AudioHelper : MonoBehaviourSingleton<AudioHelper>
     {
@@ -24,7 +24,7 @@ namespace hunt
         private AudioSource bgmSource;
         private bool isPreloadComplete = false;
 
-        protected override bool DontDestroy => base.DontDestroy;
+        protected override bool DontDestroy => true;
         protected override void Awake()
         {
             base.Awake();
@@ -74,7 +74,7 @@ namespace hunt
 
             List<UniTask> loadTasks = new List<UniTask>();
 
-            foreach (var audioKey in AudioConst.GetAllSfxKeys())
+            foreach (var audioKey in AudioKeyConst.GetAllSfxKeys())
             {
                 if (!string.IsNullOrEmpty(audioKey))
                 {

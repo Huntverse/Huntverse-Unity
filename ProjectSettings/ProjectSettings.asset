@@ -143,7 +143,8 @@ PlayerSettings:
   visionOSBundleVersion: 1.0
   tvOSBundleVersion: 1.0
   bundleVersion: 1.0
-  preloadedAssets: []
+  preloadedAssets:
+  - {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   metroInputSource: 0
   wsaTransparentSwapchain: 0
   m_HolographicPauseOnTrackingLoss: 1
@@ -593,7 +594,7 @@ PlayerSettings:
     PS5: UNITY_POST_PROCESSING_STACK_V2
     QNX: ENABLE_JSON_CATALOG;UNITY_POST_PROCESSING_STACK_V2
     Server: ENABLE_JSON_CATALOG
-    Standalone: ENABLE_JSON_CATALOG;UNITY_POST_PROCESSING_STACK_V2;STEAMWORKS_NET;MIRROR;MIRROR_89_OR_NEWER;MIRROR_90_OR_NEWER;MIRROR_93_OR_NEWER;MIRROR_96_OR_NEWER;EDGEGAP_PLUGIN_SERVERS
+    Standalone: ENABLE_JSON_CATALOG;UNITY_POST_PROCESSING_STACK_V2;STEAMWORKS_NET;EDGEGAP_PLUGIN_SERVERS
     VisionOS: UNITY_POST_PROCESSING_STACK_V2
     WebGL: ENABLE_JSON_CATALOG;UNITY_POST_PROCESSING_STACK_V2
     Windows Store Apps: ENABLE_JSON_CATALOG
@@ -602,8 +603,10 @@ PlayerSettings:
     tvOS: ENABLE_JSON_CATALOG;UNITY_POST_PROCESSING_STACK_V2
   additionalCompilerArguments: {}
   platformArchitecture: {}
-  scriptingBackend: {}
-  il2cppCompilerConfiguration: {}
+  scriptingBackend:
+    Standalone: 1
+  il2cppCompilerConfiguration:
+    Standalone: 0
   il2cppCodeGeneration: {}
   il2cppStacktraceInformation: {}
   managedStrippingLevel: {}
@@ -616,7 +619,7 @@ PlayerSettings:
   gcIncremental: 1
   gcWBarrierValidation: 0
   apiCompatibilityLevelPerPlatform: {}
-  editorAssembliesCompatibilityLevel: 1
+  editorAssembliesCompatibilityLevel: 3
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
   metroPackageName: Huntverse-Unity
@@ -709,6 +712,6 @@ PlayerSettings:
   hmiLoadingImage: {fileID: 0}
   platformRequiresReadableAssets: 0
   virtualTexturingSupportEnabled: 0
-  insecureHttpOption: 0
+  insecureHttpOption: 2
   androidVulkanDenyFilterList: []
   androidVulkanAllowFilterList: []

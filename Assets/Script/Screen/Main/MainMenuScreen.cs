@@ -1,33 +1,37 @@
 using Cysharp.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.UI;
 
-namespace hunt
+namespace Hunt
 {
 
     public class MainMenuScreen : MonoBehaviour
     {
         [Header("HUDS")]
-        [SerializeField] Canvas mainHud;
-        [SerializeField] Canvas characterSelectHud;
-
-
-        private async void Start()
+        [SerializeField] GameObject mainHud;
+        [SerializeField] GameObject characterSelectHud;
+        [SerializeField] Button enterVillageButton;
+        private async void Awake()
         {
             await UniTask.WaitUntil(() => AudioHelper.Shared);
-            AudioHelper.Shared.PlayBgm(AudioConst.GetSfxKey(AudioType.BGM_MAIN));
+            AudioHelper.Shared.PlayBgm(AudioKeyConst.GetSfxKey(AudioType.BGM_MAIN));
+            enterVillageButton.onClick.AddListener(() => EnterVillage().Forget());
             OnViewMainHud();
         }
-
+        private async UniTask EnterVillage()
+        {
+            await SceneLoadHelper.Shared.LoadSceneSingleMode(ResourceKeyConst.Ks_Village);
+        }
         public void OnViewCharacterSelectHud()
         {
-            if (mainHud.gameObject.activeSelf) mainHud.gameObject.SetActive(false);
-            if (!characterSelectHud.gameObject.activeSelf) characterSelectHud.gameObject.SetActive(true);
+            if (mainHud.activeSelf) mainHud.SetActive(false);
+            if (!characterSelectHud.activeSelf) characterSelectHud.SetActive(true);
         }
 
         public void OnViewMainHud()
         {
-            if (characterSelectHud.gameObject.activeSelf) characterSelectHud.gameObject.SetActive(false);
-            if (!mainHud.gameObject.activeSelf) mainHud.gameObject.SetActive(true);
+            if (characterSelectHud.activeSelf) characterSelectHud.SetActive(false);
+            if (!mainHud.activeSelf) mainHud.SetActive(true);
         }
         public void EnterChracterSelect()
         {
@@ -46,5 +50,9 @@ namespace hunt
 #endif
         }
 
+        private void OnDestroy()
+        {
+            enterVillageButton.onClick.RemoveAllListeners();
+        }
     }
 }

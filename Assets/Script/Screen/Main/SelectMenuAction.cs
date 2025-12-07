@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
 
-namespace hunt.ui
+namespace Hunt.ui
 {
     /// <summary>
     /// 메뉴 리스트를 키보드/마우스로 탐색하고 선택 상태를 표시.
@@ -12,7 +12,7 @@ namespace hunt.ui
     {
         [Header("Menu Items")]
         [SerializeField] private List<GameObject> menuFields = new List<GameObject>();
-        private string selectedBoolName = HuntKeyConst.Ka_isActive;
+        private string selectedBoolName = ResourceKeyConst.Ka_isActive;
         private int initialIndex = 0;
 
         private int currentIndex = -1;

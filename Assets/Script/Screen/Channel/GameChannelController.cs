@@ -1,13 +1,13 @@
 using System.Collections.Generic;
 using UnityEngine;
-namespace hunt
+namespace Hunt
 {
     public class GameChannelController : MonoBehaviourSingleton<GameChannelController>
     {
         [Header("Channel Field")]
         [SerializeField] private List<GameChannelField> gameChannelFields;
 
-        protected override bool DontDestroy => base.DontDestroy;
+        protected override bool DontDestroy => false;
         
         protected override void Awake()
         {
