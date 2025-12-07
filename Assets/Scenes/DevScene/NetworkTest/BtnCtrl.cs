@@ -1,0 +1,52 @@
+﻿using System.Net.Sockets;
+using UnityEngine;
+
+public class BtnCtrl : MonoBehaviour
+{
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    void Start()
+    {
+
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+
+    }
+    void OnDisconn(hunt.Net.NetModule.ERROR e, string msg)
+    {
+        Debug.Log(msg);
+    }
+
+    void OnConnSucc()
+    {
+        Debug.Log("Conn Succ");
+    }
+
+    void OnConnFail(SocketException e)
+    {
+        Debug.Log(e.Message);
+    }
+    public void OnConnBtn()
+    {
+        Debug.Log("On ConnBtn");
+        hunt.Net.NetworkManager.Shared.ConnLoginServerSync(OnDisconn, OnConnSucc, OnConnFail);
+        hunt.Net.NetworkManager.Shared.StartLoginServer();
+    }
+
+    public void OnSendBtn()
+    {
+        Debug.Log("On SendBtn");
+        Hunt.Login.LoginTestReq req = new Hunt.Login.LoginTestReq();
+        req.Data = "안녕하세요";
+        req.Num = 1;
+        hunt.Net.NetworkManager.Shared.SendToLogin(Hunt.Common.PacketType.LoginTestReq, req);
+    }
+
+    public void OnDisConnBtn()
+    {
+        Debug.Log("On DisConnBtn");
+        hunt.Net.NetworkManager.Shared.DisConnLoginServer();
+    }
+}
