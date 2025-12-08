@@ -38,6 +38,7 @@ namespace Hunt
 
         private GameObject model;
         private InputManager inputKey;
+        private IsAttackPointer hitpointer;
         #endregion
         private void Awake()
         {
@@ -51,7 +52,8 @@ namespace Hunt
         {
             rb = GetComponent<Rigidbody2D>();
             rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
-
+            hitpointer = GetComponentInChildren<IsAttackPointer>();
+            hitpointer.SetT(new Vector3(2.0f, 0.5f, 0f), new Vector2(1,1.25f));
         }
         private void OnEnable()
         {
@@ -90,6 +92,7 @@ namespace Hunt
             {
                 transform.localScale = new Vector3(-1, 1, 1);
             }
+
         }
 
         public bool isJumpping = false;
@@ -123,8 +126,46 @@ namespace Hunt
             if (!canControl || isAttacking) return;
             isAttacking = true;
             animator?.SetTrigger(AniKeyConst.K_tAttack);
+
+            SpawnAttackVfx();
         }
 
+        private async void SpawnAttackVfx()
+        {
+            $"⚔️ [PlayerAction] SpawnAttackVfx 시작".DLog();
+           
+            if (hitpointer == null)
+            {
+                $"⚔️ [PlayerAction] IsAttackPointer를 찾을 수 없음!".DError();
+                return;
+            }
+                        
+            if (VfxHelper.Shared == null)
+            {
+                $"⚔️ [PlayerAction] VfxHelper.Shared가 null!".DError();
+                return;
+            }
+            
+            var playerScale = transform.localScale;
+            var vfxScale = new Vector3(playerScale.x, 1f, 1f);
+            
+            var vfxHandle = await VfxHelper.Shared.PlayOneShot(
+                VfxKetConst.Kp_plain_hit_astera,
+                hitpointer.GetT().position,
+                hitpointer.GetT().rotation,
+                null,
+                vfxScale
+            );
+            
+            if (vfxHandle == null)
+            {
+                $"⚔️ [PlayerAction] VfxHandle이 null!".DError();
+            }
+            else
+            {
+                $"⚔️ [PlayerAction] VfxHandle 생성 성공!".DLog();
+            }
+        }
         public void HandleJump()
         {
             if (!canControl || isAttacking) return;

@@ -135,4 +135,10 @@ namespace Hunt
         }
 
     }
+
+    public static class VfxKetConst
+    {
+        public static readonly string Kp_plain_hit_astera = "astera_planhit@vfx";
+    }
+
 }

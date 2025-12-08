@@ -84,7 +84,7 @@ namespace Hunt
             return instance;
         }
 
-        private void ReleaseAsset(string key)
+        public void ReleaseAsset(string key)
         {
             if(!assetHandlers.ContainsKey(key))
             {
