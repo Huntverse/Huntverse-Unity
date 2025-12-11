@@ -153,7 +153,7 @@ namespace Hunt
                 VfxKetConst.Kp_plain_hit_astera,
                 hitpointer.GetT().position,
                 hitpointer.GetT().rotation,
-                null,
+                this.transform,
                 vfxScale
             );
             
