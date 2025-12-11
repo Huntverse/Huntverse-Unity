@@ -1,10 +1,10 @@
 using Cysharp.Threading.Tasks;
+using Hunt.Game;
 using System.Threading.Tasks;
 using TMPro;
-using Unity.Jobs.LowLevel.Unsafe;
 using UnityEngine;
 using UnityEngine.UI;
-
+using System.Collections.Generic;
 namespace Hunt
 {
     public class UserCharacterPanel : MonoBehaviour
@@ -16,61 +16,68 @@ namespace Hunt
         [SerializeField] private Image illustImg;
         [SerializeField] private TextMeshProUGUI savePointText;
         [SerializeField] private TextMeshProUGUI professionText;
-       
-        private async UniTask sendMsg()
-        {
 
-        }
-        private async UniTask recvMsg()
-        {
-
-        }
         public async UniTask HandleUpdateConfig(
-            int level,
+            ulong level,
             string name,
-            float[] stats,
+            List<StatInfo> stats,
             string illustKey,
-            string savepoint=null,
-            string characterProfession="")
+            ulong mapId,
+            ClassType characterProfession)
         {
             gameObject.SetActive(false);
             gameObject.SetActive(true);
-            config.Level= level;
-            levelText.text = $"레벨 : "+config.Level.ToString();
 
-            config.UserName= name;
-            nameText.text = config.UserName.ToString();
+            // Level
+            config.Level = level;
+            levelText.text = $"레벨 : {config.Level.ToString()}";
+
+            // Name
+            config.UserName = name;
+            nameText.text = config.UserName;
 
             config.Stats = stats;
-            if (balanceData != null)
+            if (balanceData != null && stats != null && stats.Count >= 5)
             {
-                balanceData.AnimateStatsFromZero(config.Stats[0], config.Stats[1], config.Stats[2], config.Stats[3], config.Stats[4], 1f);
+                // ulong → float 변환 + 정규화 (0~100 → 0~1)
+                float stat0 = stats[0].Point / 100f;
+                float stat1 = stats[1].Point / 100f;
+                float stat2 = stats[2].Point / 100f;
+                float stat3 = stats[3].Point / 100f;
+                float stat4 = stats[4].Point / 100f;
+
+                balanceData.AnimateStatsFromZero(stat0, stat1, stat2, stat3, stat4, 1f);
             }
 
             config.Illust = illustKey;
             var illust = await AbLoader.Shared.LoadAssetAsync<Sprite>(illustKey);
             illustImg.sprite = illust;
 
-            config.Savepoint= savepoint;
-            savePointText.text = $"" + savepoint;
+            config.mapId = mapId;
+            string mapName = BindKeyConst.GetMapNameByMapId(mapId);
+            savePointText.text = mapName;
 
             config.Profession = characterProfession;
-            professionText.text = $"직업 : " + config.Profession;
+            string professionName = BindKeyConst.GetProfessionMatchName(config.Profession);
+            professionText.text = $"직업 : {professionName}";
 
         }
 
-
+        private void OnDisable()
+        {
+            this.gameObject.SetActive(false);
+        }
 
     }
 
     public struct CharacterPanelConfig
     {
-        public int Level;
+        public ulong Level;
         public string UserName;
-        public float[] Stats;
+        public List<StatInfo> Stats;
         public string Illust;
-        public string Savepoint;
-        public string Profession;
+        public ulong mapId;
+        public ClassType Profession;
     }
 
 }

@@ -40,9 +40,9 @@ namespace Hunt
                 selectButton.onClick.RemoveListener(OnClickField);
             }
         }
-        public int Level
+        public ulong Level
         {
-            get => int.Parse(levelText.text);
+            get => ulong.Parse(levelText.text);
             set => levelText.text = value.ToString();
 
         }
@@ -81,7 +81,7 @@ namespace Hunt
         }
 
 
-        public void SetLevelFieldValue(int level) => Level = level;
+        public void SetLevelFieldValue(ulong level) => Level = level;
         public void SetNameFieldValue(string name) => Name = name;
         public void SetSavePointFieldValie(string savepoint) => SavePoint = savepoint;
         public async void Bind(CharacterModel model)
@@ -105,15 +105,15 @@ namespace Hunt
 
             SetLevelFieldValue(model.level);
             SetNameFieldValue(model.name);
-            SetSavePointFieldValie(model.savepoint);
+            SetSavePointFieldValie(BindKeyConst.GetMapNameByMapId(model.mapId));
 
             if (professionIcon != null)
             {
-                await LoadProfessionIcon(model.profession);
+                await LoadProfessionIcon(model.classtype);
             }
         }
 
-        private async UniTask LoadProfessionIcon(ProfessionType profession)
+        private async UniTask LoadProfessionIcon(ClassType profession)
         {
             if (AbLoader.Shared == null)
             {
@@ -121,7 +121,7 @@ namespace Hunt
                 return;
             }
 
-            string iconKey = BindKeyConst.GetProfessionIconKey(profession);
+            string iconKey = BindKeyConst.GetIconKeyByProfession(profession);
             if (string.IsNullOrEmpty(iconKey))
             {
                 professionIcon.enabled = false;

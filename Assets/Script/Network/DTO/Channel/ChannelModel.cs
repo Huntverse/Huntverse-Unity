@@ -1,39 +1,26 @@
-using System.Collections.Generic;
-using System.Linq;
 using Newtonsoft.Json;
+
 namespace Hunt
 {
-
     public class ChannelModel
     {
-        [JsonProperty("channelname")] public string ChannelName;
-        [JsonProperty("congestion")] public int Congestion;
-        [JsonProperty("charactercount")] public int MyCharacterCount;
-        [JsonIgnore] public List<CharacterModel> Characters { get; private set; } = new();
+        public string channelName;
+        public int congestion;
+        public int myCharacterCount;
         
-        // payload 
-        public static ChannelModel FromPayload(ChannelInfoPayload p)
+        /// <summary>
+        /// 혼잡도를 문자열로 변환
+        /// </summary>
+        public string GetCongestionString()
         {
-            var model = new ChannelModel
+            return congestion switch
             {
-                ChannelName = p.channelName,
-                Congestion = p.congestion,
-                MyCharacterCount = p.myCharacterCount
+                1 => "원활",
+                2 => "보통",
+                3 => "혼잡",
+                _ => "보통"
             };
-
-            model.SetCharacters(p.characters);
-            return model;
         }
-
-        public void SetCharacters(IEnumerable<CharacterInfoPayload> payloads)
-        {
-            Characters = payloads?.Select(CharacterModel.FromPayload).ToList() ?? new List<CharacterModel>();
-            if (Characters.Count > 0)
-            {
-                MyCharacterCount = Characters.Count(character => character.IsCreated);
-            }
-        }
-        
     }
 }
 

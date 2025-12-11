@@ -8,7 +8,7 @@ namespace Hunt
 {
     [Serializable]
     [JsonConverter(typeof(StringEnumConverter))]
-    public enum ProfessionType
+    public enum ClassType
     {
         Sword,
         Archer,
@@ -34,6 +34,8 @@ namespace Hunt
 
         // Player
         public static readonly string Kp_Model_Seible = "seible@model";
+        public static readonly string Kp_Model_Astera = "astera@model";
+        public static readonly string Kp_Model_Brunt = "brunt@model";
     }
     public static class AniKeyConst
     {
@@ -75,37 +77,68 @@ namespace Hunt
     }
     public static class BindKeyConst
     {
-        public static string GetProfessionMatchName(ProfessionType profession)
+        public static string GetProfessionMatchName(ClassType profession)
         {
             return profession switch
             {
-                ProfessionType.Sword => "아스트라",
-                ProfessionType.Archer => "세이블",
-                ProfessionType.Fighter => "브런트",
+                ClassType.Sword => "아스트라",
+                ClassType.Archer => "세이블",
+                ClassType.Fighter => "브런트",
                 _ => string.Empty
             };
         }
 
-        public static string GetProfessionIconKey(ProfessionType profession)
+        public static string GetIconKeyByProfession(ClassType profession)
         {
             return profession switch
             {
-                ProfessionType.Sword => ResourceKeyConst.Ks_Profession_Worrior,
-                ProfessionType.Archer => ResourceKeyConst.Ks_Profession_Magician,
-                ProfessionType.Fighter => ResourceKeyConst.Ks_Profession_Tanker,
+                ClassType.Sword => ResourceKeyConst.Ks_Profession_Worrior,
+                ClassType.Archer => ResourceKeyConst.Ks_Profession_Magician,
+                ClassType.Fighter => ResourceKeyConst.Ks_Profession_Tanker,
                 _ => string.Empty
             };
         }
 
-        public static string GetProfessionIllustKey(ProfessionType profession)
+        public static string GetIllustKeyByProfession(ClassType profession)
         {
             return profession switch
             {
-                ProfessionType.Sword => ResourceKeyConst.Ks_Illust_Astera,
-                ProfessionType.Archer => ResourceKeyConst.Ks_Illust_Sable,
-                ProfessionType.Fighter => ResourceKeyConst.Ks_Illust_Brunt,
+                ClassType.Sword => ResourceKeyConst.Ks_Illust_Astera,
+                ClassType.Archer => ResourceKeyConst.Ks_Illust_Sable,
+                ClassType.Fighter => ResourceKeyConst.Ks_Illust_Brunt,
                 _ => string.Empty
             };
         }
+
+        public static string GetModelKeyByProfession(ClassType profession)
+        {
+            return profession switch
+            {
+                ClassType.Sword => ResourceKeyConst.Kp_Model_Astera,
+                ClassType.Archer => ResourceKeyConst.Kp_Model_Seible,
+                ClassType.Fighter => ResourceKeyConst.Kp_Model_Brunt,
+
+                _ => string.Empty
+            };
+
+        }
+
+        public static string GetMapNameByMapId(ulong mapId)
+        {
+            return mapId switch
+            {
+                0 => "레미나의 잠경촌",
+                1 => "일루네스의 상념정",
+                2 => "서광잔영의 숲",
+                _ => string.Empty
+            };
+        }
+
     }
+
+    public static class VfxKetConst
+    {
+        public static readonly string Kp_plain_hit_astera = "astera_planhit@vfx";
+    }
+
 }

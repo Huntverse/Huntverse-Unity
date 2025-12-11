@@ -29,25 +29,12 @@ namespace Hunt
             }
         }
 
-        // Color 
-        private string GetCongestionString(int value)
-        {
-            return value switch
-            {
-                0 => "쾌적",
-                1 => "원활",
-                2 => "보통",
-                3 => "혼잡",
-                _ => "보통" 
-            };
-        }
-
         public void Bind(ChannelModel model)
         {
             channelModel = model;
-            channelNameText.text = model.ChannelName;
-            congestionText.text = GetCongestionString(model.Congestion);
-            myCharCountText.text = model.MyCharacterCount.ToString();
+            channelNameText.text = model.channelName;
+            congestionText.text = model.GetCongestionString();
+            myCharCountText.text = model.myCharacterCount.ToString();
         }
 
         private void OnChannelClicked()
@@ -56,7 +43,7 @@ namespace Hunt
             
             // 채널 클릭 시 해당 채널의 캐릭터 리스트를 요청하는 로직이 여기 들어가야 함
             // 현재는 캐시된 데이터를 사용하여 UI 업데이트
-            CharacterCreateController.Shared?.UpdateCharacterSlots(channelModel.ChannelName, channelModel.MyCharacterCount);
+            CharacterCreateController.Shared?.UpdateCharacterSlots(channelModel.channelName, channelModel.myCharacterCount);
         }
     }
 }

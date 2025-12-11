@@ -1,22 +1,14 @@
 using System;
 using UnityEngine;
 using System.Collections.Generic;
+using Hunt.Game;
 namespace Hunt
 {
-    [Serializable]
-    public class CharacterInfoPayload
-    {
-        public Sprite icon;
-        public ProfessionType professiontype;
-        public string name;
-        public int level;
-        public string savepoint;
-        public float[] stats;
-    }
+
     [Serializable]
     public class CharacterFieldListRequst
     {
-        public List<CharacterInfoPayload> chfields;
+        public List<CharacterModel> chfields;
     }
 
 }
