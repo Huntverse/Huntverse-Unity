@@ -134,6 +134,27 @@ namespace Hunt
             };
         }
 
+        public static string GetStatStringByType(CharStatType t)
+        {
+            return t switch
+            {
+                CharStatType.HP=>"체력",
+                CharStatType.MP=> "마력",
+                CharStatType.STR => "힘",
+                CharStatType.INT => "지능",
+                CharStatType.PATK => "물리공격",
+                CharStatType.MATK => "마법공격",
+                CharStatType.CRIT => "크리티컬",
+                CharStatType.ASPD => "공격속도",
+                CharStatType.MSPD => "이동속도",
+                CharStatType.LUK => "저주",
+                CharStatType.DEF => "방어력",
+                CharStatType.EVA => "회피",
+
+                _ => string.Empty
+            };
+
+        }
     }
 
     public static class VfxKetConst
