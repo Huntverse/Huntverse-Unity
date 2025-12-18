@@ -57,4 +57,10 @@ public class BtnCtrl : MonoBehaviour
         Hunt.Net.NetworkManager.Shared.SendToLogin(Hunt.Common.MsgId.LoginReq, req);
     }
 
+    public void OnSelectWorldReq()
+    {
+        Hunt.Login.SelectWorldReq req = new Hunt.Login.SelectWorldReq();
+        req.WorldId = 11;
+        Hunt.Net.NetworkManager.Shared.SendToLogin(Hunt.Common.MsgId.SelectWorldReq, req);
+    }
 }

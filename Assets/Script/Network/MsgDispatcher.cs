@@ -1,9 +1,6 @@
 ﻿using System.Collections.Generic;
 using System;
 using UnityEngine;
-using JetBrains.Annotations;
-using UnityEngine.XR;
-
 using Hunt.Common;
 using Hunt.Login;
 
@@ -76,19 +73,33 @@ namespace Hunt.Net
         {
             AddHandler(MsgId.LoginTestAns, OnLoginTestAns);
             AddHandler(MsgId.LoginAns, OnLoginAns);
+            AddHandler(MsgId.SelectWorldAns, OnSelectWorldAns);
             return true;
         }
 
         static void OnLoginTestAns(byte[] payload, int offset, int len)
         {
-            var testReq = LoginTestAns.Parser.ParseFrom(payload, offset, len);
-            Debug.Log($"Recv: {testReq.Data}");
+            var testAns = LoginTestAns.Parser.ParseFrom(payload, offset, len);
+            Debug.Log($"Recv: {testAns.Data}");
         }
 
         static void OnLoginAns(byte[] payload, int offset, int len)
         {
-            var testReq = LoginAns.Parser.ParseFrom(payload, offset, len);
-            Debug.Log($"OnLoginAns Recv: {testReq.ErrType}");
+            var loginAns = LoginAns.Parser.ParseFrom(payload, offset, len);
+            Debug.Log($"OnLoginAns Recv: {loginAns.ErrType}");
+        }
+
+        static void OnSelectWorldAns(byte[] payload, int offset, int len)
+        {
+            var selectWorldAns = SelectWorldAns.Parser.ParseFrom(payload, offset, len);
+            Debug.Log($"OnLoginAns Recv: {selectWorldAns.ErrType}");
+            Debug.Log($"OnLoginAns SimpleCharInfosLen: {selectWorldAns.SimpleCharInfos.Count}");
+            foreach (var simpleChar in selectWorldAns.SimpleCharInfos)
+            {
+                //simpleChar.ClassType;
+                //simpleChar.Level;
+                //simpleChar.MapId;
+            }
         }
     }
 
