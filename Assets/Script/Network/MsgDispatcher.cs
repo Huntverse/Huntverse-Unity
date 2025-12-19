@@ -74,6 +74,7 @@ namespace Hunt.Net
             AddHandler(MsgId.LoginTestAns, OnLoginTestAns);
             AddHandler(MsgId.LoginAns, OnLoginAns);
             AddHandler(MsgId.SelectWorldAns, OnSelectWorldAns);
+            AddHandler(MsgId.CreateAccountAns, OnCreateAccount);
             return true;
         }
 
@@ -100,6 +101,11 @@ namespace Hunt.Net
                 //simpleChar.Level;
                 //simpleChar.MapId;
             }
+        }
+        static void OnCreateAccount(byte[] payload, int offset, int len)
+        {
+            var createAccountAns = CreateAccountAns.Parser.ParseFrom(payload, offset, len);
+            Debug.Log($"OnLoginAns Recv: {createAccountAns.ErrType}");
         }
     }
 

@@ -24,10 +24,11 @@ namespace Hunt.Common {
     static ErrTypeReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "Cg5lcnJfdHlwZS5wcm90bxILSHVudC5Db21tb24qbwoJRXJyb3JUeXBlEgsK",
-            "B0VSUl9OT04QABIbChdFUlJfSU5WQUxJRF9QQUNLRVRfVFlQRRABEgoKBkVS",
-            "Ul9EQhACEhkKFUVSUl9BQ0NPVU5UX05PVF9FWElTVBADEhEKDUVSUl9EVVBf",
-            "TE9HSU4QBGIGcHJvdG8z"));
+            "Cg5lcnJfdHlwZS5wcm90bxILSHVudC5Db21tb24qlgEKCUVycm9yVHlwZRIL",
+            "CgdFUlJfTk9OEAASGwoXRVJSX0lOVkFMSURfUEFDS0VUX1RZUEUQARIKCgZF",
+            "UlJfREIQAhIZChVFUlJfQUNDT1VOVF9OT1RfRVhJU1QQAxIRCg1FUlJfRFVQ",
+            "X0xPR0lOEAQSDgoKRVJSX0RVUF9JRBAFEhUKEUVSUl9EVVBfTklDS19OQU1F",
+            "EAZiBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Hunt.Common.ErrorType), }, null, null));
@@ -40,6 +41,9 @@ namespace Hunt.Common {
   ///ErrType은 SYSTEM으로 
   /// </summary>
   public enum ErrorType {
+    /// <summary>
+    ///에러가 없는 경우
+    /// </summary>
     [pbr::OriginalName("ERR_NON")] ErrNon = 0,
     /// <summary>
     /// 잘못된 패킷 타입이 내려간경우
@@ -57,6 +61,14 @@ namespace Hunt.Common {
     ///중복 로그인인 경우
     /// </summary>
     [pbr::OriginalName("ERR_DUP_LOGIN")] ErrDupLogin = 4,
+    /// <summary>
+    ///계정 생성에서 ID가 겹치는 경우
+    /// </summary>
+    [pbr::OriginalName("ERR_DUP_ID")] ErrDupId = 5,
+    /// <summary>
+    ///닉네임 중복 - 생성에서 발생할 수 있음
+    /// </summary>
+    [pbr::OriginalName("ERR_DUP_NICK_NAME")] ErrDupNickName = 6,
   }
 
   #endregion
