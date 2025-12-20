@@ -6,6 +6,7 @@ public class BtnCtrl : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     [SerializeField] private string id = "t10";
     [SerializeField] private string pw = "abc";
+    [SerializeField] private string nickName = "nickName123";
     void Start()
     {
 
@@ -72,5 +73,14 @@ public class BtnCtrl : MonoBehaviour
         req.Id = id;
         req.Pw = pw;
         Hunt.Net.NetworkManager.Shared.SendToLogin(Hunt.Common.MsgId.CreateAccountReq, req);
+    }
+
+    public void OnCreateCharReq()
+    {
+        Hunt.Login.CreateCharReq req = new Hunt.Login.CreateCharReq();
+        req.ClassType = 1;
+        req.WorldId = 11;
+        req.Name = nickName;
+        Hunt.Net.NetworkManager.Shared.SendToLogin(Hunt.Common.MsgId.CreateCharReq, req);
     }
 }
