@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace Hunt
 {
-    public class LogInScreen : MonoBehaviour
+    public class LoginScreen : MonoBehaviour
     {
         #region Field
         [SerializeField] private TMP_InputField idInput, pwInput;
@@ -164,9 +164,7 @@ namespace Hunt
         }
         #endregion
         #region REQUEST
-        /// <summary>
-        /// Request Server : Duplicate ID
-        /// </summary>
+        /// <summary> Request Server : Duplicate ID </summary>
         private void ReqIdDuplicate()
         {
             var id = idInput.text;
@@ -175,9 +173,7 @@ namespace Hunt
             $"아이디 중복확인 요청".DLog();
         }
 
-        /// <summary>
-        /// Request Server : Vaild Auth
-        /// </summary>
+        /// <summary> Request Server : Vaild Auth </summary>
         private void ReqAuthVaild()
         {
             var (id, pw) = VaildateAndReturnResult(idInput, pwInput, loginVaildText, true);
@@ -188,9 +184,7 @@ namespace Hunt
             $"로그인 요청: ID={id}".DLog();
         }
 
-        /// <summary>
-        /// Request Server : Create Auth
-        /// </summary>
+        /// <summary> Request Server : Create Auth </summary>
         private void ReqCreateAuthVaild()
         {
             var (id, pw) = VaildateAndReturnResult(new_idInput, new_pwInput, createVaildText);
