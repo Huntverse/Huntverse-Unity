@@ -13,6 +13,8 @@ namespace Hunt
         // 키별 프리팹 캐시
         private readonly Dictionary<string, GameObject> prefabCache = new();
         private readonly Dictionary<string, VfxObject> vfxObjectPrefabs = new();
+        // 키별 프리팹의 원본 scale 저장
+        private readonly Dictionary<string, Vector3> prefabOriginalScales = new();
         
         // 키별 독립적인 풀 관리 (프리팹별로 구분)
         private readonly Dictionary<string, ObjectPool<VfxObject>> pools = new();
@@ -38,6 +40,9 @@ namespace Hunt
             }
 
             prefabCache[key] = prefab;
+            
+            // 프리팹의 원본 scale 저장
+            prefabOriginalScales[key] = prefab.transform.localScale;
 
             var vfxObj = prefab.GetComponent<VfxObject>();
             if (vfxObj == null)
@@ -59,12 +64,25 @@ namespace Hunt
             {
                 pool = new ObjectPool<VfxObject>(
                     createFunc: () => CreatePooledItem(prefab, key),
-                    actionOnGet: (obj) => obj.gameObject.SetActive(true),
+                    actionOnGet: (obj) => 
+                    {
+                        // 원본 scale로 복원
+                        if (prefabOriginalScales.TryGetValue(key, out var originalScale))
+                        {
+                            obj.transform.localScale = originalScale;
+                        }
+                        obj.gameObject.SetActive(true);
+                    },
                     actionOnRelease: (obj) => 
                     {
-                        obj.gameObject.SetActive(false);
+                        // 모든 자식 객체 포함하여 비활성화
+                        SetActiveRecursively(obj.gameObject, false);
                         obj.transform.SetParent(this.transform);
-                        obj.transform.localScale = Vector3.one; // Scale 초기화
+                        // 원본 scale로 복원
+                        if (prefabOriginalScales.TryGetValue(key, out var originalScale))
+                        {
+                            obj.transform.localScale = originalScale;
+                        }
                     },
                     actionOnDestroy: (obj) => Destroy(obj.gameObject),
                     collectionCheck: true,
@@ -81,7 +99,8 @@ namespace Hunt
         {
             var instance = Instantiate(prefab);
             instance.transform.SetParent(this.transform);
-            instance.gameObject.SetActive(false);
+            // 모든 자식 객체 포함하여 비활성화
+            SetActiveRecursively(instance.gameObject, false);
             return instance;
         }
 
@@ -142,14 +161,24 @@ namespace Hunt
             vfxInstance.transform.position = pos;
             vfxInstance.transform.rotation = rot;
             
-            // Scale 설정 (지정 안 하면 기본값 1,1,1)
-            if (scale.HasValue)
+            // 프리팹의 원본 scale을 가져와서 x만 변경
+            if (prefabOriginalScales.TryGetValue(key, out var originalScale))
             {
-                vfxInstance.transform.localScale = scale.Value;
+                var finalScale = originalScale;
+                if (scale.HasValue)
+                {
+                    finalScale.x = scale.Value.x; 
+                }
+                vfxInstance.transform.localScale = finalScale;
             }
             else
             {
-                vfxInstance.transform.localScale = Vector3.one;
+                var finalScale = Vector3.one;
+                if (scale.HasValue)
+                {
+                    finalScale.x = scale.Value.x;
+                }
+                vfxInstance.transform.localScale = finalScale;
             }
 
             if (parent != null)
@@ -178,6 +207,7 @@ namespace Hunt
                 AbLoader.Shared.ReleaseAsset(key.ToLower());
                 prefabCache.Remove(key);
                 vfxObjectPrefabs.Remove(key);
+                prefabOriginalScales.Remove(key);
 
                 $"🎆 [VfxHelper] Released: {key}".DLog();
             }
@@ -189,6 +219,26 @@ namespace Hunt
             foreach (var key in keys)
             {
                 Release(key);
+            }
+        }
+
+        #endregion
+
+        #region Helper Methods
+
+        /// <summary>
+        /// 재귀적으로 GameObject와 모든 자식 객체의 활성화 상태를 설정
+        /// </summary>
+        private void SetActiveRecursively(GameObject obj, bool active)
+        {
+            if (obj == null) return;
+            
+            obj.SetActive(active);
+            
+            // 모든 자식 객체도 재귀적으로 처리
+            for (int i = 0; i < obj.transform.childCount; i++)
+            {
+                SetActiveRecursively(obj.transform.GetChild(i).gameObject, active);
             }
         }
 

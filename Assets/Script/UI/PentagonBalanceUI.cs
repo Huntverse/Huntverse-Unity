@@ -17,15 +17,15 @@ namespace Hunt
         [Range(0f, 1f)] public float stat4 = 1f;
         [Range(0f, 1f)] public float stat5 = 1f;
 
-        [Header("�ɼ�")]
+        [Header("SETTING")]
         public float padding = 10f;
         public bool drawOutline = true;
         public float outlineThickness = 2f;
         public Color outlineColor = Color.black;
 
-        [Header("�� �ɼ�")]
-        public TextMeshProUGUI[] labels;   // 5�� �־�α�
-        public float labelOffset = 15f;    // ������ ������ �󸶳� �����
+        [Header("STATLABEL")]
+        public TextMeshProUGUI[] labels;   
+        public float labelOffset = 15f;    
 
         public void SetStats(float s1, float s2, float s3, float s4, float s5)
         {
