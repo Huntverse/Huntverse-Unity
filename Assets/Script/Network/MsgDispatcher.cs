@@ -87,9 +87,11 @@ namespace Hunt.Net
 
         static void OnLoginAns(byte[] payload, int offset, int len)
         {
-            var testReq = LoginAns.Parser.ParseFrom(payload, offset, len);
-            Debug.Log($"OnLoginAns Recv: {testReq.ErrType}");
+            var ans = LoginAns.Parser.ParseFrom(payload, offset, len);
+            Debug.Log($"OnLoginAns Recv: {ans.ErrType}");
+            Hunt.AuthReqHandler.NotifyLoginResponse(ans);
         }
+
     }
 
     /*

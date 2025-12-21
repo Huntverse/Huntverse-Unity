@@ -60,7 +60,10 @@ namespace Hunt.Net
         {
             m_loginConnection.Stop();
         }
-
+        //public bool IsLoginServerConnected()
+        //{
+        //    return m_loginConnection != null && m_loginConnection.IsConnected(); // IsConnected 메서드 필요
+        //}
         public void SendToLogin<ProtoT>(Hunt.Common.MsgId type, ProtoT data) where ProtoT : Google.Protobuf.IMessage
             => m_loginConnection.Send(type, data);
 
