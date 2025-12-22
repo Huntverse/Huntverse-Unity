@@ -1,11 +1,9 @@
 ﻿using System.Collections.Generic;
 using System;
 using UnityEngine;
-using JetBrains.Annotations;
-using UnityEngine.XR;
-
 using Hunt.Common;
 using Hunt.Login;
+using UnityEngine.ProBuilder.MeshOperations;
 
 namespace Hunt.Net
 {
@@ -76,22 +74,93 @@ namespace Hunt.Net
         {
             AddHandler(MsgId.LoginTestAns, OnLoginTestAns);
             AddHandler(MsgId.LoginAns, OnLoginAns);
+            AddHandler(MsgId.SelectWorldAns, OnSelectWorldAns);
+            AddHandler(MsgId.CreateAccountAns, OnCreateAccountAns);
+            AddHandler(MsgId.CreateCharAns, OnCreateCharAns);
             return true;
         }
 
         static void OnLoginTestAns(byte[] payload, int offset, int len)
         {
-            var testReq = LoginTestAns.Parser.ParseFrom(payload, offset, len);
-            Debug.Log($"Recv: {testReq.Data}");
+            var testAns = LoginTestAns.Parser.ParseFrom(payload, offset, len);
+            Debug.Log($"Recv: {testAns.Data}");
         }
 
         static void OnLoginAns(byte[] payload, int offset, int len)
         {
-            var ans = LoginAns.Parser.ParseFrom(payload, offset, len);
-            Debug.Log($"OnLoginAns Recv: {ans.ErrType}");
-            Hunt.AuthReqHandler.NotifyLoginResponse(ans);
+            var loginAns = LoginAns.Parser.ParseFrom(payload, offset, len);
+            if (loginAns.ErrType == ErrorType.ErrNon)
+            {
+                Debug.Log($"OnLoginAns Recv: {loginAns.ErrType}");
+            }
+            else
+            {
+                if (loginAns.ErrType == ErrorType.ErrDupLogin)
+                {
+                    Debug.Log($"OnLoginAns Recv: {loginAns.ErrType}, 중복 로그인");
+                }
+                if (loginAns.ErrType == ErrorType.ErrDb)
+                {
+                    Debug.Log($"OnLoginAns Recv: {loginAns.ErrType}, DB 에러");
+                }
+
+            }
         }
 
+        static void OnSelectWorldAns(byte[] payload, int offset, int len)
+        {
+            var selectWorldAns = SelectWorldAns.Parser.ParseFrom(payload, offset, len);
+            Debug.Log($"OnSelectWorldAns Recv: {selectWorldAns.ErrType}");
+            Debug.Log($"OnSelectWorldAns SimpleCharInfosLen: {selectWorldAns.SimpleCharInfos.Count}");
+            foreach (var simpleChar in selectWorldAns.SimpleCharInfos)
+            {
+                //simpleChar.ClassType;
+                //simpleChar.Level;
+                //simpleChar.MapId;
+            }
+        }
+        static void OnCreateAccountAns(byte[] payload, int offset, int len)
+        {
+            var createAccountAns = CreateAccountAns.Parser.ParseFrom(payload, offset, len);
+            if (createAccountAns.ErrType == ErrorType.ErrNon)
+            {
+                Debug.Log($"OnCreateAccountAns Recv: {createAccountAns.ErrType}");
+            }
+            else
+            {
+                if (createAccountAns.ErrType == ErrorType.ErrDupId)
+                {
+                    Debug.Log($"OnCreateAccountAns Recv: {createAccountAns.ErrType}, ID중복");
+                }
+                if (createAccountAns.ErrType == ErrorType.ErrDb)
+                {
+                    Debug.Log($"OnCreateAccountAns Recv: {createAccountAns.ErrType}, DB에러"); //얘는 모든 Ans에 대해서 그냥 팝업으로 DB에러 발생했습니다 띄우면 될듯?
+
+                }
+
+            }
+        }
+
+        static void OnCreateCharAns(byte[] payload, int offset, int len)
+        {
+            var createCharAns = CreateCharAns.Parser.ParseFrom(payload, offset, len);
+            if (createCharAns.ErrType == ErrorType.ErrNon)
+            {
+                Debug.Log($"OnCreateCharAns Recv: {createCharAns.ErrType}, {createCharAns.CharInfo.Name}, {createCharAns.CharInfo.CharId}, {createCharAns.CharInfo.WorldId}, {createCharAns.CharInfo.ClassType}");
+            }
+            else
+            {
+                if (createCharAns.ErrType == ErrorType.ErrDupNickName)
+                {
+                    Debug.Log($"OnCreateCharAns Recv: [Error:{createCharAns.ErrType}], 닉네임 중복");
+
+                }
+                if (createCharAns.ErrType == ErrorType.ErrDb)
+                {
+                    Debug.Log($"OnCreateCharAns Recv: [Error:{createCharAns.ErrType}], DB 에러");
+                }
+            }
+        }
     }
 
     /*

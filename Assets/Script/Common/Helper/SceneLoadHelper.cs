@@ -17,7 +17,7 @@ namespace Hunt
 
         [Header("Loading Indicator")]
         [SerializeField] private Canvas loadingCanvas;
-        [SerializeField] private CanvasGroup loadingCanvasGroup; // 페이드 효과용
+        [SerializeField] private CanvasGroup loadingCanvasGroup;
         [SerializeField] private float minLoadingDuration = 0.5f; // 최소 로딩 표시 시간 (깜빡임 방지)
         [SerializeField] private float fadeDuration = 0.7f; // 페이드 인/아웃 시간
 

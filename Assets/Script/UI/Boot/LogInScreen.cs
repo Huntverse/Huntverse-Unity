@@ -176,6 +176,7 @@ namespace Hunt
         }
         #endregion
         #region REQUEST
+
         /// <summary> Request Server : Duplicate ID </summary>
         private void ReqIdDuplicate()
         {
