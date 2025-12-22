@@ -24,7 +24,6 @@ namespace Hunt
 
         private LoginService loginService;
         public LoginService LoginService => loginService;
-        public event Action<LoginAns> OnLoginResponse;
         protected override bool DontDestroy => base.DontDestroy;
         #region Life
         protected override void Awake()
@@ -42,17 +41,13 @@ namespace Hunt
             if (networkManager == null) return;
 
             loginService = new LoginService(networkManager);
-            LoginService.OnLoginResponse += (ans) => OnLoginResponse?.Invoke(ans);
+
             isInitialized = true;
             $"[GameSession] Session Initialized".DLog();
         }
 
         protected override void OnDestroy()
         {
-            if (LoginService != null)
-            {
-                LoginService.OnLoginResponse -= (ans) => OnLoginResponse?.Invoke(ans);
-            }
             base.OnDestroy();
         }
         #endregion

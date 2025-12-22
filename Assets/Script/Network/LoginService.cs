@@ -35,7 +35,6 @@ namespace Hunt
 
         public void ReqCreateAuthVaild(string id, string pw)
         {
-            // TODO: CreateAccountReq 구현 후 활성화
             var req = new CreateAccountReq { Id = id, Pw = pw };
             networkManager.SendToLogin(Hunt.Common.MsgId.CreateAccountReq, req);
             $"[LoginService] 계정 생성 요청: ID={id}".DLog();
@@ -43,7 +42,6 @@ namespace Hunt
 
         public void ReqIdDuplicate(string id)
         {
-            // TODO: IdDuplicateReq 구현 후 활성화
             var req = new ConfirmIdReq{ Id = id };
            networkManager.SendToLogin(Hunt.Common.MsgId.ConfirmIdReq, req);
             $"[LoginService] 아이디 중복확인 요청: ID={id}".DLog();
@@ -54,7 +52,6 @@ namespace Hunt
         /// </summary>
         public void ReqNicknameDuplicate(string nickname)
         {
-            // TODO: NicknameDuplicateReq 구현 후 활성화
             var req = new ConfirmNameReq{ Name = nickname };
             networkManager.SendToLogin(Hunt.Common.MsgId.ConfirmNameReq, req);
             $"[LoginService] 닉네임 중복확인 요청: Nickname={nickname}".DLog();

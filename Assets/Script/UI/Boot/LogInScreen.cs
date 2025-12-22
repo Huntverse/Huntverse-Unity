@@ -97,7 +97,7 @@ namespace Hunt
             createVaildText.text = "";
             loginVaildText.text = "";
 
-            GameSession.Shared.OnLoginResponse += HandleNotiLoginResponse;
+            LoginService.OnLoginResponse += HandleNotiLoginResponse;
         }
         private void Update()
         {
@@ -112,7 +112,7 @@ namespace Hunt
             pwInput.onSubmit.RemoveListener(OnPwSubmit);
             new_idInput.onSubmit.RemoveListener(OnIdSubmit);
             new_pwInput.onSubmit.RemoveListener(OnPwSubmit);
-            GameSession.Shared.OnLoginResponse -= HandleNotiLoginResponse;
+            LoginService.OnLoginResponse -= HandleNotiLoginResponse;
         }
         #endregion
         #region INPUT
