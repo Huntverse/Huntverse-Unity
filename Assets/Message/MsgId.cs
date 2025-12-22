@@ -24,12 +24,16 @@ namespace Hunt.Common {
     static MsgIdReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "Cgxtc2dfaWQucHJvdG8SC0h1bnQuQ29tbW9uKsYBCgVNc2dJZBILCgdJTlZB",
+            "Cgxtc2dfaWQucHJvdG8SC0h1bnQuQ29tbW9uKvYCCgVNc2dJZBILCgdJTlZB",
             "TElEEAASCgoGU1lTVEVNEAESDQoJTE9HSU5fUkVREAISDQoJTE9HSU5fQU5T",
             "EAMSFAoQTE9HSU5fQllfS0VZX1JFURAEEhQKEExPR0lOX0JZX0tFWV9BTlMQ",
             "BRIXChNSRVRVUk5fVE9fTE9HSU5fUkVREAYSFwoTUkVUVVJOX1RPX0xPR0lO",
-            "X0FOUxAHEhMKDkxPR0lOX1RFU1RfUkVREI9OEhMKDkxPR0lOX1RFU1RfQU5T",
-            "EJBOYgZwcm90bzM="));
+            "X0FOUxAHEhQKEFNFTEVDVF9XT1JMRF9SRVEQCBIUChBTRUxFQ1RfV09STERf",
+            "QU5TEAkSFgoSQ1JFQVRFX0FDQ09VTlRfUkVREAoSFgoSQ1JFQVRFX0FDQ09V",
+            "TlRfQU5TEAsSEwoPQ1JFQVRFX0NIQVJfUkVREAwSEwoPQ1JFQVRFX0NIQVJf",
+            "QU5TEA0SFAoQQ09ORklSTV9OQU1FX1JFURAOEhIKDkNPTkZJUk1fSURfUkVR",
+            "EA8SEwoOTE9HSU5fVEVTVF9SRVEQj04SEwoOTE9HSU5fVEVTVF9BTlMQkE5i",
+            "BnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Hunt.Common.MsgId), }, null, null));
@@ -58,6 +62,14 @@ namespace Hunt.Common {
     [pbr::OriginalName("LOGIN_BY_KEY_ANS")] LoginByKeyAns = 5,
     [pbr::OriginalName("RETURN_TO_LOGIN_REQ")] ReturnToLoginReq = 6,
     [pbr::OriginalName("RETURN_TO_LOGIN_ANS")] ReturnToLoginAns = 7,
+    [pbr::OriginalName("SELECT_WORLD_REQ")] SelectWorldReq = 8,
+    [pbr::OriginalName("SELECT_WORLD_ANS")] SelectWorldAns = 9,
+    [pbr::OriginalName("CREATE_ACCOUNT_REQ")] CreateAccountReq = 10,
+    [pbr::OriginalName("CREATE_ACCOUNT_ANS")] CreateAccountAns = 11,
+    [pbr::OriginalName("CREATE_CHAR_REQ")] CreateCharReq = 12,
+    [pbr::OriginalName("CREATE_CHAR_ANS")] CreateCharAns = 13,
+    [pbr::OriginalName("CONFIRM_NAME_REQ")] ConfirmNameReq = 14,
+    [pbr::OriginalName("CONFIRM_ID_REQ")] ConfirmIdReq = 15,
     [pbr::OriginalName("LOGIN_TEST_REQ")] LoginTestReq = 9999,
     [pbr::OriginalName("LOGIN_TEST_ANS")] LoginTestAns = 10000,
   }
