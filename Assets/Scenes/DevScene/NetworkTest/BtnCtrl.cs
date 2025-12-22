@@ -7,6 +7,8 @@ public class BtnCtrl : MonoBehaviour
     [SerializeField] private string id = "t10";
     [SerializeField] private string pw = "abc";
     [SerializeField] private string nickName = "nickName123";
+    [SerializeField] private string confirmId = "t1";
+    [SerializeField] private string confirmName = "박승호122";
     void Start()
     {
 
@@ -83,4 +85,24 @@ public class BtnCtrl : MonoBehaviour
         req.Name = nickName;
         Hunt.Net.NetworkManager.Shared.SendToLogin(Hunt.Common.MsgId.CreateCharReq, req);
     }
+
+    public void OnConfirmDupIdReq()
+    {
+        Hunt.Login.ConfirmIdReq req = new Hunt.Login.ConfirmIdReq();
+        req.Id = confirmId;
+        Hunt.Net.NetworkManager.Shared.SendToLogin(Hunt.Common.MsgId.ConfirmIdReq, req);
+    }
+
+    public void OnConfirmDupNameReq()
+    {
+        Hunt.Login.ConfirmNameReq req = new Hunt.Login.ConfirmNameReq();
+        req.Name = confirmName;
+        Hunt.Net.NetworkManager.Shared.SendToLogin(Hunt.Common.MsgId.ConfirmNameReq, req);
+    }
+
+    public void OnGameStartReq()
+    {
+
+    }
+
 }

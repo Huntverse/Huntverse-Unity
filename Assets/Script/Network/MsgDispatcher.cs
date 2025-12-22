@@ -3,7 +3,6 @@ using System;
 using UnityEngine;
 using Hunt.Common;
 using Hunt.Login;
-using UnityEngine.ProBuilder.MeshOperations;
 
 namespace Hunt.Net
 {
@@ -77,6 +76,8 @@ namespace Hunt.Net
             AddHandler(MsgId.SelectWorldAns, OnSelectWorldAns);
             AddHandler(MsgId.CreateAccountAns, OnCreateAccountAns);
             AddHandler(MsgId.CreateCharAns, OnCreateCharAns);
+            AddHandler(MsgId.ConfirmIdAns, OnConfirmIdAns);
+            AddHandler(MsgId.ConfirmNameAns, OnConfirmNameAns);
             return true;
         }
 
@@ -158,6 +159,38 @@ namespace Hunt.Net
                 if (createCharAns.ErrType == ErrorType.ErrDb)
                 {
                     Debug.Log($"OnCreateCharAns Recv: [Error:{createCharAns.ErrType}], DB 에러");
+                }
+            }
+        }
+
+        static void OnConfirmIdAns(byte[] payload, int offset, int len)
+        {
+            var ans = ConfirmIdAns.Parser.ParseFrom(payload, offset, len);
+            if (ans.ErrType == ErrorType.ErrNon)
+            {
+                Debug.Log($"OnConfirmIdAns Recv: {ans.ErrType}, [isDup: {ans.IsDup}]");
+            }
+            else
+            {
+                if (ans.ErrType == ErrorType.ErrDb)
+                {
+                    Debug.Log($"OnConfirmIdAns Recv: [Error:{ans.ErrType}], DB 에러");
+                }
+            }
+        }
+
+        static void OnConfirmNameAns(byte[] payload, int offset, int len)
+        {
+            var ans = ConfirmNameAns.Parser.ParseFrom(payload, offset, len);
+            if (ans.ErrType == ErrorType.ErrNon)
+            {
+                Debug.Log($"OnConfirmNameAns Recv: {ans.ErrType}, [isDup: {ans.IsDup}]");
+            }
+            else
+            {
+                if (ans.ErrType == ErrorType.ErrDb)
+                {
+                    Debug.Log($"OnConfirmNameAns Recv: [Error:{ans.ErrType}], DB 에러");
                 }
             }
         }
