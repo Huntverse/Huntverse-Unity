@@ -64,7 +64,8 @@ namespace Hunt.Login {
             new pbr::GeneratedClrTypeInfo(typeof(global::Hunt.Login.ServerCongestionInfo), global::Hunt.Login.ServerCongestionInfo.Parser, new[]{ "WorldId", "Congestion" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Hunt.Login.LoginReq), global::Hunt.Login.LoginReq.Parser, new[]{ "Id", "Pw" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Hunt.Login.SimpleCharacterInfo), global::Hunt.Login.SimpleCharacterInfo.Parser, new[]{ "WorldId", "CharId", "Name", "ClassType", "Level", "MapId", "StatInfos" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Hunt.Login.LoginAns), global::Hunt.Login.LoginAns.Parser, new[]{ "ErrType", "WorldInfos", "CogestionInfos", "CharInfos", "ServerEndPointInfos" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Hunt.Login.SimpleCharacterByWorld), global::Hunt.Login.SimpleCharacterByWorld.Parser, new[]{ "WorldId", "CharCnt" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Hunt.Login.LoginAns), global::Hunt.Login.LoginAns.Parser, new[]{ "ErrType", "CongestionInfos", "CharInfos", "ServerEndPointInfos" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Hunt.Login.ReturnToLoginReq), global::Hunt.Login.ReturnToLoginReq.Parser, new[]{ "AccountId", "Token" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Hunt.Login.ReturnToLoginAns), global::Hunt.Login.ReturnToLoginAns.Parser, new[]{ "ErrType" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Hunt.Login.SelectWorldReq), global::Hunt.Login.SelectWorldReq.Parser, new[]{ "WorldId" }, null, null, null, null),
@@ -992,6 +993,247 @@ namespace Hunt.Login {
   }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
+  public sealed partial class SimpleCharacterByWorld : pb::IMessage<SimpleCharacterByWorld>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<SimpleCharacterByWorld> _parser = new pb::MessageParser<SimpleCharacterByWorld>(() => new SimpleCharacterByWorld());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pb::MessageParser<SimpleCharacterByWorld> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Hunt.Login.LoginReflection.Descriptor.MessageTypes[3]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public SimpleCharacterByWorld() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public SimpleCharacterByWorld(SimpleCharacterByWorld other) : this() {
+      worldId_ = other.worldId_;
+      charCnt_ = other.charCnt_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public SimpleCharacterByWorld Clone() {
+      return new SimpleCharacterByWorld(this);
+    }
+
+    /// <summary>Field number for the "worldId" field.</summary>
+    public const int WorldIdFieldNumber = 1;
+    private uint worldId_;
+    /// <summary>
+    ///월드 정보
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public uint WorldId {
+      get { return worldId_; }
+      set {
+        worldId_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "charCnt" field.</summary>
+    public const int CharCntFieldNumber = 2;
+    private uint charCnt_;
+    /// <summary>
+    /// 캐릭터 갯수
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public uint CharCnt {
+      get { return charCnt_; }
+      set {
+        charCnt_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override bool Equals(object other) {
+      return Equals(other as SimpleCharacterByWorld);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool Equals(SimpleCharacterByWorld other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (WorldId != other.WorldId) return false;
+      if (CharCnt != other.CharCnt) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (WorldId != 0) hash ^= WorldId.GetHashCode();
+      if (CharCnt != 0) hash ^= CharCnt.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (WorldId != 0) {
+        output.WriteRawTag(13);
+        output.WriteFixed32(WorldId);
+      }
+      if (CharCnt != 0) {
+        output.WriteRawTag(21);
+        output.WriteFixed32(CharCnt);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (WorldId != 0) {
+        output.WriteRawTag(13);
+        output.WriteFixed32(WorldId);
+      }
+      if (CharCnt != 0) {
+        output.WriteRawTag(21);
+        output.WriteFixed32(CharCnt);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int CalculateSize() {
+      int size = 0;
+      if (WorldId != 0) {
+        size += 1 + 4;
+      }
+      if (CharCnt != 0) {
+        size += 1 + 4;
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(SimpleCharacterByWorld other) {
+      if (other == null) {
+        return;
+      }
+      if (other.WorldId != 0) {
+        WorldId = other.WorldId;
+      }
+      if (other.CharCnt != 0) {
+        CharCnt = other.CharCnt;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 13: {
+            WorldId = input.ReadFixed32();
+            break;
+          }
+          case 21: {
+            CharCnt = input.ReadFixed32();
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 13: {
+            WorldId = input.ReadFixed32();
+            break;
+          }
+          case 21: {
+            CharCnt = input.ReadFixed32();
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class LoginAns : pb::IMessage<LoginAns>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
@@ -1006,7 +1248,7 @@ namespace Hunt.Login {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Hunt.Login.LoginReflection.Descriptor.MessageTypes[3]; }
+      get { return global::Hunt.Login.LoginReflection.Descriptor.MessageTypes[4]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1027,8 +1269,7 @@ namespace Hunt.Login {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public LoginAns(LoginAns other) : this() {
       errType_ = other.errType_;
-      worldInfos_ = other.worldInfos_ != null ? other.worldInfos_.Clone() : null;
-      cogestionInfos_ = other.cogestionInfos_.Clone();
+      congestionInfos_ = other.congestionInfos_.Clone();
       charInfos_ = other.charInfos_.Clone();
       serverEndPointInfos_ = other.serverEndPointInfos_.Clone();
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
@@ -1052,46 +1293,31 @@ namespace Hunt.Login {
       }
     }
 
-    /// <summary>Field number for the "worldInfos" field.</summary>
-    public const int WorldInfosFieldNumber = 2;
-    private global::Hunt.Common.WorldInfo worldInfos_;
-    /// <summary>
-    ///월드id-이름
-    /// </summary>
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public global::Hunt.Common.WorldInfo WorldInfos {
-      get { return worldInfos_; }
-      set {
-        worldInfos_ = value;
-      }
-    }
-
-    /// <summary>Field number for the "cogestionInfos" field.</summary>
-    public const int CogestionInfosFieldNumber = 3;
-    private static readonly pb::FieldCodec<global::Hunt.Login.ServerCongestionInfo> _repeated_cogestionInfos_codec
+    /// <summary>Field number for the "congestionInfos" field.</summary>
+    public const int CongestionInfosFieldNumber = 3;
+    private static readonly pb::FieldCodec<global::Hunt.Login.ServerCongestionInfo> _repeated_congestionInfos_codec
         = pb::FieldCodec.ForMessage(26, global::Hunt.Login.ServerCongestionInfo.Parser);
-    private readonly pbc::RepeatedField<global::Hunt.Login.ServerCongestionInfo> cogestionInfos_ = new pbc::RepeatedField<global::Hunt.Login.ServerCongestionInfo>();
+    private readonly pbc::RepeatedField<global::Hunt.Login.ServerCongestionInfo> congestionInfos_ = new pbc::RepeatedField<global::Hunt.Login.ServerCongestionInfo>();
     /// <summary>
     ///혼잡도
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public pbc::RepeatedField<global::Hunt.Login.ServerCongestionInfo> CogestionInfos {
-      get { return cogestionInfos_; }
+    public pbc::RepeatedField<global::Hunt.Login.ServerCongestionInfo> CongestionInfos {
+      get { return congestionInfos_; }
     }
 
     /// <summary>Field number for the "charInfos" field.</summary>
     public const int CharInfosFieldNumber = 4;
-    private static readonly pb::FieldCodec<global::Hunt.Login.SimpleCharacterInfo> _repeated_charInfos_codec
-        = pb::FieldCodec.ForMessage(34, global::Hunt.Login.SimpleCharacterInfo.Parser);
-    private readonly pbc::RepeatedField<global::Hunt.Login.SimpleCharacterInfo> charInfos_ = new pbc::RepeatedField<global::Hunt.Login.SimpleCharacterInfo>();
+    private static readonly pb::FieldCodec<global::Hunt.Login.SimpleCharacterByWorld> _repeated_charInfos_codec
+        = pb::FieldCodec.ForMessage(34, global::Hunt.Login.SimpleCharacterByWorld.Parser);
+    private readonly pbc::RepeatedField<global::Hunt.Login.SimpleCharacterByWorld> charInfos_ = new pbc::RepeatedField<global::Hunt.Login.SimpleCharacterByWorld>();
     /// <summary>
     ///캐릭터 정보들
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public pbc::RepeatedField<global::Hunt.Login.SimpleCharacterInfo> CharInfos {
+    public pbc::RepeatedField<global::Hunt.Login.SimpleCharacterByWorld> CharInfos {
       get { return charInfos_; }
     }
 
@@ -1125,8 +1351,7 @@ namespace Hunt.Login {
         return true;
       }
       if (ErrType != other.ErrType) return false;
-      if (!object.Equals(WorldInfos, other.WorldInfos)) return false;
-      if(!cogestionInfos_.Equals(other.cogestionInfos_)) return false;
+      if(!congestionInfos_.Equals(other.congestionInfos_)) return false;
       if(!charInfos_.Equals(other.charInfos_)) return false;
       if(!serverEndPointInfos_.Equals(other.serverEndPointInfos_)) return false;
       return Equals(_unknownFields, other._unknownFields);
@@ -1137,8 +1362,7 @@ namespace Hunt.Login {
     public override int GetHashCode() {
       int hash = 1;
       if (ErrType != global::Hunt.Common.ErrorType.ErrNon) hash ^= ErrType.GetHashCode();
-      if (worldInfos_ != null) hash ^= WorldInfos.GetHashCode();
-      hash ^= cogestionInfos_.GetHashCode();
+      hash ^= congestionInfos_.GetHashCode();
       hash ^= charInfos_.GetHashCode();
       hash ^= serverEndPointInfos_.GetHashCode();
       if (_unknownFields != null) {
@@ -1163,11 +1387,7 @@ namespace Hunt.Login {
         output.WriteRawTag(8);
         output.WriteEnum((int) ErrType);
       }
-      if (worldInfos_ != null) {
-        output.WriteRawTag(18);
-        output.WriteMessage(WorldInfos);
-      }
-      cogestionInfos_.WriteTo(output, _repeated_cogestionInfos_codec);
+      congestionInfos_.WriteTo(output, _repeated_congestionInfos_codec);
       charInfos_.WriteTo(output, _repeated_charInfos_codec);
       serverEndPointInfos_.WriteTo(output, _repeated_serverEndPointInfos_codec);
       if (_unknownFields != null) {
@@ -1184,11 +1404,7 @@ namespace Hunt.Login {
         output.WriteRawTag(8);
         output.WriteEnum((int) ErrType);
       }
-      if (worldInfos_ != null) {
-        output.WriteRawTag(18);
-        output.WriteMessage(WorldInfos);
-      }
-      cogestionInfos_.WriteTo(ref output, _repeated_cogestionInfos_codec);
+      congestionInfos_.WriteTo(ref output, _repeated_congestionInfos_codec);
       charInfos_.WriteTo(ref output, _repeated_charInfos_codec);
       serverEndPointInfos_.WriteTo(ref output, _repeated_serverEndPointInfos_codec);
       if (_unknownFields != null) {
@@ -1204,10 +1420,7 @@ namespace Hunt.Login {
       if (ErrType != global::Hunt.Common.ErrorType.ErrNon) {
         size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) ErrType);
       }
-      if (worldInfos_ != null) {
-        size += 1 + pb::CodedOutputStream.ComputeMessageSize(WorldInfos);
-      }
-      size += cogestionInfos_.CalculateSize(_repeated_cogestionInfos_codec);
+      size += congestionInfos_.CalculateSize(_repeated_congestionInfos_codec);
       size += charInfos_.CalculateSize(_repeated_charInfos_codec);
       size += serverEndPointInfos_.CalculateSize(_repeated_serverEndPointInfos_codec);
       if (_unknownFields != null) {
@@ -1225,13 +1438,7 @@ namespace Hunt.Login {
       if (other.ErrType != global::Hunt.Common.ErrorType.ErrNon) {
         ErrType = other.ErrType;
       }
-      if (other.worldInfos_ != null) {
-        if (worldInfos_ == null) {
-          WorldInfos = new global::Hunt.Common.WorldInfo();
-        }
-        WorldInfos.MergeFrom(other.WorldInfos);
-      }
-      cogestionInfos_.Add(other.cogestionInfos_);
+      congestionInfos_.Add(other.congestionInfos_);
       charInfos_.Add(other.charInfos_);
       serverEndPointInfos_.Add(other.serverEndPointInfos_);
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
@@ -1257,15 +1464,8 @@ namespace Hunt.Login {
             ErrType = (global::Hunt.Common.ErrorType) input.ReadEnum();
             break;
           }
-          case 18: {
-            if (worldInfos_ == null) {
-              WorldInfos = new global::Hunt.Common.WorldInfo();
-            }
-            input.ReadMessage(WorldInfos);
-            break;
-          }
           case 26: {
-            cogestionInfos_.AddEntriesFrom(input, _repeated_cogestionInfos_codec);
+            congestionInfos_.AddEntriesFrom(input, _repeated_congestionInfos_codec);
             break;
           }
           case 34: {
@@ -1299,15 +1499,8 @@ namespace Hunt.Login {
             ErrType = (global::Hunt.Common.ErrorType) input.ReadEnum();
             break;
           }
-          case 18: {
-            if (worldInfos_ == null) {
-              WorldInfos = new global::Hunt.Common.WorldInfo();
-            }
-            input.ReadMessage(WorldInfos);
-            break;
-          }
           case 26: {
-            cogestionInfos_.AddEntriesFrom(ref input, _repeated_cogestionInfos_codec);
+            congestionInfos_.AddEntriesFrom(ref input, _repeated_congestionInfos_codec);
             break;
           }
           case 34: {
@@ -1343,7 +1536,7 @@ namespace Hunt.Login {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Hunt.Login.LoginReflection.Descriptor.MessageTypes[4]; }
+      get { return global::Hunt.Login.LoginReflection.Descriptor.MessageTypes[5]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1581,7 +1774,7 @@ namespace Hunt.Login {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Hunt.Login.LoginReflection.Descriptor.MessageTypes[5]; }
+      get { return global::Hunt.Login.LoginReflection.Descriptor.MessageTypes[6]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]

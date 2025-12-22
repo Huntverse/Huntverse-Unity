@@ -4,6 +4,9 @@ using UnityEngine;
 public class BtnCtrl : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
+    [SerializeField] private string id = "t10";
+    [SerializeField] private string pw = "abc";
+    [SerializeField] private string nickName = "nickName123";
     void Start()
     {
 
@@ -57,4 +60,27 @@ public class BtnCtrl : MonoBehaviour
         Hunt.Net.NetworkManager.Shared.SendToLogin(Hunt.Common.MsgId.LoginReq, req);
     }
 
+    public void OnSelectWorldReq()
+    {
+        Hunt.Login.SelectWorldReq req = new Hunt.Login.SelectWorldReq();
+        req.WorldId = 11;
+        Hunt.Net.NetworkManager.Shared.SendToLogin(Hunt.Common.MsgId.SelectWorldReq, req);
+    }
+
+    public void OnCreateAccountReq()
+    {
+        Hunt.Login.CreateAccountReq req = new Hunt.Login.CreateAccountReq();
+        req.Id = id;
+        req.Pw = pw;
+        Hunt.Net.NetworkManager.Shared.SendToLogin(Hunt.Common.MsgId.CreateAccountReq, req);
+    }
+
+    public void OnCreateCharReq()
+    {
+        Hunt.Login.CreateCharReq req = new Hunt.Login.CreateCharReq();
+        req.ClassType = 1;
+        req.WorldId = 11;
+        req.Name = nickName;
+        Hunt.Net.NetworkManager.Shared.SendToLogin(Hunt.Common.MsgId.CreateCharReq, req);
+    }
 }
