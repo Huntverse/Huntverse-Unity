@@ -1,6 +1,7 @@
 using System;
 using Cysharp.Threading.Tasks;
 using Hunt;
+using Hunt.Net;
 using UnityEngine;
 
 public class SystemBoot : MonoBehaviourSingleton<SystemBoot>
@@ -18,11 +19,11 @@ public class SystemBoot : MonoBehaviourSingleton<SystemBoot>
     }
 
     bool isInit = false;
-    private async UniTaskVoid Initialize()
+    private async UniTask Initialize()
     {
         $"[Boot] : Initializing...".DLog();
 
-        // ContentsDownloader 대기 및 리소스 다운로드
+        // Contetns Download
         await UniTask.WaitUntil(() => ContentsDownloader.Shared != null);
         $"[Boot] : ContentsDownloader Ready!".DLog();
         
@@ -34,6 +35,23 @@ public class SystemBoot : MonoBehaviourSingleton<SystemBoot>
         }
         $"[Boot] : Resource Download Complete!".DLog();
 
+        // Network Manager
+        await UniTask.WaitUntil(() => NetworkManager.Shared != null);
+        $"[Boot] : NetworkManger Ready!".DLog();
+
+        // GameSession
+        await UniTask.WaitUntil(() => GameSession.Shared != null && GameSession.Shared.IsInitialized);
+        $"[Boot] : GameSession Ready!".DLog();
+
+        bool loginServerConnected = await GameSession.Shared.ConnectionToLoginServer();
+        if (!loginServerConnected)
+        {
+            $"[Boot] : LoginServer Connection Fail".DError();
+            //return;
+        }
+        $"[Boot] : LoginServer Connection Success!".DLog();
+
+        // Steam User
         await UniTask.WaitUntil(() => UserAuth.Shared != null);
         $"[Boot] : UserAuth Ready!".DLog();
 
@@ -66,10 +84,6 @@ public class SystemBoot : MonoBehaviourSingleton<SystemBoot>
                 SceneLoadHelper.Shared?.LoadSceneSingleMode(ResourceKeyConst.Ks_Mainmenu,false);
             }
         }
-    }
-    private void Start()
-    {
-      
     }
 
     protected override void OnDestroy()

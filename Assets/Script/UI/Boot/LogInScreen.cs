@@ -71,12 +71,11 @@ namespace Hunt
         private static extern short GetKeyState(int keyCode);
         private const int VK_CAPITAL = 0x14;
         #endregion
-        private AuthReqHandler loginHandler;
+        private LoginService loginService;
         #region Life
         private void Start()
         {
-            loginHandler = new AuthReqHandler(NetworkManager.Shared);
-            ConnectToLoginServer();
+            loginService = GameSession.Shared?.LoginService;
 
             confirmButton.onClick.AddListener(ReqAuthVaild);
             pwVisButton.onClick.AddListener(() => TogglePasswordVisibility(false));
@@ -98,14 +97,12 @@ namespace Hunt
             createVaildText.text = "";
             loginVaildText.text = "";
 
-            AuthReqHandler.OnLoginResponse += HandleNotiLoginResponse;
+            GameSession.Shared.OnLoginResponse += HandleNotiLoginResponse;
         }
         private void Update()
         {
             HandleKeyInput();
         }
-        #endregion
-        #region INPUT
         private void OnDestroy()
         {
             confirmButton.onClick.RemoveListener(ReqAuthVaild);
@@ -115,8 +112,11 @@ namespace Hunt
             pwInput.onSubmit.RemoveListener(OnPwSubmit);
             new_idInput.onSubmit.RemoveListener(OnIdSubmit);
             new_pwInput.onSubmit.RemoveListener(OnPwSubmit);
-            AuthReqHandler.OnLoginResponse -= HandleNotiLoginResponse;
+            GameSession.Shared.OnLoginResponse -= HandleNotiLoginResponse;
         }
+        #endregion
+        #region INPUT
+
         private void HandleKeyInput()
         {
             var key = Keyboard.current;
@@ -191,14 +191,14 @@ namespace Hunt
                 return;
             }
 
-            loginHandler.ReqIdDuplicate(id);
+            loginService.ReqIdDuplicate(id);
         }
 
         /// <summary> Request Server : Vaild Auth </summary>
         private void ReqAuthVaild()
         {
             var (id, pw) = VaildateAndReturnResult(idInput, pwInput, loginVaildText, true);
-            loginHandler.ReqAuthVaild(id, pw);
+            loginService.ReqAuthVaild(id, pw);
         }
 
         /// <summary> Request Server : Create Auth </summary>
@@ -217,7 +217,7 @@ namespace Hunt
                 return;
             }
 
-            loginHandler.ReqCreateAuthVaild(id, pw);
+            loginService.ReqCreateAuthVaild(id, pw);
         }
         private void HandleNotiLoginResponse(LoginAns ans)
         {
@@ -240,20 +240,6 @@ namespace Hunt
             }
         }
 
-
-        /// <summary> 로그인 서버 연결 (UI 콜백 처리) </summary>
-        private void ConnectToLoginServer()
-        {
-            loginHandler.ConnectToServer(
-                OnConnectSuccess,
-                OnConnectFail
-            );
-        }
-        void OnDisConnect(NetModule.ERROR e, string msg)
-        {
-            $"[LoginScreen] 연결 끊김: {msg}".DLog();
-            // 필요시 UI 업데이트
-        }
         void OnConnectSuccess()
         {
             ShowNotificationText(

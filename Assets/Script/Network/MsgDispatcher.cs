@@ -106,7 +106,7 @@ namespace Hunt.Net
                 }
             }
             
-            Hunt.AuthReqHandler.NotifyLoginResponse(loginAns);
+            Hunt.LoginService.NotifyLoginResponse(loginAns);
         }
 
         static void OnSelectWorldAns(byte[] payload, int offset, int len)
