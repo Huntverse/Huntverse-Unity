@@ -36,16 +36,16 @@ namespace Hunt
         public void ReqCreateAuthVaild(string id, string pw)
         {
             // TODO: CreateAccountReq 구현 후 활성화
-            // var req = new CreateAccountReq { Id = id, Pw = pw };
-            // networkManager.SendToLogin(Hunt.Common.MsgId.CreateAccountReq, req);
+            var req = new CreateAccountReq { Id = id, Pw = pw };
+            networkManager.SendToLogin(Hunt.Common.MsgId.CreateAccountReq, req);
             $"[AuthReqHandler] 계정 생성 요청: ID={id}".DLog();
         }
 
         public void ReqIdDuplicate(string id)
         {
             // TODO: IdDuplicateReq 구현 후 활성화
-            // var req = new IdDuplicateReq { Id = id };
-            // networkManager.SendToLogin(Hunt.Common.MsgId.IdDuplicateReq, req);
+            var req = new ConfirmIdReq{ Id = id };
+           networkManager.SendToLogin(Hunt.Common.MsgId.ConfirmIdReq, req);
             $"[AuthReqHandler] 아이디 중복확인 요청: ID={id}".DLog();
         }
 
@@ -55,8 +55,8 @@ namespace Hunt
         public void ReqNicknameDuplicate(string nickname)
         {
             // TODO: NicknameDuplicateReq 구현 후 활성화
-            // var req = new NicknameDuplicateReq { Nickname = nickname };
-            // networkManager.SendToLogin(Hunt.Common.MsgId.NicknameDuplicateReq, req);
+            var req = new ConfirmNameReq{ Name = nickname };
+            networkManager.SendToLogin(Hunt.Common.MsgId.ConfirmNameReq, req);
             $"[AuthReqHandler] 닉네임 중복확인 요청: Nickname={nickname}".DLog();
         }
 

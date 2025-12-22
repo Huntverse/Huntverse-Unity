@@ -104,8 +104,9 @@ namespace Hunt.Net
                 {
                     Debug.Log($"OnLoginAns Recv: {loginAns.ErrType}, DB 에러");
                 }
-
             }
+            
+            Hunt.AuthReqHandler.NotifyLoginResponse(loginAns);
         }
 
         static void OnSelectWorldAns(byte[] payload, int offset, int len)
