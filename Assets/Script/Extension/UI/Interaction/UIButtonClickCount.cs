@@ -5,24 +5,17 @@ using UnityEngine.UI;
 
 namespace Hunt
 {
-    [RequireComponent(typeof(Button))]
-    public class ButtonClickCountEvent : MonoBehaviour
+    public class UIButtonClickCount : UIButtonControlBase
     {
         [SerializeField] private float doubleClickTime = 0.5f;
         [SerializeField] private UnityEvent onDoubleClick;
         [SerializeField] private UnityEvent onOneClick;
-        private Button button;
+
         private float lastClickTime = 0f;
-
         public static bool SelectedOnce = false;
-        private void Awake()
+        protected override void OnClickEvent()
         {
-            button = GetComponent<Button>();
-            button.onClick.AddListener(HandleClick);
-        }
-
-        private void HandleClick()
-        {
+            if (!IsActive) return;
             float t = Time.time;
 
             if (t - lastClickTime < doubleClickTime)
