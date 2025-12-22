@@ -1,8 +1,4 @@
-using Hunt.Login;
-using Hunt.Net;
-using System;
 using System.Collections;
-using System.Net.Sockets;
 using System.Runtime.InteropServices;
 using TMPro;
 using UnityEngine;
@@ -71,21 +67,17 @@ namespace Hunt
         private static extern short GetKeyState(int keyCode);
         private const int VK_CAPITAL = 0x14;
         #endregion
-        private AuthReqHandler loginHandler;
         #region Life
         private void Start()
         {
-            loginHandler = new AuthReqHandler(NetworkManager.Shared);
-            ConnectToLoginServer();
-
             confirmButton.onClick.AddListener(ReqAuthVaild);
             pwVisButton.onClick.AddListener(() => TogglePasswordVisibility(false));
 
             createConfirmButton.onClick.AddListener(ReqCreateAuthVaild);
             new_pwVisButton.onClick.AddListener(() => TogglePasswordVisibility(true));
-
+            
             id_DupButton.onClick.AddListener(ReqIdDuplicate);
-
+            
             idInput.onSubmit.AddListener(OnIdSubmit);
             pwInput.onSubmit.AddListener(OnPwSubmit);
 
@@ -97,8 +89,6 @@ namespace Hunt
 
             createVaildText.text = "";
             loginVaildText.text = "";
-
-            AuthReqHandler.OnLoginResponse += HandleNotiLoginResponse;
         }
         private void Update()
         {
@@ -115,7 +105,6 @@ namespace Hunt
             pwInput.onSubmit.RemoveListener(OnPwSubmit);
             new_idInput.onSubmit.RemoveListener(OnIdSubmit);
             new_pwInput.onSubmit.RemoveListener(OnPwSubmit);
-            AuthReqHandler.OnLoginResponse -= HandleNotiLoginResponse;
         }
         private void HandleKeyInput()
         {
@@ -134,7 +123,6 @@ namespace Hunt
             bool isCapsLockOn = (GetKeyState(VK_CAPITAL) & 0x0001) != 0;
             context.Capslock?.SetActive(isCapsLockOn);
         }
-
         private void TogglePasswordVisibility(bool isCreatePanel)
         {
             if (isCreatePanel)
@@ -179,36 +167,27 @@ namespace Hunt
         /// <summary> Request Server : Duplicate ID </summary>
         private void ReqIdDuplicate()
         {
-            var id = new_idInput.text; 
-            if (string.IsNullOrEmpty(id))
-            {
-                ShowNotificationText(
-                    createVaildText,
-                    NotiConst.GetAuthNotiMsg(AUTH_NOTI_TYPE.FAIL_INPUT),
-                    NotiConst.COLOR_WARNNING
-                );
-                return;
-            }
-
-            loginHandler.ReqIdDuplicate(id);
+            var id = idInput.text;
+            // createVaildText.text = NotiConst.GetAuthNotiMsg(AUTH_NOTI_TYPE.FAIL_ID_EXIST);
+            // createVaildText.text = NotiConst.GetAuthNotiMsg(AUTH_NOTI_TYPE.SUCCESS_ID_EXIST);
+            $"아이디 중복확인 요청".DLog();
         }
 
         /// <summary> Request Server : Vaild Auth </summary>
         private void ReqAuthVaild()
         {
             var (id, pw) = VaildateAndReturnResult(idInput, pwInput, loginVaildText, true);
-            loginHandler.ReqAuthVaild(id, pw);
+
+            // loginVaildText.text = NotiConst.GetAuthNotiMsg(AUTH_NOTI_TYPE.FAIL_VAILD);
+            // loginVaildText.text = NotiConst.GetAuthNotiMsg(AUTH_NOTI_TYPE.SUCCESS_VAILD);
+
+            $"로그인 요청: ID={id}".DLog();
         }
 
         /// <summary> Request Server : Create Auth </summary>
         private void ReqCreateAuthVaild()
         {
-            // UI 검증
             var (id, pw) = VaildateAndReturnResult(new_idInput, new_pwInput, createVaildText);
-            if (string.IsNullOrEmpty(id) || string.IsNullOrEmpty(pw))
-            {
-                return;
-            }
 
             if (!IsVaildSyncPassWord())
             {
@@ -216,58 +195,7 @@ namespace Hunt
                 return;
             }
 
-            loginHandler.ReqCreateAuthVaild(id, pw);
-        }
-        private void HandleNotiLoginResponse(LoginAns ans)
-        {
-            if (ans.ErrType == Hunt.Common.ErrorType.ErrNon)
-            {
-                // 성공
-                ShowNotificationText(
-                    loginVaildText,
-                    NotiConst.GetAuthNotiMsg(AUTH_NOTI_TYPE.SUCCESS_VAILD),
-                    NotiConst.COLOR_SUCCESS);
-            }
-            else
-            {
-                // 실패
-                // string errorMsg = GetErrorMessage(ans.ErrType);
-                ShowNotificationText(
-                    loginVaildText,
-                    ans.ErrType.ToString(),
-                    NotiConst.COLOR_WARNNING);
-            }
-        }
-
-
-        /// <summary> 로그인 서버 연결 (UI 콜백 처리) </summary>
-        private void ConnectToLoginServer()
-        {
-            loginHandler.ConnectToServer(
-                OnConnectSuccess,
-                OnConnectFail
-            );
-        }
-        void OnDisConnect(NetModule.ERROR e, string msg)
-        {
-            $"[LoginScreen] 연결 끊김: {msg}".DLog();
-            // 필요시 UI 업데이트
-        }
-        void OnConnectSuccess()
-        {
-            ShowNotificationText(
-            loginVaildText,
-            NotiConst.GetAuthNotiMsg(AUTH_NOTI_TYPE.SERVER_CON_SUCCESS),
-            NotiConst.COLOR_SUCCESS
-            );
-        }
-        void OnConnectFail(SocketException e)
-        {
-            ShowNotificationText(
-                loginVaildText,
-                NotiConst.GetAuthNotiMsg(AUTH_NOTI_TYPE.SERVER_CON_FAIL),
-                NotiConst.COLOR_WARNNING
-                );
+            $"계정 생성 요청: ID={id}".DLog();
         }
         #endregion
         #region VAILD

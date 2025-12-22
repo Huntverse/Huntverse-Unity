@@ -4,7 +4,6 @@ namespace Hunt
 {
     public enum AUTH_NOTI_TYPE
     {
-        SERVER_CON_SUCCESS,SERVER_CON_FAIL,
         FAIL_PW_DUP, FAIL_INPUT, FAIL_ID_EXIST, FAIL_VAILD,
         SUCCESS_VAILD, SUCCESS_ID_EXIST
     }
@@ -29,8 +28,6 @@ namespace Hunt
                 AUTH_NOTI_TYPE.FAIL_VAILD => "해당 계정을 찾을 수 없습니다.",
                 AUTH_NOTI_TYPE.SUCCESS_VAILD => "환영합니다, 헌터님.",
                 AUTH_NOTI_TYPE.SUCCESS_ID_EXIST => "사용가능한 아이디입니다.",
-                AUTH_NOTI_TYPE.SERVER_CON_FAIL=>"서버 연결에 실패했습니다.",
-                AUTH_NOTI_TYPE.SERVER_CON_SUCCESS=> "서버 연결에 성공했습니다.",
                 _ => string.Empty
             };
         }
