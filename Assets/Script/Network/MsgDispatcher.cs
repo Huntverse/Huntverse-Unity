@@ -106,7 +106,7 @@ namespace Hunt.Net
                 }
             }
             
-            Hunt.LoginService.NotifyLoginResponse(loginAns);
+            Hunt.LoginService.NotifyLoginResponse(loginAns.ErrType);
         }
 
         static void OnSelectWorldAns(byte[] payload, int offset, int len)
@@ -141,6 +141,8 @@ namespace Hunt.Net
                 }
 
             }
+
+            Hunt.LoginService.NotifyLoginResponse(createAccountAns.ErrType);
         }
 
         static void OnCreateCharAns(byte[] payload, int offset, int len)
@@ -162,6 +164,8 @@ namespace Hunt.Net
                     Debug.Log($"OnCreateCharAns Recv: [Error:{createCharAns.ErrType}], DB 에러");
                 }
             }
+
+            Hunt.LoginService.NotifyCreateCharResponse(createCharAns.ErrType);
         }
 
         static void OnConfirmIdAns(byte[] payload, int offset, int len)
@@ -178,6 +182,7 @@ namespace Hunt.Net
                     Debug.Log($"OnConfirmIdAns Recv: [Error:{ans.ErrType}], DB 에러");
                 }
             }
+            Hunt.LoginService.NotifyLoginResponse(ans.ErrType);
         }
 
         static void OnConfirmNameAns(byte[] payload, int offset, int len)
@@ -194,6 +199,7 @@ namespace Hunt.Net
                     Debug.Log($"OnConfirmNameAns Recv: [Error:{ans.ErrType}], DB 에러");
                 }
             }
+            Hunt.LoginService.NotifyCreateCharResponse(ans.ErrType);
         }
     }
 

@@ -1,3 +1,5 @@
+using Cysharp.Threading.Tasks;
+using Hunt.Common;
 using Hunt.Login;
 using Hunt.Net;
 using System;
@@ -14,7 +16,7 @@ namespace Hunt
     public class LoginScreen : MonoBehaviour
     {
         #region Field
-        [SerializeField] private TMP_InputField idInput, pwInput;
+        [SerializeField] private TMP_InputField org_idInput, org_pwInput;
         [SerializeField] private TMP_InputField new_idInput, new_pwInput, new_pwDupInput;
 
         [Header("LOGIN")]
@@ -57,8 +59,8 @@ namespace Hunt
 
             return new InputContext
             {
-                IdField = idInput,
-                PwField = pwInput,
+                IdField = org_idInput,
+                PwField = org_pwInput,
                 VaildText = loginVaildText,
                 Capslock = caplockVis
             };
@@ -71,11 +73,9 @@ namespace Hunt
         private static extern short GetKeyState(int keyCode);
         private const int VK_CAPITAL = 0x14;
         #endregion
-        private LoginService loginService;
         #region Life
         private void Start()
         {
-            loginService = GameSession.Shared?.LoginService;
 
             confirmButton.onClick.AddListener(ReqAuthVaild);
             pwVisButton.onClick.AddListener(() => TogglePasswordVisibility(false));
@@ -85,20 +85,33 @@ namespace Hunt
 
             id_DupButton.onClick.AddListener(ReqIdDuplicate);
 
-            idInput.onSubmit.AddListener(OnIdSubmit);
-            pwInput.onSubmit.AddListener(OnPwSubmit);
+            org_idInput.onSubmit.AddListener(OnIdSubmit);
+            org_pwInput.onSubmit.AddListener(OnPwSubmit);
 
             new_idInput.onSubmit.AddListener(OnIdSubmit);
             new_pwInput.onSubmit.AddListener(OnPwSubmit);
 
-            idInput.Select();
-            idInput.ActivateInputField();
+            org_idInput.Select();
+            org_idInput.ActivateInputField();
 
             createVaildText.text = "";
             loginVaildText.text = "";
+            org_pwInput.contentType = TMP_InputField.ContentType.Password;
+            new_pwInput.contentType = TMP_InputField.ContentType.Password;
+            new_pwDupInput.contentType = TMP_InputField.ContentType.Password;
 
             LoginService.OnLoginResponse += HandleNotiLoginResponse;
+
+            if (!SystemBoot.Shared.loginServerConnected)
+            {
+                ShowNotificationText(loginVaildText, NotiConst.GetAuthNotiMsg(AUTH_NOTI_TYPE.SERVER_CON_FAIL), NotiConst.COLOR_WARNNING );
+            }
+            else
+            {
+                ShowNotificationText(loginVaildText, NotiConst.GetAuthNotiMsg(AUTH_NOTI_TYPE.SERVER_CON_SUCCESS), NotiConst.COLOR_SUCCESS);
+            }
         }
+
         private void Update()
         {
             HandleKeyInput();
@@ -108,8 +121,8 @@ namespace Hunt
             confirmButton.onClick.RemoveListener(ReqAuthVaild);
             createConfirmButton.onClick.RemoveListener(ReqCreateAuthVaild);
             id_DupButton.onClick.RemoveListener(ReqIdDuplicate);
-            idInput.onSubmit.RemoveListener(OnIdSubmit);
-            pwInput.onSubmit.RemoveListener(OnPwSubmit);
+            org_idInput.onSubmit.RemoveListener(OnIdSubmit);
+            org_pwInput.onSubmit.RemoveListener(OnPwSubmit);
             new_idInput.onSubmit.RemoveListener(OnIdSubmit);
             new_pwInput.onSubmit.RemoveListener(OnPwSubmit);
             LoginService.OnLoginResponse -= HandleNotiLoginResponse;
@@ -151,10 +164,10 @@ namespace Hunt
             else
             {
                 isPasswordVisible = !isPasswordVisible;
-                pwInput.contentType = isPasswordVisible
+                org_pwInput.contentType = isPasswordVisible
                     ? TMP_InputField.ContentType.Standard
                     : TMP_InputField.ContentType.Password;
-                pwInput.ForceLabelUpdate();
+                org_pwInput.ForceLabelUpdate();
             }
         }
         private void OnIdSubmit(string _)
@@ -180,7 +193,7 @@ namespace Hunt
         /// <summary> Request Server : Duplicate ID </summary>
         private void ReqIdDuplicate()
         {
-            var id = new_idInput.text; 
+            var id = new_idInput.text;
             if (string.IsNullOrEmpty(id))
             {
                 ShowNotificationText(
@@ -191,14 +204,14 @@ namespace Hunt
                 return;
             }
 
-            loginService.ReqIdDuplicate(id);
+            GameSession.Shared?.LoginService.ReqIdDuplicate(id);
         }
 
         /// <summary> Request Server : Vaild Auth </summary>
         private void ReqAuthVaild()
         {
-            var (id, pw) = VaildateAndReturnResult(idInput, pwInput, loginVaildText, true);
-            loginService.ReqAuthVaild(id, pw);
+            var (id, pw) = VaildateAndReturnResult(org_idInput, org_pwInput, loginVaildText, true);
+            GameSession.Shared?.LoginService.ReqAuthVaild(id, pw);
         }
 
         /// <summary> Request Server : Create Auth </summary>
@@ -217,45 +230,49 @@ namespace Hunt
                 return;
             }
 
-            loginService.ReqCreateAuthVaild(id, pw);
+            GameSession.Shared?.LoginService.ReqCreateAuthVaild(id, pw);
         }
-        private void HandleNotiLoginResponse(LoginAns ans)
+        private void HandleNotiLoginResponse(ErrorType t)
         {
-            if (ans.ErrType == Hunt.Common.ErrorType.ErrNon)
+            switch (t)
             {
-                // 성공
-                ShowNotificationText(
+                case Common.ErrorType.ErrNon:
+                    ShowNotificationText(
                     loginVaildText,
                     NotiConst.GetAuthNotiMsg(AUTH_NOTI_TYPE.SUCCESS_VAILD),
                     NotiConst.COLOR_SUCCESS);
-            }
-            else
-            {
-                // 실패
-                // string errorMsg = GetErrorMessage(ans.ErrType);
-                ShowNotificationText(
-                    loginVaildText,
-                    ans.ErrType.ToString(),
+                    break;
+                case Common.ErrorType.ErrDupId:
+                    ShowNotificationText(
+                    createVaildText,
+                    NotiConst.GetAuthNotiMsg(AUTH_NOTI_TYPE.DUP_ID),
                     NotiConst.COLOR_WARNNING);
+                    break;
+                case Common.ErrorType.ErrAccountNotExist:
+                    ShowNotificationText(
+                    loginVaildText,
+                    NotiConst.GetAuthNotiMsg(AUTH_NOTI_TYPE.ACCOUNT_NOT_EXIST),
+                    NotiConst.COLOR_WARNNING);
+                    break;
+                case Common.ErrorType.ErrDupLogin:
+                    ShowNotificationText(
+                    loginVaildText,
+                    NotiConst.GetAuthNotiMsg(AUTH_NOTI_TYPE.DUP_ID),
+                    NotiConst.COLOR_WARNNING);
+                    break;
             }
+
+            if (t != ErrorType.ErrNon)
+            {
+                org_idInput.text = "";
+                org_pwInput.text = "";
+                new_idInput.text = "";
+                new_pwDupInput.text = "";
+                new_pwInput.text = "";
+            }
+
         }
 
-        void OnConnectSuccess()
-        {
-            ShowNotificationText(
-            loginVaildText,
-            NotiConst.GetAuthNotiMsg(AUTH_NOTI_TYPE.SERVER_CON_SUCCESS),
-            NotiConst.COLOR_SUCCESS
-            );
-        }
-        void OnConnectFail(SocketException e)
-        {
-            ShowNotificationText(
-                loginVaildText,
-                NotiConst.GetAuthNotiMsg(AUTH_NOTI_TYPE.SERVER_CON_FAIL),
-                NotiConst.COLOR_WARNNING
-                );
-        }
         #endregion
         #region VAILD
         private (string, string) VaildateAndReturnResult(
@@ -308,7 +325,7 @@ namespace Hunt
             if (!vaild)
                 ShowNotificationText(
                 createVaildText,
-                NotiConst.GetAuthNotiMsg(AUTH_NOTI_TYPE.FAIL_PW_DUP),
+                NotiConst.GetAuthNotiMsg(AUTH_NOTI_TYPE.DUP_PW),
                 NotiConst.COLOR_WARNNING);
 
             return vaild;
@@ -321,35 +338,9 @@ namespace Hunt
         {
             if (currentFadeCoroutine != null) StopCoroutine(currentFadeCoroutine);
 
-            currentFadeCoroutine = StartCoroutine(CO_FadeText(textUI, message, color));
+            currentFadeCoroutine = StartCoroutine(UIEffect.CO_FadeText(textUI, message, color));
         }
 
-        private IEnumerator CO_FadeText(TextMeshProUGUI textUI, string message, Color color)
-        {
-            textUI.text = message;
-            textUI.color = color;
-            textUI.gameObject.SetActive(true);
-
-            // Fade In
-            float a = 0f;
-            while (a < 1f)
-            {
-                a += Time.deltaTime * 3f;
-                textUI.color = new Color(color.r, color.g, color.b, a);
-                yield return null;
-            }
-
-            yield return new WaitForSeconds(2f);
-
-            while (a > 0f)
-            {
-                a -= Time.deltaTime * 3f;
-                textUI.color = new Color(color.r, color.g, color.b, a);
-                yield return null;
-            }
-
-            textUI.gameObject.SetActive(false);
-        }
         #endregion
     }
 }

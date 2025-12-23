@@ -801,7 +801,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uB2E4\uC2DC \uC785\uB825\uD558\uC138\uC694."
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 47984bc8d4123f74a8e1a56124d3cb25, type: 2}
   m_sharedMaterial: {fileID: -5101873356033928024, guid: 47984bc8d4123f74a8e1a56124d3cb25, type: 2}
@@ -882,7 +882,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6021993219193413896}
   - component: {fileID: 6670400765375477418}
-  - component: {fileID: 1731270611949175240}
+  - component: {fileID: 2073426752133209497}
   m_Layer: 5
   m_Name: NewCharacterSelectField
   m_TagString: Untagged
@@ -935,7 +935,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &1731270611949175240
+--- !u!114 &2073426752133209497
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -944,18 +944,21 @@ MonoBehaviour:
   m_GameObject: {fileID: 3385841910365537525}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2038530a74138774ebc14f179c67729f, type: 3}
+  m_Script: {fileID: 11500000, guid: b9a1d94374141de40a10dc2f09fb2d29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectButton: {fileID: 2058095892233826012}
-  idField: {fileID: 2064508971235248874}
+  createWindow: {fileID: 2681944248520081803}
+  createButton: {fileID: 2058095892233826012}
+  dupNickButton: {fileID: 4532423176276421691}
+  createcharVaildText: {fileID: 9112509288300311553}
+  nickNameField: {fileID: 2064508971235248874}
   professionType: 0
   stats:
   - 0.5
-  - 0.3
-  - 0.6
-  - 0.3
-  - 0.6
+  - 0.4
+  - 0.2
+  - 0.4
+  - 0.5
   storyString: "\uD604\uC2E4\uC5D0\uC11C \uC5EC\uB7EC \uB3D9\uC0DD\uC744 \uB3CC\uBCF4\uBA70
     \uC0B4\uC544\uAC00\uB358 \uC870\uC6A9\uD55C \uC7A5\uB140\uC600\uB2E4. \uC5B4\uB290
     \uB0A0 \uAE4A\uC740 \uC7A0\uC5D0 \uBE60\uC9C4 \uB4A4 \uAE68\uC5B4\uB098\uC9C0

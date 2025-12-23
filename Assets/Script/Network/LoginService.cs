@@ -1,8 +1,7 @@
+using Hunt.Common;
 using Hunt.Login;
 using Hunt.Net;
 using System;
-using System.Net.Sockets;
-using UnityEngine;
 
 namespace Hunt
 {
@@ -13,23 +12,30 @@ namespace Hunt
     public class LoginService
     {
         private readonly NetworkManager networkManager;
-        public static event Action<LoginAns> OnLoginResponse;
+        public static event Action<ErrorType> OnLoginResponse;
+        public static event Action<ErrorType> OnCreateCharResponse;
         public LoginService(NetworkManager networkManager = null)
         {
             this.networkManager = networkManager ?? NetworkManager.Shared;
         }
 
         /// <summary> 로그인 응답을 처리하고 이벤트 발생 (MsgDispatcher에서 호출) </summary>
-        public static void NotifyLoginResponse(LoginAns ans)
+        public static void NotifyLoginResponse(ErrorType t)
         {
-            $"[LoginService] 로그인 응답 수신: {ans.ErrType}".DLog();
-            OnLoginResponse?.Invoke(ans);
+            $"[LoginService] 계정 응답 수신: {t}".DLog();
+            OnLoginResponse?.Invoke(t);
+            
+        }
+        public static void NotifyCreateCharResponse(ErrorType t)
+        {
+            $"[LoginService] 캐릭터 이름 응답 수신: {t}".DLog();
+            OnCreateCharResponse?.Invoke(t);
         }
 
         public void ReqAuthVaild(string id, string pw)
         {
             var req = new LoginReq { Id = id, Pw = pw };
-            $"[LoginService] 로그인 요청: ID={id}".DLog();
+            $"[LoginService] 로그인 요청: ID={id} PW={pw}".DLog();
             networkManager.SendToLogin(Hunt.Common.MsgId.LoginReq, req);
         }
 
@@ -56,5 +62,12 @@ namespace Hunt
             networkManager.SendToLogin(Hunt.Common.MsgId.ConfirmNameReq, req);
             $"[LoginService] 닉네임 중복확인 요청: Nickname={nickname}".DLog();
         }
+        public void ReqCreateChar(string nickname)
+        {
+            var req = new CreateCharReq { Name = nickname };
+            networkManager.SendToLogin(Hunt.Common.MsgId.CreateCharReq, req);
+            $"[LoginService] 캐릭터 생성 요청: Nickname={nickname}".DLog();
+        }
+
     }
 }

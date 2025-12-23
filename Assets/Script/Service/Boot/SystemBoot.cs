@@ -10,6 +10,7 @@ public class SystemBoot : MonoBehaviourSingleton<SystemBoot>
     [SerializeField] private Canvas LogInCanvas;
 
     public bool isSystemContinue = false;
+    public bool loginServerConnected;
     protected override bool DontDestroy => base.DontDestroy;
     protected override void Awake()
     {
@@ -43,7 +44,7 @@ public class SystemBoot : MonoBehaviourSingleton<SystemBoot>
         await UniTask.WaitUntil(() => GameSession.Shared != null && GameSession.Shared.IsInitialized);
         $"[Boot] : GameSession Ready!".DLog();
 
-        bool loginServerConnected = await GameSession.Shared.ConnectionToLoginServer();
+        loginServerConnected = await GameSession.Shared.ConnectionToLoginServer();
         if (!loginServerConnected)
         {
             $"[Boot] : LoginServer Connection Fail".DError();

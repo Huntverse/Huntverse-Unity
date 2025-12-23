@@ -7,14 +7,14 @@ namespace Hunt
 
     public class UserCharacter : MonoBehaviour
     {
-        private PlayerAction characterAction;
+        private PlayerLoco characterAction;
         private GameObject model;
 
         private bool isSetupComplete = false;
         public bool IsSetupComplete => isSetupComplete;
         private void Start()
         {
-            characterAction = GetComponent<PlayerAction>();
+            characterAction = GetComponent<PlayerLoco>();
             if (characterAction != null)
             {
                 characterAction.enabled = false;
