@@ -225,7 +225,7 @@ namespace Hunt
         /// <summary> Request Server : Vaild Auth </summary>
         private void ReqAuthVaild()
         {
-            var (id, pw) = VaildateAndReturnResult(org_idInput, org_pwInput, loginVaildText, true);
+            var (id, pw) = VaildateAndReturnResult(org_idInput, org_pwInput, loginVaildText);
             if (string.IsNullOrEmpty(id) || string.IsNullOrEmpty(pw)) return;
             
             $"[LogInScreen] 로그인 요청 시도: ID={id}".DLog();
@@ -253,24 +253,33 @@ namespace Hunt
         /// <summary> 로그인 응답 처리 </summary>
         private void HandleNotiLoginResponse(ErrorType t)
         {
-            $"[LogInScreen] HandleNotiLoginResponse 호출: {t}".DLog();
+            
             switch (t)
             {
                 case Common.ErrorType.ErrNon:
+                    animator.SetBool(AniKeyConst.k_bValid, true);
                     ShowNotificationText(
                     loginVaildText,
                     NotiConst.GetAuthNotiMsg(AUTH_NOTI_TYPE.SUCCESS_VAILD),
                     NotiConst.COLOR_SUCCESS);
+                    $"[LogInScreen] HandleNotiLoginResponse 로그인 성공: {t}".DLog();
+                    
+                    SceneLoadHelper.Shared?.LoadSceneSingleMode(ResourceKeyConst.Ks_Mainmenu, false);
+
                     break;
                 case Common.ErrorType.ErrAccountNotExist:
                     animator.SetTrigger(AniKeyConst.k_tFail);
+                    animator.SetBool(AniKeyConst.k_bValid, false);
                     ShowNotificationText(
                     loginVaildText,
                     NotiConst.GetAuthNotiMsg(AUTH_NOTI_TYPE.ACCOUNT_NOT_EXIST),
                     NotiConst.COLOR_WARNNING);
+                   
+                    $"[LogInScreen] HandleNotiLoginResponse 계정 정보 존재 하지 않음: {t}".DError();
                     break;
                 case Common.ErrorType.ErrDupLogin:
                     animator.SetTrigger(AniKeyConst.k_tFail);
+                    animator.SetBool(AniKeyConst.k_bValid, false);
                     ShowNotificationText(
                     loginVaildText,
                     NotiConst.GetAuthNotiMsg(AUTH_NOTI_TYPE.DUP_LOGIN),
@@ -328,10 +337,9 @@ namespace Hunt
         private (string, string) VaildateAndReturnResult(
             TMP_InputField idField,
             TMP_InputField pwField,
-            TextMeshProUGUI resultText,
-            bool isAni = false)
+            TextMeshProUGUI resultText )
         {
-            if (!IsValid(idField.text, pwField.text, resultText, isAni))
+            if (!IsValid(idField.text, pwField.text, resultText))
             {
                 return default;
             }
@@ -339,7 +347,7 @@ namespace Hunt
             return (idField.text, pwField.text);
         }
 
-        private bool IsValid(string id, string pw, TextMeshProUGUI vaildText, bool isAni)
+        private bool IsValid(string id, string pw, TextMeshProUGUI vaildText)
         {
             char[] invalidChars = { '-', '#', ' ' };
 
@@ -353,7 +361,7 @@ namespace Hunt
             if (isValid)
             {
                 vaildText.color = NotiConst.COLOR_SUCCESS;
-                animator.SetBool(AniKeyConst.k_bValid, isAni);
+               
                 $"Field Value Is Valid {true}".DLog();
             }
             else
@@ -365,7 +373,7 @@ namespace Hunt
                 animator.SetTrigger(AniKeyConst.k_tFail);
                 $"Field Value Is Valid {false}".DError();
             }
-
+            animator.SetBool(AniKeyConst.k_bValid, isValid);
             return isValid;
         }
 

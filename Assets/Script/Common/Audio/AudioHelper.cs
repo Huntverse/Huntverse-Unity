@@ -72,6 +72,7 @@ namespace Hunt
         {
             "🔊 [AudioHelper] AudioClip Preload Start...".DLog();
 
+            await UniTask.WaitUntil(() => AbLoader.Shared != null);
             List<UniTask> loadTasks = new List<UniTask>();
 
             foreach (var audioKey in AudioKeyConst.GetAllSfxKeys())
@@ -89,6 +90,7 @@ namespace Hunt
 
         private async UniTask LoadAudioClipAsync(string audioKey)
         {
+            if (AbLoader.Shared == null) return;
             try
             {
                 var audioClip = await AbLoader.Shared.LoadAssetAsync<AudioClip>(audioKey);
@@ -118,7 +120,7 @@ namespace Hunt
                 if (!isPreloadComplete)
                 {
                     await UniTask.WaitUntil(() => isPreloadComplete);
-                    
+
                     if (!audioClipCache.TryGetValue(audioKey, out clip))
                     {
                         $"🔊 [AudioHelper] AudioClip not Find: {audioKey}".DError();
@@ -149,7 +151,7 @@ namespace Hunt
         private async UniTaskVoid ReturnSfxSourceToPoolAfterPlay(AudioSource source, float delay)
         {
             await UniTask.Delay((int)(delay * 1000));
-            
+
             if (source != null)
             {
                 source.Stop();
@@ -172,7 +174,7 @@ namespace Hunt
                 if (!isPreloadComplete)
                 {
                     await UniTask.WaitUntil(() => isPreloadComplete);
-                    
+
                     if (!audioClipCache.TryGetValue(audioKey, out clip))
                     {
                         $"🔊 [AudioHelper] BGM AudioClip not found: {audioKey}".DError();
