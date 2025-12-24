@@ -150,7 +150,7 @@ namespace Hunt.ui
             // 2. Boot 씬으로 이동
             if (SceneLoadHelper.Shared != null)
             {
-                await SceneLoadHelper.Shared.LoadToBootScene();
+                await SceneLoadHelper.Shared.LoadToLogOut();
             }
         }
 

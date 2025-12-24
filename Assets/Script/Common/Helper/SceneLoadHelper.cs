@@ -19,8 +19,8 @@ namespace Hunt
         [Header("Loading Indicator")]
         [SerializeField] private Canvas loadingCanvas;
         [SerializeField] private CanvasGroup loadingCanvasGroup;
-        [SerializeField] private float minLoadingDuration = 0.5f; // 최소 로딩 표시 시간 (깜빡임 방지)
-        [SerializeField] private float fadeDuration = 0.7f; // 페이드 인/아웃 시간
+        [SerializeField] private float minLoadingDuration = 0.5f; 
+        [SerializeField] private float fadeDuration = 0.7f; 
 
         protected override bool DontDestroy => base.DontDestroy;
         protected override void Awake()
@@ -75,7 +75,7 @@ namespace Hunt
                 ShowLoadingIndicator(true);
                 if (isfadeactive)
                 {
-                    await FadeIn(cts.Token);
+                    await UIEffect.FadeIn(loadingCanvasGroup, cts.Token, fadeDuration);
                 }
 
                 // 2. 기존 씬 언로드
@@ -103,40 +103,28 @@ namespace Hunt
                     await UniTask.Delay(TimeSpan.FromSeconds(minLoadingDuration - elapsedTime), cancellationToken: cts.Token);
                 }
 
-                // 4. 페이드 아웃: 로딩 화면 숨김
                 if (isfadeactive)
                 {
-                    await FadeOut(cts.Token);
+                    await UIEffect.FadeOut(loadingCanvasGroup,cts.Token,fadeDuration);
                 }
                 ShowLoadingIndicator(false);
             }
             catch (OperationCanceledException)
             {
-                Debug.LogWarning("[SceneLoadHelper] 씬 로드가 취소되었습니다.");
+                "[SceneLoadHelper] 씬 로드가 취소되었습니다.".DWarning();
                 ShowLoadingIndicator(false);
                 throw;
             }
             catch (Exception ex)
             {
-                Debug.LogError($"[SceneLoadHelper] 씬 로드 중 오류 발생: {ex.Message}");
+                $"[SceneLoadHelper] 씬 로드 중 오류 발생: {ex.Message}".DError();
                 ShowLoadingIndicator(false);
                 throw;
             }
         }
 
-        public async UniTask<SceneInstance> LoadSceneAdditiveMode(string key)
-        {
-            CancelCurrentOps();
-
-            var handle = Addressables.LoadSceneAsync(key, LoadSceneMode.Additive);
-            var scene = await handle.ToUniTask(cancellationToken: cts.Token);
-            return scene;
-        }
-
-        /// <summary>
-        /// Boot 씬으로 이동 (로그아웃 처리)
-        /// </summary>
-        public async UniTask LoadToBootScene()
+        /// <summary> Boot 씬으로 이동 (로그아웃 처리) </summary>
+        public async UniTask LoadToLogOut()
         {
             if (cts == null)
             {
@@ -154,7 +142,7 @@ namespace Hunt
                 ShowLoadingIndicator(true);
                 if (loadingCanvasGroup != null)
                 {
-                    await FadeIn(cts.Token);
+                    await UIEffect.FadeIn(loadingCanvasGroup, cts.Token, fadeDuration);
                 }
 
                 if (curScene.Scene.IsValid())
@@ -215,7 +203,7 @@ namespace Hunt
 
                     if (loadingCanvasGroup != null)
                     {
-                        await FadeOut(cts.Token);
+                        await UIEffect.FadeOut(loadingCanvasGroup, cts.Token, fadeDuration);
                     }
                 }
 
@@ -242,87 +230,15 @@ namespace Hunt
             }
         }
 
-        /// <summary>
-        /// 게임 완전 재시작 (모든 DontDestroyOnLoad 객체 파괴)
-        /// </summary>
-        public void RestartGameSimple()
+
+        public async UniTask<SceneInstance> LoadSceneAdditiveMode(string key)
         {
-            try
-            {
-                ResetSteamManager();
-                CleanupAddressables();
-                
-                Scene tempScene = SceneManager.CreateScene("TempDestroyScene");
-                GameObject[] allObjects = FindObjectsByType<GameObject>(FindObjectsSortMode.None);
-                
-                foreach (GameObject obj in allObjects)
-                {
-                    if (obj == null || obj.transform.parent != null)
-                        continue;
-                    
-                    if (obj.scene.name == "DontDestroyOnLoad")
-                    {
-                        SceneManager.MoveGameObjectToScene(obj, tempScene);
-                    }
-                }
-                
-                SceneManager.LoadScene(0, LoadSceneMode.Single);
-            }
-            catch (Exception ex)
-            {
-                $"[SceneLoadHelper] RestartGameSimple 에러: {ex.Message}".DError();
-            }
+            CancelCurrentOps();
+
+            var handle = Addressables.LoadSceneAsync(key, LoadSceneMode.Additive);
+            var scene = await handle.ToUniTask(cancellationToken: cts.Token);
+            return scene;
         }
-
-        private void ResetSteamManager()
-        {
-            try
-            {
-                var steamManagerType = Type.GetType("SteamManager");
-                if (steamManagerType == null) return;
-
-                var everInitField = steamManagerType.GetField("s_EverInitialized", BindingFlags.Static | BindingFlags.NonPublic);
-                if (everInitField != null)
-                {
-                    everInitField.SetValue(null, false);
-                }
-
-                var instanceField = steamManagerType.GetField("s_instance", BindingFlags.Static | BindingFlags.NonPublic);
-                if (instanceField != null)
-                {
-                    instanceField.SetValue(null, null);
-                }
-            }
-            catch (Exception ex)
-            {
-                $"[SceneLoadHelper] SteamManager 리셋 중 에러: {ex.Message}".DWarning();
-            }
-        }
-
-        private void CleanupAddressables()
-        {
-            try
-            {
-                if (curScene.Scene.IsValid())
-                {
-                    var unloadOp = Addressables.UnloadSceneAsync(curScene);
-                    unloadOp.WaitForCompletion();
-                    curScene = default;
-                }
-                
-                var downloader = ContentsDownloader.Shared;
-                if (downloader != null)
-                {
-                    downloader.ResetDownloadState();
-                }
-            }
-            catch (Exception ex)
-            {
-                $"[SceneLoadHelper] Addressables 정리 중 에러: {ex.Message}".DWarning();
-            }
-        }
-
-
         public async UniTask UnloadSceneAdditive(SceneInstance scene)
         {
             if (!scene.Scene.IsValid())
@@ -348,38 +264,5 @@ namespace Hunt
             }
         }
 
-        private async UniTask FadeIn(CancellationToken token)
-        {
-            if (loadingCanvasGroup == null) return;
-
-            float elapsed = 0f;
-            loadingCanvasGroup.alpha = 0f;
-
-            while (elapsed < fadeDuration)
-            {
-                elapsed += Time.unscaledDeltaTime;
-                loadingCanvasGroup.alpha = Mathf.Clamp01(elapsed / fadeDuration);
-                await UniTask.Yield(PlayerLoopTiming.Update, token);
-            }
-
-            loadingCanvasGroup.alpha = 1f;
-        }
-
-        private async UniTask FadeOut(CancellationToken token)
-        {
-            if (loadingCanvasGroup == null) return;
-
-            float elapsed = 0f;
-            loadingCanvasGroup.alpha = 1f;
-
-            while (elapsed < fadeDuration)
-            {
-                elapsed += Time.unscaledDeltaTime;
-                loadingCanvasGroup.alpha = Mathf.Clamp01(1f - (elapsed / fadeDuration));
-                await UniTask.Yield(PlayerLoopTiming.Update, token);
-            }
-
-            loadingCanvasGroup.alpha = 0f;
-        }
     }
 }
