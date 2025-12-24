@@ -3,6 +3,7 @@ using System;
 using UnityEngine;
 using Hunt.Common;
 using System.Linq;
+using UnityEngine.UIElements;
 
 //쓰기 버퍼 1개
 //읽기 버퍼 1개(전송하는 버퍼)
@@ -59,6 +60,7 @@ namespace Hunt.Net
     {
         private readonly object m_lock = new object(); // Mutex보다 lock이 더 가볍고 안전
         private InternalSendBuffer[] m_sendBuffers;
+        private InternalSendBuffer m_emptyBuffer;
         private int m_writeAbleIdx = 0;
         private AutoResetEvent m_signal = new AutoResetEvent(false);
         private bool m_isLittleEndian = false;
@@ -69,6 +71,7 @@ namespace Hunt.Net
             m_sendBuffers = new InternalSendBuffer[2];
             m_sendBuffers[0] = new InternalSendBuffer();
             m_sendBuffers[1] = new InternalSendBuffer();
+            m_emptyBuffer = new InternalSendBuffer();
         }
 
         public void Send(UInt32 msgId, byte[] writeData2, UInt16 len2) //writeableIdx 버퍼에 write작업
@@ -103,11 +106,15 @@ namespace Hunt.Net
         //writeableIdx를 바꾸고, 더 이상 write할일 없는 prev에 대해서 전송 버퍼로 활용
         public InternalSendBuffer GetSendAbleData()//writeableIdx를 교체, 지금까지 쓰여지던 버퍼는 send, 안쓰던 버퍼는 write작업으로
         {
-            m_signal.WaitOne(Timeout.Infinite);//Send할게 생길 때까지 대기, 어차피 Send는 async로 동작되는
+            m_signal.WaitOne(1000);//Send할게 생길 때까지 대기, 어차피 Send는 async로 동작되는
             // m_signal.Reset();
             var prev = 0;
             lock (m_lock)
             {
+                if (m_sendBuffers[m_writeAbleIdx].GetLength() <= 0)
+                {
+                    return m_emptyBuffer;
+                }
                 prev = m_writeAbleIdx;
                 m_writeAbleIdx = (m_writeAbleIdx + 1) & 1;//알아서 0, 1 변경 됨
                 m_sendBuffers[m_writeAbleIdx].Clear();//쉬던 버퍼를 클리어 -> 이제 이 버퍼에 write작업이 들어감
