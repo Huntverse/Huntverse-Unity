@@ -99,14 +99,31 @@ namespace Hunt
                 return false;
             }
 
-            var catalogHandle = Addressables.LoadContentCatalogAsync(catalogUrl, true);
+            // 절대 URL인지 확인하고, 상대 경로라면 절대 URL로 변환
+            string absoluteCatalogUrl = catalogUrl;
+            if (!Uri.IsWellFormedUriString(catalogUrl, UriKind.Absolute))
+            {
+                // 상대 경로인 경우, env_contents.json의 remoteCatalogUrl을 그대로 사용
+                // 하지만 Addressables가 Profile의 Remote.LoadPath를 사용하지 않도록 절대 URL로 만들어야 함
+                // catalogUrl이 이미 전체 URL이어야 하므로, 그대로 사용
+                absoluteCatalogUrl = catalogUrl;
+            }
+
+            $"📦 [Downloader] Loading catalog from: {absoluteCatalogUrl}".DLog();
+            var catalogHandle = Addressables.LoadContentCatalogAsync(absoluteCatalogUrl, true);
             await catalogHandle.Task;
 
-            if (catalogHandle.Status != AsyncOperationStatus.Succeeded)
+            if (!catalogHandle.IsValid() || catalogHandle.Status != AsyncOperationStatus.Succeeded)
             {
-                "📦 [Downloader] Failed to load catalog".DError();
+                string errorMsg = catalogHandle.IsValid() ? catalogHandle.OperationException?.ToString() : "Invalid operation handle";
+                $"📦 [Downloader] Failed to load catalog - {errorMsg}".DError();
+                if (catalogHandle.IsValid())
+                {
+                    Addressables.Release(catalogHandle);
+                }
                 return false;
             }
+            Addressables.Release(catalogHandle);
             return true;
         }
 

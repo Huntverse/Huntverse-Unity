@@ -2,6 +2,8 @@ using Hunt.Common;
 using Hunt.Login;
 using Hunt.Net;
 using System;
+using Cysharp.Threading.Tasks;
+using UnityEngine;
 
 namespace Hunt
 {
@@ -13,22 +15,68 @@ namespace Hunt
     {
         private readonly NetworkManager networkManager;
         public static event Action<ErrorType> OnLoginResponse;
+        public static event Action<ErrorType> OnCreateAccountResponse;
+        public static event Action<ErrorType, bool> OnConfirmIdResponse;
         public static event Action<ErrorType> OnCreateCharResponse;
         public LoginService(NetworkManager networkManager = null)
         {
             this.networkManager = networkManager ?? NetworkManager.Shared;
         }
 
-        /// <summary> 로그인 응답을 처리하고 이벤트 발생 (MsgDispatcher에서 호출) </summary>
+        /// <summary> 로그인 응답 처리 </summary>
         public static void NotifyLoginResponse(ErrorType t)
         {
-            $"[LoginService] 계정 응답 수신: {t}".DLog();
-            OnLoginResponse?.Invoke(t);
-            
+            $"[LoginService] 로그인 응답 수신: {t}".DLog();
+            if (OnLoginResponse == null) return;
+            NotifyLoginResponseAsync(t).Forget();
         }
+
+        private static async UniTaskVoid NotifyLoginResponseAsync(ErrorType t)
+        {
+            await UniTask.SwitchToMainThread();
+            OnLoginResponse?.Invoke(t);
+        }
+
+        /// <summary> 계정 생성 응답 처리 </summary>
+        public static void NotifyCreateAccountResponse(ErrorType t)
+        {
+            $"[LoginService] 계정 생성 응답 수신: {t}".DLog();
+            if (OnCreateAccountResponse == null)
+            {
+                $"[LoginService] OnCreateAccountResponse 이벤트 구독자 없음!".DError();
+                return;
+            }
+            NotifyCreateAccountResponseAsync(t).Forget();
+        }
+
+        private static async UniTaskVoid NotifyCreateAccountResponseAsync(ErrorType t)
+        {
+            await UniTask.SwitchToMainThread();
+            OnCreateAccountResponse?.Invoke(t);
+        }
+
+        /// <summary> 아이디 중복 확인 응답 처리 </summary>
+        public static void NotifyConfirmIdResponse(ErrorType t, bool isDup)
+        {
+            $"[LoginService] 아이디 중복확인 응답 수신: {t}, IsDup: {isDup}".DLog();
+            if (OnConfirmIdResponse == null)
+            {
+                $"[LoginService] OnConfirmIdResponse 이벤트 구독자 없음!".DError();
+                return;
+            }
+            NotifyConfirmIdResponseAsync(t, isDup).Forget();
+        }
+
+        private static async UniTaskVoid NotifyConfirmIdResponseAsync(ErrorType t, bool isDup)
+        {
+            await UniTask.SwitchToMainThread();
+            OnConfirmIdResponse?.Invoke(t, isDup);
+        }
+
+        /// <summary> 캐릭터 생성 응답 처리 </summary>
         public static void NotifyCreateCharResponse(ErrorType t)
         {
-            $"[LoginService] 캐릭터 이름 응답 수신: {t}".DLog();
+            $"[LoginService] 캐릭터 생성 응답 수신: {t}".DLog();
             OnCreateCharResponse?.Invoke(t);
         }
 

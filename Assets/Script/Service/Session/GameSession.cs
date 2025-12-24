@@ -10,8 +10,8 @@ namespace Hunt
 {
     public class GameSession : MonoBehaviourSingleton<GameSession>
     {
-        private string loginServerIp = "127.0.0.1";
-        private int loginServerPort = 9000;
+        [SerializeField] private string loginServerIp = "127.0.0.1";
+        [SerializeField] private int loginServerPort = 9000;
         private UInt64 loginServerKey;
 
         private NetworkManager networkManager;
@@ -54,12 +54,12 @@ namespace Hunt
 
         #region Network Connect
 
-        /// <summary> ·Î±×ÀÎ¼­¹ö ¿¬°á </summary>
+        /// <summary> ë¡œê·¸ì¸ì„œë²„ ì—°ê²° </summary>
         public async UniTask<bool> ConnectionToLoginServer()
         {
             if (!isInitialized)
             {
-                $"[GameSession] ÃÊ±âÈ­ ´ë±â Áß ...".DLog();
+                $"[GameSession] ì´ˆê¸°í™” ëŒ€ê¸° ì¤‘ ...".DLog();
                 float elapsed = 0f;
                 while (!isInitialized && elapsed < 1f)
                 {
@@ -69,13 +69,13 @@ namespace Hunt
 
                 if (!isInitialized)
                 {
-                    "[GameSession] ÃÊ±âÈ­ ½ÇÆĞ!".DError();
+                    "[GameSession] ì´ˆê¸°í™” ì‹¤íŒ¨!".DError();
                     return false;
                 }
             }
 
             if (networkManager == null) return false;
-            "[GameSession] ·Î±×ÀÎ¼­¹ö ¿¬°á ½Ãµµ".DLog();
+            "[GameSession] ë¡œê·¸ì¸ì„œë²„ ì—°ê²° ì‹œë„".DLog();
 
             if (networkManager.IsExistConnection(loginServerKey))
             {
@@ -85,22 +85,21 @@ namespace Hunt
             await UniTask.RunOnThreadPool(() =>
             {
                 connected = networkManager.ConnLoginServerSync(
-                    (e, msg) => { $"[GameSession] ·Î±×ÀÎ ¼­¹ö ¿¬°á ²÷±è : {msg}".DLog(); },
-                    () => { $"[GameSession] ·Î±×ÀÎ ¼­¹ö ¿¬°á ¼º°ø".DLog(); },
-                    (e) => { $"[GameSession] ·Î±×ÀÎ ¼­¹ö ¿¬°á ½ÇÆĞ:{e.Message}".DLog(); }
+                    (e, msg) => { $"[GameSession] ë¡œê·¸ì¸ ì„œë²„ ì—°ê²° ëŠê¹€ : {msg}".DLog(); },
+                    () => { $"[GameSession] ë¡œê·¸ì¸ ì„œë²„ ì—°ê²° ì„±ê³µ".DLog(); },
+                    (e) => { $"[GameSession] ë¡œê·¸ì¸ ì„œë²„ ì—°ê²° ì‹¤íŒ¨:{e.Message}".DLog(); }
                     );
-
-                if (connected)
-                {
-                    networkManager.StartLoginServer();
-                }
             });
+            if (connected)
+            {
+                networkManager.StartLoginServer();
+            }
             return connected;
         }
-        /// <summary> ·Î±×ÀÎ¼­¹ö ¿¬°áÇØÁ¦ </summary>
+        /// <summary> ë¡œê·¸ì¸ì„œë²„ ì—°ê²°í•´ì œ </summary>
         public async UniTask DisConnectionToLoginServer()
         {
-            $"[GameSession] ·Î±×ÀÎ ¼­¹ö ¿¬°áÀ» ÇØÁ¦.".DLog();
+            $"[GameSession] ë¡œê·¸ì¸ ì„œë²„ ì—°ê²°ì„ í•´ì œ.".DLog();
             await UniTask.RunOnThreadPool(() =>
             {
                 networkManager?.DisConnLoginServer();
@@ -110,14 +109,14 @@ namespace Hunt
         private bool hasGameServerInfo = false;
         public void SetGameServerInfo(LoginAns loginans)
         {
-            $"[GameSession] °ÔÀÓ ¼­¹ö Á¤º¸ ÀúÀå : {gameServerIp} : {gameServerPort}".DLog();
+            $"[GameSession] ê²Œì„ ì„œë²„ ì •ë³´ ì €ì¥ : {gameServerIp} : {gameServerPort}".DLog();
         }
-        /// <summary> °ÔÀÓ¼­¹ö ¿¬°á </summary>
+        /// <summary> ê²Œì„ì„œë²„ ì—°ê²° </summary>
         public async UniTask<bool> ConnectionToGameServer()
         {
             if (!hasGameServerInfo)
             {
-                $"[GameSession] °ÔÀÓ ¼­¹ö Á¤º¸°¡ ¼³Á¤µÇÁö ¾ÊÀ½.".DError();
+                $"[GameSession] ê²Œì„ ì„œë²„ ì •ë³´ê°€ ì„¤ì •ë˜ì§€ ì•ŠìŒ.".DError();
                 return false;
             }
             if (networkManager == null)
@@ -126,11 +125,11 @@ namespace Hunt
                 return false;
             }
 
-            $"[GameSession] °ÔÀÓ ¼­¹ö ¿¬°á ½Ãµµ: {gameServerIp} : {gameServerPort}".DLog();
+            $"[GameSession] ê²Œì„ ì„œë²„ ì—°ê²° ì‹œë„: {gameServerIp} : {gameServerPort}".DLog();
 
             if (networkManager.IsExistConnection(gameServerKey))
             {
-                $"[GameSession] ±âÁ¸ °ÔÀÓ ¼­¹ö ¿¬°á ÇØÁ¦".DLog();
+                $"[GameSession] ê¸°ì¡´ ê²Œì„ ì„œë²„ ì—°ê²° í•´ì œ".DLog();
                 networkManager.StopNet(gameServerKey);
             }
 
@@ -139,9 +138,9 @@ namespace Hunt
             {
                 var netModule = networkManager.MakeNetModule(
                     NetModule.ServiceType.Game,
-                    (error, msg) => { $"[GameSession] °ÔÀÓ ¼­¹ö ¿¬°á ²÷±è: {error}, {msg}".DLog(); },
-                    () => { $"[GameSession] °ÔÀÓ ¼­¹ö ¿¬°á ¼º°ø".DLog(); },
-                    (e) => { $"[GameSession] °ÔÀÓ ¼­¹ö ¿¬°á ½ÇÆĞ : {e.Message}".DLog(); }
+                    (error, msg) => { $"[GameSession] ê²Œì„ ì„œë²„ ì—°ê²° ëŠê¹€: {error}, {msg}".DLog(); },
+                    () => { $"[GameSession] ê²Œì„ ì„œë²„ ì—°ê²° ì„±ê³µ".DLog(); },
+                    (e) => { $"[GameSession] ê²Œì„ ì„œë²„ ì—°ê²° ì‹¤íŒ¨ : {e.Message}".DLog(); }
                 );
 
                 connected = netModule.SyncConn(gameServerIp, gameServerPort);
@@ -154,13 +153,14 @@ namespace Hunt
 
             return connected;
         }
-        /// <summary> °ÔÀÓ¼­¹ö ¿¬°áÇØÁ¦ </summary>
+        /// <summary> ê²Œì„ì„œë²„ ì—°ê²°í•´ì œ </summary>
         public async UniTask DisConnectionToGameServer()
         {
-            $"[GameSession] °ÔÀÓ ¼­¹ö ¿¬°á ÇØÁ¦".DLog();
+            $"[GameSession] ê²Œì„ ì„œë²„ ì—°ê²° í•´ì œ".DLog();
             await UniTask.RunOnThreadPool(() =>
             {
-                if (networkManager != null && networkManager.IsExistConnection(gameServerKey)){
+                if (networkManager != null && networkManager.IsExistConnection(gameServerKey))
+                {
                     networkManager.StopNet(gameServerKey);
                 }
             });
@@ -175,12 +175,12 @@ namespace Hunt
         public void SetCharacterList(List<SimpleCharacterInfo> characters)
         {
             CharacterInfos = new List<SimpleCharacterInfo>(characters);
-            $"[GameSession] Ä³¸¯ÅÍ ¸®½ºÆ® ÀúÀå : {characters.Count}°³".DLog();
+            $"[GameSession] ìºë¦­í„° ë¦¬ìŠ¤íŠ¸ ì €ì¥ : {characters.Count}ê°œ".DLog();
         }
         public void SelectCharacter(SimpleCharacterInfo character)
         {
             SelectedCharacter = character;
-            $"[GameSession] ¼±ÅÃµÈ Ä³¸¯ÅÍ : ÀÌ¸§->{character.Name} , Á÷¾÷->{character.ClassType}".DLog();
+            $"[GameSession] ì„ íƒëœ ìºë¦­í„° : ì´ë¦„->{character.Name} , ì§ì—…->{character.ClassType}".DLog();
         }
 
         public void SelectCharacterById(ulong charId)
@@ -188,7 +188,7 @@ namespace Hunt
             SelectedCharacter = CharacterInfos?.Find(c => c.CharId == charId);
             if (SelectedCharacter != null)
             {
-                $"[GameSession] Ä³¸¯ÅÍ ¼±ÅÃ : {SelectedCharacter.Name}".DLog();
+                $"[GameSession] ìºë¦­í„° ì„ íƒ : {SelectedCharacter.Name}".DLog();
             }
         }
         #endregion
@@ -199,7 +199,7 @@ namespace Hunt
         public void SelectCharacterModel(CharacterModel model)
         {
             SelectedCharacterModel = model;
-            $"[GameSession] ¼±ÅÃµÈ Ä³¸¯ÅÍ (Model): {model.name} (ClassType: {model.classtype})".DLog();
+            $"[GameSession] ì„ íƒëœ ìºë¦­í„° (Model): {model.name} (ClassType: {model.classtype})".DLog();
         }
         #endregion
 
