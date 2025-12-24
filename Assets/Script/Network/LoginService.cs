@@ -77,6 +77,17 @@ namespace Hunt
         public static void NotifyCreateCharResponse(ErrorType t)
         {
             $"[LoginService] 캐릭터 생성 응답 수신: {t}".DLog();
+            if (OnCreateCharResponse == null)
+            {
+                $"[LoginService] OnCreateCharResponse 이벤트 구독자 없음!".DError();
+                return;
+            }
+            NotifyCreateCharResponseAsync(t).Forget();
+        }
+
+        private static async UniTaskVoid NotifyCreateCharResponseAsync(ErrorType t)
+        {
+            await UniTask.SwitchToMainThread();
             OnCreateCharResponse?.Invoke(t);
         }
 

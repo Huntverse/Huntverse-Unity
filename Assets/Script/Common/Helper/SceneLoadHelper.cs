@@ -1,6 +1,7 @@
 using Cysharp.Threading.Tasks;
 using System;
 using System.Net;
+using System.Reflection;
 using System.Threading;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -21,7 +22,7 @@ namespace Hunt
         [SerializeField] private float minLoadingDuration = 0.5f; // 최소 로딩 표시 시간 (깜빡임 방지)
         [SerializeField] private float fadeDuration = 0.7f; // 페이드 인/아웃 시간
 
-        protected override bool DontDestroy => true;
+        protected override bool DontDestroy => base.DontDestroy;
         protected override void Awake()
         {
             base.Awake();
@@ -43,8 +44,23 @@ namespace Hunt
         protected override void OnDestroy()
         {
             base.OnDestroy();
-            cts.Cancel();
-            cts.Dispose();
+            
+            if (cts != null)
+            {
+                try
+                {
+                    cts.Cancel();
+                    cts.Dispose();
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogWarning($"[SceneLoadHelper] OnDestroy에서 cts 정리 중 에러: {ex.Message}");
+                }
+                finally
+                {
+                    cts = null;
+                }
+            }
         }
 
         public async UniTask LoadSceneSingleMode(string key, bool isfadeactive = true)
@@ -117,6 +133,196 @@ namespace Hunt
             return scene;
         }
 
+        /// <summary>
+        /// Boot 씬으로 이동 (로그아웃 처리)
+        /// </summary>
+        public async UniTask LoadToBootScene()
+        {
+            if (cts == null)
+            {
+                cts = new CancellationTokenSource();
+            }
+            else
+            {
+                CancelCurrentOps();
+            }
+
+            float loadStartTime = Time.realtimeSinceStartup;
+
+            try
+            {
+                ShowLoadingIndicator(true);
+                if (loadingCanvasGroup != null)
+                {
+                    await FadeIn(cts.Token);
+                }
+
+                if (curScene.Scene.IsValid())
+                {
+                    try
+                    {
+                        await Addressables.UnloadSceneAsync(curScene).ToUniTask(cancellationToken: cts.Token);
+                        await UniTask.Yield(PlayerLoopTiming.PostLateUpdate, cts.Token);
+                    }
+                    catch (Exception ex)
+                    {
+                        $"[SceneLoadHelper] 씬 언로드 중 에러: {ex.Message}".DLog();
+                    }
+                }
+
+                for (int i = SceneManager.sceneCount - 1; i >= 0; i--)
+                {
+                    try
+                    {
+                        var scene = SceneManager.GetSceneAt(i);
+                        if (scene.isLoaded && scene.name != "DontDestroyOnLoad")
+                        {
+                            await SceneManager.UnloadSceneAsync(scene);
+                            await UniTask.Yield(PlayerLoopTiming.PostLateUpdate, cts.Token);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        $"[SceneLoadHelper] 씬 언로드 중 에러: {ex.Message}".DLog();
+                    }
+                }
+
+                curScene = default;
+                var loadOp = SceneManager.LoadSceneAsync(0, LoadSceneMode.Single);
+
+                if (loadOp == null)
+                {
+                    "[SceneLoadHelper] Boot 씬 로드 실패".DError();
+                    throw new Exception("Boot 씬 로드 실패");
+                }
+
+                while (!loadOp.isDone)
+                {
+                    if (cts == null || cts.Token.IsCancellationRequested)
+                        break;
+                    await UniTask.Yield(PlayerLoopTiming.PostLateUpdate, cts.Token);
+                }
+
+                await UniTask.Yield(PlayerLoopTiming.PostLateUpdate, cts.Token);
+
+                if (cts != null && !cts.Token.IsCancellationRequested)
+                {
+                    float elapsedTime = Time.realtimeSinceStartup - loadStartTime;
+                    if (elapsedTime < minLoadingDuration)
+                    {
+                        await UniTask.Delay(TimeSpan.FromSeconds(minLoadingDuration - elapsedTime), cancellationToken: cts.Token);
+                    }
+
+                    if (loadingCanvasGroup != null)
+                    {
+                        await FadeOut(cts.Token);
+                    }
+                }
+
+                ShowLoadingIndicator(false);
+            }
+            catch (OperationCanceledException)
+            {
+                "[SceneLoadHelper] Boot 씬 로드가 취소되었습니다".DWarning();
+                ShowLoadingIndicator(false);
+            }
+            catch (Exception ex)
+            {
+                $"[SceneLoadHelper] Boot 씬 로드 중 오류: {ex.Message}".DError();
+                ShowLoadingIndicator(false);
+
+                try
+                {
+                    SceneManager.LoadScene(0);
+                }
+                catch (Exception fallbackEx)
+                {
+                    $"[SceneLoadHelper] 폴백 로드 실패: {fallbackEx.Message}".DError();
+                }
+            }
+        }
+
+        /// <summary>
+        /// 게임 완전 재시작 (모든 DontDestroyOnLoad 객체 파괴)
+        /// </summary>
+        public void RestartGameSimple()
+        {
+            try
+            {
+                ResetSteamManager();
+                CleanupAddressables();
+                
+                Scene tempScene = SceneManager.CreateScene("TempDestroyScene");
+                GameObject[] allObjects = FindObjectsByType<GameObject>(FindObjectsSortMode.None);
+                
+                foreach (GameObject obj in allObjects)
+                {
+                    if (obj == null || obj.transform.parent != null)
+                        continue;
+                    
+                    if (obj.scene.name == "DontDestroyOnLoad")
+                    {
+                        SceneManager.MoveGameObjectToScene(obj, tempScene);
+                    }
+                }
+                
+                SceneManager.LoadScene(0, LoadSceneMode.Single);
+            }
+            catch (Exception ex)
+            {
+                $"[SceneLoadHelper] RestartGameSimple 에러: {ex.Message}".DError();
+            }
+        }
+
+        private void ResetSteamManager()
+        {
+            try
+            {
+                var steamManagerType = Type.GetType("SteamManager");
+                if (steamManagerType == null) return;
+
+                var everInitField = steamManagerType.GetField("s_EverInitialized", BindingFlags.Static | BindingFlags.NonPublic);
+                if (everInitField != null)
+                {
+                    everInitField.SetValue(null, false);
+                }
+
+                var instanceField = steamManagerType.GetField("s_instance", BindingFlags.Static | BindingFlags.NonPublic);
+                if (instanceField != null)
+                {
+                    instanceField.SetValue(null, null);
+                }
+            }
+            catch (Exception ex)
+            {
+                $"[SceneLoadHelper] SteamManager 리셋 중 에러: {ex.Message}".DWarning();
+            }
+        }
+
+        private void CleanupAddressables()
+        {
+            try
+            {
+                if (curScene.Scene.IsValid())
+                {
+                    var unloadOp = Addressables.UnloadSceneAsync(curScene);
+                    unloadOp.WaitForCompletion();
+                    curScene = default;
+                }
+                
+                var downloader = ContentsDownloader.Shared;
+                if (downloader != null)
+                {
+                    downloader.ResetDownloadState();
+                }
+            }
+            catch (Exception ex)
+            {
+                $"[SceneLoadHelper] Addressables 정리 중 에러: {ex.Message}".DWarning();
+            }
+        }
+
+
         public async UniTask UnloadSceneAdditive(SceneInstance scene)
         {
             if (!scene.Scene.IsValid())
@@ -133,60 +339,42 @@ namespace Hunt
             cts = new CancellationTokenSource();
         }
 
+
         private void ShowLoadingIndicator(bool show)
         {
             if (loadingCanvas != null)
             {
                 loadingCanvas.gameObject.SetActive(show);
-                $"[SceneLoadHelper] 로딩 인디케이터 {(show ? "활성화" : "비활성화")}".DLog();
             }
-
         }
 
-        /// <summary>
-        /// 페이드 인: 로딩 화면을 부드럽게 표시
-        /// </summary>
         private async UniTask FadeIn(CancellationToken token)
         {
-            if (loadingCanvasGroup == null)
-            {
-                Debug.LogWarning("[SceneLoadHelper] CanvasGroup이 없어 페이드 효과를 적용할 수 없습니다.");
-                return;
-            }
-
+            if (loadingCanvasGroup == null) return;
 
             float elapsed = 0f;
             loadingCanvasGroup.alpha = 0f;
 
             while (elapsed < fadeDuration)
             {
-                elapsed += Time.unscaledDeltaTime; // Time.timeScale 영향 받지 않음
+                elapsed += Time.unscaledDeltaTime;
                 loadingCanvasGroup.alpha = Mathf.Clamp01(elapsed / fadeDuration);
                 await UniTask.Yield(PlayerLoopTiming.Update, token);
             }
 
             loadingCanvasGroup.alpha = 1f;
-
         }
 
-        /// <summary>
-        /// 페이드 아웃: 로딩 화면을 부드럽게 숨김
-        /// </summary>
         private async UniTask FadeOut(CancellationToken token)
         {
-            if (loadingCanvasGroup == null)
-            {
-
-                return;
-            }
-
+            if (loadingCanvasGroup == null) return;
 
             float elapsed = 0f;
             loadingCanvasGroup.alpha = 1f;
 
             while (elapsed < fadeDuration)
             {
-                elapsed += Time.unscaledDeltaTime; // Time.timeScale 영향 받지 않음
+                elapsed += Time.unscaledDeltaTime;
                 loadingCanvasGroup.alpha = Mathf.Clamp01(1f - (elapsed / fadeDuration));
                 await UniTask.Yield(PlayerLoopTiming.Update, token);
             }
