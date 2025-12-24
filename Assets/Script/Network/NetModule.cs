@@ -300,6 +300,17 @@ namespace Hunt.Net
 
         public void Send<ProtoT>(Common.MsgId msgId, ProtoT data) where ProtoT : Google.Protobuf.IMessage
         {
+            if (m_isStoped)
+            {
+                $"[NetModule] 전송 실패: 연결이 종료된 상태입니다. MsgId={msgId}".DError();
+                return;
+            }
+
+            if (m_tcpClient == null || !m_tcpClient.Connected)
+            {
+                $"[NetModule] 전송 실패: TCP 연결이 끊어진 상태입니다. MsgId={msgId}".DError();
+                return;
+            }
             var serData = data.ToByteArray();
 
             m_sendContext.Send((UInt32)msgId, serData, (UInt16)data.CalculateSize());

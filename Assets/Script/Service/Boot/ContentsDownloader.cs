@@ -1,6 +1,7 @@
 using Cysharp.Threading.Tasks;
 using System;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.AddressableAssets.Initialization;   
@@ -31,9 +32,13 @@ namespace Hunt
             base.Awake();
         }
 
-        /// <summary>
-        /// 외부에서 호출하는 진입점
-        /// </summary>
+        public void ResetDownloadState()
+        {
+            cachedConfig = null;
+            envConfigLoadAttempted = false;
+            DownloadProgress = 0f;
+        }
+
         public async UniTask<bool> StartDownload()
         {
             try
@@ -60,21 +65,17 @@ namespace Hunt
                     return false;
                 }
 
-                // 0. CCD 런타임 프로퍼티 세팅 (RemoteLoadPath 안의 {CcdManager.*} 치환용)
                 ApplyCcdRuntimeProperties(config);
                 UpdateLoadingUI(0.1f);
 
-                // 1. Remote 카탈로그 로드
                 if (!await LoadRemoteCatalog(config.remoteCatalogUrl))
                     return false;
                 UpdateLoadingUI(0.2f);
 
-                // 2. Catalog 업데이트
                 if (!await UpdateCatalog())
                     return false;
                 UpdateLoadingUI(0.3f);
 
-                // 3. Addressables 다운로드 (라벨 기준 -> default 라벨을 가지고있어야만 다운로드가 가능한 에셋)
                 if (!await DownloadAddressablesByLabel(config.downloadLabel))
                     return false;
                 UpdateLoadingUI(1f);
@@ -95,32 +96,35 @@ namespace Hunt
         {
             if (string.IsNullOrWhiteSpace(catalogUrl))
             {
-                "📦 [Downloader] remoteCatalogUrl missing (env_contents.json)".DError();
+                "📦 [Downloader] remoteCatalogUrl missing".DError();
                 return false;
             }
 
             var catalogHandle = Addressables.LoadContentCatalogAsync(catalogUrl, true);
             await catalogHandle.Task;
 
-            if (catalogHandle.Status != AsyncOperationStatus.Succeeded)
+            if (!catalogHandle.IsValid() || catalogHandle.Status != AsyncOperationStatus.Succeeded)
             {
-                "📦 [Downloader] Failed to load catalog".DError();
+                string errorMsg = catalogHandle.IsValid() ? catalogHandle.OperationException?.ToString() : "Invalid operation handle";
+                $"📦 [Downloader] Failed to load catalog - {errorMsg}".DError();
+                if (catalogHandle.IsValid())
+                {
+                    Addressables.Release(catalogHandle);
+                }
                 return false;
             }
+            Addressables.Release(catalogHandle);
             return true;
         }
 
         private async UniTask<bool> UpdateCatalog()
         {
-            "📦 [Downloader] Checking catalog updates...".DLog();
-
             var checkHandle = Addressables.CheckForCatalogUpdates(false);
             await checkHandle.Task;
 
             if (checkHandle.Status != AsyncOperationStatus.Succeeded)
             {
-                $"📦 [Downloader] Catalog check failed : {checkHandle.OperationException}".DError();
-                
+                $"📦 [Downloader] Catalog check failed: {checkHandle.OperationException}".DError();
                 Addressables.Release(checkHandle);
                 return false;
             }
@@ -130,31 +134,26 @@ namespace Hunt
 
             if (catalogs == null)
             {
-                "📦 [Downloader] Catalog list is null.".DError();
+                "📦 [Downloader] Catalog list is null".DError();
                 return false;
             }
 
             if (catalogs.Count == 0)
             {
-                "📦 [Downloader] Already catalog updates".DLog();
                 return true;
             }
-
-            $"📦 [Downloader] Found {catalogs.Count} catalog updates".DLog();
 
             var updateHandle = Addressables.UpdateCatalogs(catalogs, false);
             await updateHandle.Task;
 
             if (updateHandle.Status != AsyncOperationStatus.Succeeded)
             {
-                $"📦 [Downloader] Catalog update failed : {updateHandle.OperationException}".DError();
+                $"📦 [Downloader] Catalog update failed: {updateHandle.OperationException}".DError();
                 Addressables.Release(updateHandle);
                 return false;
             }
 
-            "📦 [Downloader] Catalog update success".DLog();
             Addressables.Release(updateHandle);
-
             return true;
         }
 
@@ -170,15 +169,12 @@ namespace Hunt
                 return false;
             }
 
-            $"📦 [Downloader] Calc download size for label: {label}".DLog();
-
             var sizeHandle = Addressables.GetDownloadSizeAsync(label);
             await sizeHandle.Task;
 
             if (sizeHandle.Status != AsyncOperationStatus.Succeeded)
             {
-                $"📦 [Downloader] GetDownloadSize failed for label: {label} - {sizeHandle.OperationException}".DError();
-                
+                $"📦 [Downloader] GetDownloadSize failed: {sizeHandle.OperationException}".DError();
                 Addressables.Release(sizeHandle);
                 return false;
             }
@@ -188,11 +184,10 @@ namespace Hunt
 
             if (size <= 0)
             {
-                $"📦 [Downloader] No download needed for label '{label}'.".DLog();
                 return true;
             }
 
-            $"📦 [Downloader] Download size for '{label}': {size / (1024f * 1024f):F2} MB".DLog();
+            $"📦 [Downloader] Download size: {size / (1024f * 1024f):F2} MB".DLog();
 
             var downloadHandle = Addressables.DownloadDependenciesAsync(label, true);
 
@@ -205,12 +200,11 @@ namespace Hunt
 
             if (downloadHandle.Status != AsyncOperationStatus.Succeeded)
             {
-                $"📦 [Downloader] Download FAILED for label '{label}' - {downloadHandle.OperationException}".DError();
+                $"📦 [Downloader] Download failed: {downloadHandle.OperationException}".DError();
                 Addressables.Release(downloadHandle);
                 return false;
             }
 
-            $"📦 [Downloader] Download Complete for '{label}'".DLog();
             Addressables.Release(downloadHandle);
             UpdateLoadingUI(1f);
             return true;
@@ -234,11 +228,6 @@ namespace Hunt
             AddressablesRuntimeProperties.SetPropertyValue("CcdManager.BucketId", config.bucketId);
             AddressablesRuntimeProperties.SetPropertyValue("CcdManager.BucketName", config.bucketName);
             AddressablesRuntimeProperties.SetPropertyValue("CcdManager.Badge", config.badge);
-
-            "CCD Runtime Properties Set:".DLog();
-            $"Env   = {AddressablesRuntimeProperties.EvaluateString("{CcdManager.EnvironmentName}")}".DLog();
-            $"Bucket= {AddressablesRuntimeProperties.EvaluateString("{CcdManager.BucketId}")}".DLog();
-            $"Badge = {AddressablesRuntimeProperties.EvaluateString("{CcdManager.Badge}")}".DLog();
         }
 
         private CcdEnvConfig LoadEnvConfig()
@@ -250,15 +239,15 @@ namespace Hunt
 
             if (string.IsNullOrWhiteSpace(envConfigFileName))
             {
-                "📦 [Downloader] Env config filename is empty. Skipping config load.".DError();
+                "📦 [Downloader] Env config filename is empty".DError();
                 return null;
             }
 
-            string configPath = Path.Combine(Application.streamingAssetsPath, "aa",envConfigFileName);
+            string configPath = Path.Combine(Application.streamingAssetsPath, "aa", envConfigFileName);
 
             if (!File.Exists(configPath))
             {
-                $"📦 [Downloader] Env config not found at {configPath}".DError();
+                $"📦 [Downloader] Env config not found: {configPath}".DError();
                 return null;
             }
 
@@ -268,16 +257,12 @@ namespace Hunt
                 cachedConfig = JsonUtility.FromJson<CcdEnvConfig>(json);
                 if (cachedConfig == null)
                 {
-                    $"📦 [Downloader] Failed to parse env config at {configPath}".DError();
-                }
-                else
-                {
-                    $"📦 [Downloader] Env config loaded from {configPath}".DLog();
+                    "📦 [Downloader] Failed to parse env config".DError();
                 }
             }
             catch (Exception e)
             {
-                $"📦 [Downloader] Failed to read env config. Path: {configPath}, Error: {e.Message}".DError();
+                $"📦 [Downloader] Failed to read env config: {e.Message}".DError();
             }
 
             return cachedConfig;

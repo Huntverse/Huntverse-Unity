@@ -35,7 +35,7 @@ namespace Hunt
         }
         public void EnterChracterSelect()
         {
-            if (ButtonClickCountEvent.SelectedOnce)
+            if (UIButtonClickCount.SelectedOnce)
             {
                 OnViewCharacterSelectHud();
             }

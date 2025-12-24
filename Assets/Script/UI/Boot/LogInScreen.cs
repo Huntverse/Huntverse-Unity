@@ -1,3 +1,5 @@
+using Cysharp.Threading.Tasks;
+using Hunt.Common;
 using Hunt.Login;
 using Hunt.Net;
 using System;
@@ -14,7 +16,7 @@ namespace Hunt
     public class LoginScreen : MonoBehaviour
     {
         #region Field
-        [SerializeField] private TMP_InputField idInput, pwInput;
+        [SerializeField] private TMP_InputField org_idInput, org_pwInput;
         [SerializeField] private TMP_InputField new_idInput, new_pwInput, new_pwDupInput;
 
         [Header("LOGIN")]
@@ -57,8 +59,8 @@ namespace Hunt
 
             return new InputContext
             {
-                IdField = idInput,
-                PwField = pwInput,
+                IdField = org_idInput,
+                PwField = org_pwInput,
                 VaildText = loginVaildText,
                 Capslock = caplockVis
             };
@@ -71,12 +73,16 @@ namespace Hunt
         private static extern short GetKeyState(int keyCode);
         private const int VK_CAPITAL = 0x14;
         #endregion
-        private AuthReqHandler loginHandler;
         #region Life
+        private void OnEnable()
+        {
+            LoginService.OnLoginResponse += HandleNotiLoginResponse;
+            LoginService.OnCreateAccountResponse += HandleNotiCreateAccountResponse;
+            LoginService.OnConfirmIdResponse += HandleNotiConfirmIdResponse;
+        }
+
         private void Start()
         {
-            loginHandler = new AuthReqHandler(NetworkManager.Shared);
-            ConnectToLoginServer();
 
             confirmButton.onClick.AddListener(ReqAuthVaild);
             pwVisButton.onClick.AddListener(() => TogglePasswordVisibility(false));
@@ -86,37 +92,58 @@ namespace Hunt
 
             id_DupButton.onClick.AddListener(ReqIdDuplicate);
 
-            idInput.onSubmit.AddListener(OnIdSubmit);
-            pwInput.onSubmit.AddListener(OnPwSubmit);
+            org_idInput.onSubmit.AddListener(OnIdSubmit);
+            org_pwInput.onSubmit.AddListener(OnPwSubmit);
 
             new_idInput.onSubmit.AddListener(OnIdSubmit);
             new_pwInput.onSubmit.AddListener(OnPwSubmit);
 
-            idInput.Select();
-            idInput.ActivateInputField();
+            org_idInput.Select();
+            org_idInput.ActivateInputField();
 
             createVaildText.text = "";
             loginVaildText.text = "";
+            org_pwInput.contentType = TMP_InputField.ContentType.Password;
+            new_pwInput.contentType = TMP_InputField.ContentType.Password;
+            new_pwDupInput.contentType = TMP_InputField.ContentType.Password;
 
-            AuthReqHandler.OnLoginResponse += HandleNotiLoginResponse;
+            if (!SystemBoot.Shared.LoginServerConnected)
+            {
+                ShowNotificationText(loginVaildText, NotiConst.GetAuthNotiMsg(AUTH_NOTI_TYPE.SERVER_CON_FAIL), NotiConst.COLOR_WARNNING );
+            }
+            else
+            {
+                ShowNotificationText(loginVaildText, NotiConst.GetAuthNotiMsg(AUTH_NOTI_TYPE.SERVER_CON_SUCCESS), NotiConst.COLOR_SUCCESS);
+            }
         }
+
         private void Update()
         {
             HandleKeyInput();
         }
-        #endregion
-        #region INPUT
+        private void OnDisable()
+        {
+            LoginService.OnLoginResponse -= HandleNotiLoginResponse;
+            LoginService.OnCreateAccountResponse -= HandleNotiCreateAccountResponse;
+            LoginService.OnConfirmIdResponse -= HandleNotiConfirmIdResponse;
+        }
+
         private void OnDestroy()
         {
             confirmButton.onClick.RemoveListener(ReqAuthVaild);
             createConfirmButton.onClick.RemoveListener(ReqCreateAuthVaild);
             id_DupButton.onClick.RemoveListener(ReqIdDuplicate);
-            idInput.onSubmit.RemoveListener(OnIdSubmit);
-            pwInput.onSubmit.RemoveListener(OnPwSubmit);
+            org_idInput.onSubmit.RemoveListener(OnIdSubmit);
+            org_pwInput.onSubmit.RemoveListener(OnPwSubmit);
             new_idInput.onSubmit.RemoveListener(OnIdSubmit);
             new_pwInput.onSubmit.RemoveListener(OnPwSubmit);
-            AuthReqHandler.OnLoginResponse -= HandleNotiLoginResponse;
+            LoginService.OnLoginResponse -= HandleNotiLoginResponse;
+            LoginService.OnCreateAccountResponse -= HandleNotiCreateAccountResponse;
+            LoginService.OnConfirmIdResponse -= HandleNotiConfirmIdResponse;
         }
+        #endregion
+        #region INPUT
+
         private void HandleKeyInput()
         {
             var key = Keyboard.current;
@@ -151,10 +178,10 @@ namespace Hunt
             else
             {
                 isPasswordVisible = !isPasswordVisible;
-                pwInput.contentType = isPasswordVisible
+                org_pwInput.contentType = isPasswordVisible
                     ? TMP_InputField.ContentType.Standard
                     : TMP_InputField.ContentType.Password;
-                pwInput.ForceLabelUpdate();
+                org_pwInput.ForceLabelUpdate();
             }
         }
         private void OnIdSubmit(string _)
@@ -180,7 +207,7 @@ namespace Hunt
         /// <summary> Request Server : Duplicate ID </summary>
         private void ReqIdDuplicate()
         {
-            var id = new_idInput.text; 
+            var id = new_idInput.text;
             if (string.IsNullOrEmpty(id))
             {
                 ShowNotificationText(
@@ -191,20 +218,23 @@ namespace Hunt
                 return;
             }
 
-            loginHandler.ReqIdDuplicate(id);
+            $"[LogInScreen] 아이디 중복확인 요청 시도: ID={id}".DLog();
+            GameSession.Shared?.LoginService.ReqIdDuplicate(id);
         }
 
         /// <summary> Request Server : Vaild Auth </summary>
         private void ReqAuthVaild()
         {
-            var (id, pw) = VaildateAndReturnResult(idInput, pwInput, loginVaildText, true);
-            loginHandler.ReqAuthVaild(id, pw);
+            var (id, pw) = VaildateAndReturnResult(org_idInput, org_pwInput, loginVaildText);
+            if (string.IsNullOrEmpty(id) || string.IsNullOrEmpty(pw)) return;
+            
+            $"[LogInScreen] 로그인 요청 시도: ID={id}".DLog();
+            GameSession.Shared?.LoginService.ReqAuthVaild(id, pw);
         }
 
         /// <summary> Request Server : Create Auth </summary>
         private void ReqCreateAuthVaild()
         {
-            // UI 검증
             var (id, pw) = VaildateAndReturnResult(new_idInput, new_pwInput, createVaildText);
             if (string.IsNullOrEmpty(id) || string.IsNullOrEmpty(pw))
             {
@@ -213,72 +243,103 @@ namespace Hunt
 
             if (!IsVaildSyncPassWord())
             {
-                $"비밀번호가 일치하지 않습니다.".DLog();
+                $"[LogInScreen] 비밀번호가 일치하지 않습니다.".DLog();
                 return;
             }
 
-            loginHandler.ReqCreateAuthVaild(id, pw);
+            $"[LogInScreen] 계정 생성 요청 시도: ID={id}".DLog();
+            GameSession.Shared?.LoginService.ReqCreateAuthVaild(id, pw);
         }
-        private void HandleNotiLoginResponse(LoginAns ans)
+        /// <summary> 로그인 응답 처리 </summary>
+        private void HandleNotiLoginResponse(ErrorType t)
         {
-            if (ans.ErrType == Hunt.Common.ErrorType.ErrNon)
+            
+            switch (t)
             {
-                // 성공
-                ShowNotificationText(
+                case Common.ErrorType.ErrNon:
+                    animator.SetBool(AniKeyConst.k_bValid, true);
+                    ShowNotificationText(
                     loginVaildText,
                     NotiConst.GetAuthNotiMsg(AUTH_NOTI_TYPE.SUCCESS_VAILD),
                     NotiConst.COLOR_SUCCESS);
-            }
-            else
-            {
-                // 실패
-                // string errorMsg = GetErrorMessage(ans.ErrType);
-                ShowNotificationText(
+                    $"[LogInScreen] HandleNotiLoginResponse 로그인 성공: {t}".DLog();
+                    
+                    SceneLoadHelper.Shared?.LoadSceneSingleMode(ResourceKeyConst.Ks_Mainmenu, false);
+
+                    break;
+                case Common.ErrorType.ErrAccountNotExist:
+                    animator.SetTrigger(AniKeyConst.k_tFail);
+                    animator.SetBool(AniKeyConst.k_bValid, false);
+                    ShowNotificationText(
                     loginVaildText,
-                    ans.ErrType.ToString(),
+                    NotiConst.GetAuthNotiMsg(AUTH_NOTI_TYPE.ACCOUNT_NOT_EXIST),
                     NotiConst.COLOR_WARNNING);
+                   
+                    $"[LogInScreen] HandleNotiLoginResponse 계정 정보 존재 하지 않음: {t}".DError();
+                    break;
+                case Common.ErrorType.ErrDupLogin:
+                    animator.SetTrigger(AniKeyConst.k_tFail);
+                    animator.SetBool(AniKeyConst.k_bValid, false);
+                    ShowNotificationText(
+                    loginVaildText,
+                    NotiConst.GetAuthNotiMsg(AUTH_NOTI_TYPE.DUP_LOGIN),
+                    NotiConst.COLOR_WARNNING);
+                    break;
             }
         }
 
+        /// <summary> 계정 생성 응답 처리 </summary>
+        private void HandleNotiCreateAccountResponse(ErrorType t)
+        {
+            $"[LogInScreen] HandleNotiCreateAccountResponse 호출: {t}".DLog();
+            switch (t)
+            {
+                case Common.ErrorType.ErrNon:
+                    ShowNotificationText(
+                    createVaildText,
+                    NotiConst.GetAuthNotiMsg(AUTH_NOTI_TYPE.SUCCESS_CREATE_ACCOUNT),
+                    NotiConst.COLOR_SUCCESS);
+                    break;
+                case Common.ErrorType.ErrDupId:
+                    ShowNotificationText(
+                    createVaildText,
+                    NotiConst.GetAuthNotiMsg(AUTH_NOTI_TYPE.DUP_ID),
+                    NotiConst.COLOR_WARNNING);
+                    break;
+            }
+        }
 
-        /// <summary> 로그인 서버 연결 (UI 콜백 처리) </summary>
-        private void ConnectToLoginServer()
+        /// <summary> 아이디 중복확인 응답 처리 </summary>
+        private void HandleNotiConfirmIdResponse(ErrorType t, bool isDup)
         {
-            loginHandler.ConnectToServer(
-                OnConnectSuccess,
-                OnConnectFail
-            );
+            $"[LogInScreen] HandleNotiConfirmIdResponse 호출: {t}, IsDup: {isDup}".DLog();
+            if (t == Common.ErrorType.ErrNon)
+            {
+                if (isDup)
+                {
+                    ShowNotificationText(
+                    createVaildText,
+                    NotiConst.GetAuthNotiMsg(AUTH_NOTI_TYPE.DUP_ID),
+                    NotiConst.COLOR_WARNNING);
+                }
+                else
+                {
+                    ShowNotificationText(
+                    createVaildText,
+                    NotiConst.GetAuthNotiMsg(AUTH_NOTI_TYPE.SUCCESS_ID_EXIST),
+                    NotiConst.COLOR_SUCCESS);
+                }
+            }
         }
-        void OnDisConnect(NetModule.ERROR e, string msg)
-        {
-            $"[LoginScreen] 연결 끊김: {msg}".DLog();
-            // 필요시 UI 업데이트
-        }
-        void OnConnectSuccess()
-        {
-            ShowNotificationText(
-            loginVaildText,
-            NotiConst.GetAuthNotiMsg(AUTH_NOTI_TYPE.SERVER_CON_SUCCESS),
-            NotiConst.COLOR_SUCCESS
-            );
-        }
-        void OnConnectFail(SocketException e)
-        {
-            ShowNotificationText(
-                loginVaildText,
-                NotiConst.GetAuthNotiMsg(AUTH_NOTI_TYPE.SERVER_CON_FAIL),
-                NotiConst.COLOR_WARNNING
-                );
-        }
+
         #endregion
         #region VAILD
         private (string, string) VaildateAndReturnResult(
             TMP_InputField idField,
             TMP_InputField pwField,
-            TextMeshProUGUI resultText,
-            bool isAni = false)
+            TextMeshProUGUI resultText )
         {
-            if (!IsValid(idField.text, pwField.text, resultText, isAni))
+            if (!IsValid(idField.text, pwField.text, resultText))
             {
                 return default;
             }
@@ -286,7 +347,7 @@ namespace Hunt
             return (idField.text, pwField.text);
         }
 
-        private bool IsValid(string id, string pw, TextMeshProUGUI vaildText, bool isAni)
+        private bool IsValid(string id, string pw, TextMeshProUGUI vaildText)
         {
             char[] invalidChars = { '-', '#', ' ' };
 
@@ -300,7 +361,7 @@ namespace Hunt
             if (isValid)
             {
                 vaildText.color = NotiConst.COLOR_SUCCESS;
-                animator.SetBool(AniKeyConst.k_bValid, isAni);
+               
                 $"Field Value Is Valid {true}".DLog();
             }
             else
@@ -312,7 +373,7 @@ namespace Hunt
                 animator.SetTrigger(AniKeyConst.k_tFail);
                 $"Field Value Is Valid {false}".DError();
             }
-
+            animator.SetBool(AniKeyConst.k_bValid, isValid);
             return isValid;
         }
 
@@ -322,7 +383,7 @@ namespace Hunt
             if (!vaild)
                 ShowNotificationText(
                 createVaildText,
-                NotiConst.GetAuthNotiMsg(AUTH_NOTI_TYPE.FAIL_PW_DUP),
+                NotiConst.GetAuthNotiMsg(AUTH_NOTI_TYPE.DUP_PW),
                 NotiConst.COLOR_WARNNING);
 
             return vaild;
@@ -334,36 +395,10 @@ namespace Hunt
         private void ShowNotificationText(TextMeshProUGUI textUI, string message, Color color)
         {
             if (currentFadeCoroutine != null) StopCoroutine(currentFadeCoroutine);
-
-            currentFadeCoroutine = StartCoroutine(CO_FadeText(textUI, message, color));
+            $"[LoginScreen] Noti Msg : {message}".DLog();
+            currentFadeCoroutine = StartCoroutine(UIEffect.CO_FadeText(textUI, message, color));
         }
 
-        private IEnumerator CO_FadeText(TextMeshProUGUI textUI, string message, Color color)
-        {
-            textUI.text = message;
-            textUI.color = color;
-            textUI.gameObject.SetActive(true);
-
-            // Fade In
-            float a = 0f;
-            while (a < 1f)
-            {
-                a += Time.deltaTime * 3f;
-                textUI.color = new Color(color.r, color.g, color.b, a);
-                yield return null;
-            }
-
-            yield return new WaitForSeconds(2f);
-
-            while (a > 0f)
-            {
-                a -= Time.deltaTime * 3f;
-                textUI.color = new Color(color.r, color.g, color.b, a);
-                yield return null;
-            }
-
-            textUI.gameObject.SetActive(false);
-        }
         #endregion
     }
 }

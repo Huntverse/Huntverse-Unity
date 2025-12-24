@@ -5,8 +5,8 @@ namespace Hunt
     public enum AUTH_NOTI_TYPE
     {
         SERVER_CON_SUCCESS,SERVER_CON_FAIL,
-        FAIL_PW_DUP, FAIL_INPUT, FAIL_ID_EXIST, FAIL_VAILD,
-        SUCCESS_VAILD, SUCCESS_ID_EXIST
+        DUP_PW, FAIL_INPUT, DUP_ID, ACCOUNT_NOT_EXIST, DUP_LOGIN,DUP_NICK,DUP_REQ,
+        SUCCESS_VAILD, SUCCESS_ID_EXIST, SUCCESS_DUP_NICK, SUCCESS_CREATE_ACCOUNT
     }
 
     public static class NotiConst
@@ -23,14 +23,19 @@ namespace Hunt
         {
             return type switch
             {
-                AUTH_NOTI_TYPE.FAIL_PW_DUP => "ºñ¹Ð¹øÈ£°¡ Æ²·È½À´Ï´Ù. ´Ù½Ã ÇÑ ¹ø È®ÀÎÇØ ÁÖ¼¼¿ä.",
-                AUTH_NOTI_TYPE.FAIL_INPUT=> "Æ¯¼ö¹®ÀÚ(#, -, °ø¹é)´Â »ç¿ëÇÒ ¼ö ¾ø½À´Ï´Ù.",
-                AUTH_NOTI_TYPE.FAIL_ID_EXIST => "ÀÌ¹Ì »ç¿ë ÁßÀÎ ¾ÆÀÌµðÀÔ´Ï´Ù.",
-                AUTH_NOTI_TYPE.FAIL_VAILD => "ÇØ´ç °èÁ¤À» Ã£À» ¼ö ¾ø½À´Ï´Ù.",
-                AUTH_NOTI_TYPE.SUCCESS_VAILD => "È¯¿µÇÕ´Ï´Ù, ÇåÅÍ´Ô.",
-                AUTH_NOTI_TYPE.SUCCESS_ID_EXIST => "»ç¿ë°¡´ÉÇÑ ¾ÆÀÌµðÀÔ´Ï´Ù.",
-                AUTH_NOTI_TYPE.SERVER_CON_FAIL=>"¼­¹ö ¿¬°á¿¡ ½ÇÆÐÇß½À´Ï´Ù.",
-                AUTH_NOTI_TYPE.SERVER_CON_SUCCESS=> "¼­¹ö ¿¬°á¿¡ ¼º°øÇß½À´Ï´Ù.",
+                AUTH_NOTI_TYPE.DUP_PW => "ë¹„ë°€ë²ˆí˜¸ê°€ í‹€ë ¸ìŠµë‹ˆë‹¤. ë‹¤ì‹œ í•œ ë²ˆ í™•ì¸í•´ ì£¼ì„¸ìš”.",
+                AUTH_NOTI_TYPE.FAIL_INPUT=> "íŠ¹ìˆ˜ë¬¸ìž(#, -, ê³µë°±)ëŠ” ìž…ë ¥í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤.",
+                AUTH_NOTI_TYPE.DUP_ID => "ì´ë¯¸ ì¡´ìž¬ í•˜ëŠ” ì•„ì´ë””ìž…ë‹ˆë‹¤.",
+                AUTH_NOTI_TYPE.DUP_LOGIN=> "ì´ë¯¸ ë¡œê·¸ì¸ ì¤‘ìž…ë‹ˆë‹¤.",
+                AUTH_NOTI_TYPE.DUP_NICK=> "ì´ë¯¸ ì¡´ìž¬ í•˜ëŠ” ì´ë¦„ìž…ë‹ˆë‹¤.",
+                AUTH_NOTI_TYPE.DUP_REQ => "ì¤‘ë³µ í™•ì¸ì´ ì•ˆë˜ì—ˆìŠµë‹ˆë‹¤.",
+                AUTH_NOTI_TYPE.SUCCESS_DUP_NICK=> "ì‚¬ìš©ê°€ëŠ¥í•œ ë‹‰ë„¤ìž„ìž…ë‹ˆë‹¤.",
+                AUTH_NOTI_TYPE.ACCOUNT_NOT_EXIST => "í•´ë‹¹ ê³„ì •ì„ ì°¾ì„ ìˆ˜ ì—†ìŠµë‹ˆë‹¤.",
+                AUTH_NOTI_TYPE.SUCCESS_VAILD => "í™˜ì˜í•©ë‹ˆë‹¤, í—Œí„°ë‹˜.",
+                AUTH_NOTI_TYPE.SUCCESS_ID_EXIST => "ì‚¬ìš©ê°€ëŠ¥í•œ ì•„ì´ë””ìž…ë‹ˆë‹¤.",
+                AUTH_NOTI_TYPE.SUCCESS_CREATE_ACCOUNT => "ê³„ì •ì´ ìƒì„±ë˜ì—ˆìŠµë‹ˆë‹¤.",
+                AUTH_NOTI_TYPE.SERVER_CON_FAIL=>"ì„œë²„ì— ì ‘ì†ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤.",
+                AUTH_NOTI_TYPE.SERVER_CON_SUCCESS=> "ì„œë²„ì— ì ‘ì†ì„±ê³µí–ˆìŠµë‹ˆë‹¤.",
                 _ => string.Empty
             };
         }

@@ -3,6 +3,7 @@ using System;
 using UnityEngine;
 using Hunt.Common;
 using Hunt.Login;
+using Hunt;
 
 namespace Hunt.Net
 {
@@ -89,23 +90,26 @@ namespace Hunt.Net
 
         static void OnLoginAns(byte[] payload, int offset, int len)
         {
+            $"[MsgDispatcher] OnLoginAns 핸들러 호출됨".DLog();
             var loginAns = LoginAns.Parser.ParseFrom(payload, offset, len);
+            
             if (loginAns.ErrType == ErrorType.ErrNon)
             {
-                Debug.Log($"OnLoginAns Recv: {loginAns.ErrType}");
+                $"[MsgDispatcher] 로그인 성공: {loginAns.ErrType}".DLog();
             }
             else
             {
                 if (loginAns.ErrType == ErrorType.ErrDupLogin)
                 {
-                    Debug.Log($"OnLoginAns Recv: {loginAns.ErrType}, 중복 로그인");
+                    $"[MsgDispatcher] 로그인 실패 - 중복 로그인: {loginAns.ErrType}".DLog();
                 }
                 if (loginAns.ErrType == ErrorType.ErrDb)
                 {
-                    Debug.Log($"OnLoginAns Recv: {loginAns.ErrType}, DB 에러");
+                    $"[MsgDispatcher] 로그인 실패 - DB 에러: {loginAns.ErrType}".DError();
                 }
-
             }
+            
+            Hunt.LoginService.NotifyLoginResponse(loginAns.ErrType);
         }
 
         static void OnSelectWorldAns(byte[] payload, int offset, int len)
@@ -122,24 +126,26 @@ namespace Hunt.Net
         }
         static void OnCreateAccountAns(byte[] payload, int offset, int len)
         {
+            $"[MsgDispatcher] OnCreateAccountAns 핸들러 호출됨".DLog();
             var createAccountAns = CreateAccountAns.Parser.ParseFrom(payload, offset, len);
+            
             if (createAccountAns.ErrType == ErrorType.ErrNon)
             {
-                Debug.Log($"OnCreateAccountAns Recv: {createAccountAns.ErrType}");
+                $"[MsgDispatcher] 계정 생성 성공: {createAccountAns.ErrType}".DLog();
             }
             else
             {
                 if (createAccountAns.ErrType == ErrorType.ErrDupId)
                 {
-                    Debug.Log($"OnCreateAccountAns Recv: {createAccountAns.ErrType}, ID중복");
+                    $"[MsgDispatcher] 계정 생성 실패 - ID중복: {createAccountAns.ErrType}".DLog();
                 }
                 if (createAccountAns.ErrType == ErrorType.ErrDb)
                 {
-                    Debug.Log($"OnCreateAccountAns Recv: {createAccountAns.ErrType}, DB에러"); //얘는 모든 Ans에 대해서 그냥 팝업으로 DB에러 발생했습니다 띄우면 될듯?
-
+                    $"[MsgDispatcher] 계정 생성 실패 - DB에러: {createAccountAns.ErrType}".DError();
                 }
-
             }
+
+            Hunt.LoginService.NotifyCreateAccountResponse(createAccountAns.ErrType);
         }
 
         static void OnCreateCharAns(byte[] payload, int offset, int len)
@@ -161,22 +167,28 @@ namespace Hunt.Net
                     Debug.Log($"OnCreateCharAns Recv: [Error:{createCharAns.ErrType}], DB 에러");
                 }
             }
+
+            Hunt.LoginService.NotifyCreateCharResponse(createCharAns.ErrType);
         }
 
         static void OnConfirmIdAns(byte[] payload, int offset, int len)
         {
+            $"[MsgDispatcher] OnConfirmIdAns 핸들러 호출됨".DLog();
             var ans = ConfirmIdAns.Parser.ParseFrom(payload, offset, len);
+            
             if (ans.ErrType == ErrorType.ErrNon)
             {
-                Debug.Log($"OnConfirmIdAns Recv: {ans.ErrType}, [isDup: {ans.IsDup}]");
+                $"[MsgDispatcher] 아이디 중복확인 응답: ErrType={ans.ErrType}, IsDup={ans.IsDup}".DLog();
             }
             else
             {
                 if (ans.ErrType == ErrorType.ErrDb)
                 {
-                    Debug.Log($"OnConfirmIdAns Recv: [Error:{ans.ErrType}], DB 에러");
+                    $"[MsgDispatcher] 아이디 중복확인 실패 - DB 에러: {ans.ErrType}".DError();
                 }
             }
+            
+            Hunt.LoginService.NotifyConfirmIdResponse(ans.ErrType, ans.IsDup);
         }
 
         static void OnConfirmNameAns(byte[] payload, int offset, int len)
@@ -193,6 +205,7 @@ namespace Hunt.Net
                     Debug.Log($"OnConfirmNameAns Recv: [Error:{ans.ErrType}], DB 에러");
                 }
             }
+            Hunt.LoginService.NotifyCreateCharResponse(ans.ErrType);
         }
     }
 

@@ -10,10 +10,10 @@ namespace Hunt
         #region Serialized Fields
         [Header("Character Slots")]
         [SerializeField] private List<CharacterInfoField> characterInfoFields;
-        [SerializeField] private List<GenerationCharacterInfoField> newCharacterInfoFields;
+        [SerializeField] private List<GenerateCharInfoField> newCharacterInfoFields;
 
         [Header("UI Panels")]
-        [SerializeField] private GenerationCharacterPanel generationcharacterPanel;
+        [SerializeField] private GenerateCharPanel generationcharacterPanel;
         [SerializeField] private UserCharacterPanel userCharacterPanel;
 
         [Header("Navigation Buttons")]
@@ -427,7 +427,7 @@ namespace Hunt
             return -1;
         }
 
-        private CharacterModel CreateCharacterModel(GenerationCharacterInfoField generationField)
+        private CharacterModel CreateCharacterModel(GenerateCharInfoField generationField)
         {
             List<Hunt.Game.StatInfo> statInfoList = ConvertFloatStatsToStatInfo(generationField.stats);
 

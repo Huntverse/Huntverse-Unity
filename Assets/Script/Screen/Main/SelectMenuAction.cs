@@ -1,12 +1,15 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
+using Hunt.Net;
 
 namespace Hunt.ui
 {
     /// <summary>
-    /// ¸Ş´º ¸®½ºÆ®¸¦ Å°º¸µå/¸¶¿ì½º·Î Å½»öÇÏ°í ¼±ÅÃ »óÅÂ¸¦ Ç¥½Ã.
-    /// Enter¸¦ ´©¸£¸é ÇØ´ç Ç×¸ñÀÇ Button.onClickÀ» È£Ãâ.
+    /// ï¿½Ş´ï¿½ ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ Å°ï¿½ï¿½ï¿½ï¿½/ï¿½ï¿½ï¿½ì½ºï¿½ï¿½ Å½ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Â¸ï¿½ Ç¥ï¿½ï¿½.
+    /// Enterï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ø´ï¿½ ï¿½×¸ï¿½ï¿½ï¿½ Button.onClickï¿½ï¿½ È£ï¿½ï¿½.
     /// </summary>
     public class SelectMenuAction : MonoBehaviour
     {
@@ -48,7 +51,7 @@ namespace Hunt.ui
         {
             if (menuFields.Count == 0) return;
 
-            // Å°º¸µå Å½»ö (¡è/W, ¡é/S)
+            // Å°ï¿½ï¿½ï¿½ï¿½ Å½ï¿½ï¿½ (ï¿½ï¿½/W, ï¿½ï¿½/S)
             if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W))
             {
                 Move(-1);
@@ -58,7 +61,7 @@ namespace Hunt.ui
                 Move(+1);
             }
 
-            // Enter ¶Ç´Â KeypadEnter·Î ¼±ÅÃ ½ÇÇà
+            // Enter ï¿½Ç´ï¿½ KeypadEnterï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
             {
                 SubmitCurrent();
@@ -136,6 +139,49 @@ namespace Hunt.ui
         {
             SetIndex(index);
             SubmitCurrent();
+        }
+
+
+        public async void ReturnLogin()
+        {
+            // 1. MainMenuì—ì„œ ìƒì„±ëœ DontDestroyOnLoad ê°ì²´ë“¤ ì •ë¦¬
+            CleanupMainMenuObjects();
+            
+            // 2. Boot ì”¬ìœ¼ë¡œ ì´ë™
+            if (SceneLoadHelper.Shared != null)
+            {
+                await SceneLoadHelper.Shared.LoadToLogOut();
+            }
+        }
+
+        private void CleanupMainMenuObjects()
+        {
+            // MainMenuì—ì„œ ìƒì„±ëœ DontDestroyOnLoad ê°ì²´ë“¤ ì°¾ì•„ì„œ ì œê±°
+            var allObjects = FindObjectsByType<GameObject>(FindObjectsSortMode.None);
+            
+            foreach (var obj in allObjects)
+            {
+                if (obj == null || obj.transform.parent != null)
+                    continue;
+                
+                if (obj.scene.name == "DontDestroyOnLoad")
+                {
+                    // SceneLoadHelper, SystemBoot, NetworkManager, GameSession, ContentsDownloader, SteamManagerëŠ” ìœ ì§€
+                    if (obj.GetComponent<SceneLoadHelper>() != null ||
+                        obj.GetComponent<SystemBoot>() != null ||
+                        obj.GetComponent<NetworkManager>() != null ||
+                        obj.GetComponent<GameSession>() != null ||
+                        obj.GetComponent<ContentsDownloader>() != null ||
+                        obj.name.Contains("SteamManager"))
+                    {
+                        continue;
+                    }
+                    
+                    // MainMenuì—ì„œ ìƒì„±ëœ ë‚˜ë¨¸ì§€ ê°ì²´ë“¤ ì œê±°
+                    Debug.Log($"[SelectMenuAction] MainMenu ê°ì²´ ì œê±°: {obj.name}");
+                    Destroy(obj);
+                }
+            }
         }
     }
 }

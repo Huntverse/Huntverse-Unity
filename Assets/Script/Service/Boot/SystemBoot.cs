@@ -1,6 +1,8 @@
 using System;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using Hunt;
+using Hunt.Net;
 using UnityEngine;
 
 public class SystemBoot : MonoBehaviourSingleton<SystemBoot>
@@ -9,71 +11,187 @@ public class SystemBoot : MonoBehaviourSingleton<SystemBoot>
     [SerializeField] private Canvas LogInCanvas;
 
     public bool isSystemContinue = false;
-    protected override bool DontDestroy => base.DontDestroy;
+    private bool loginServerConnected;
+    public bool LoginServerConnected => loginServerConnected;
+    
+    private bool isInit = false;
+    private bool isInitializing = false;
+    private static bool isFirstInitComplete = false;
+    private CancellationTokenSource initCts;
+    
+    protected override bool DontDestroy => false;
+    
     protected override void Awake()
     {
         base.Awake();
+        loginServerConnected = false;
         LogInCanvas.gameObject.SetActive(false);
+        
         Initialize().Forget();
     }
-
-    bool isInit = false;
-    private async UniTaskVoid Initialize()
+    
+    private async UniTask Initialize()
     {
-        $"[Boot] : Initializing...".DLog();
-
-        // ContentsDownloader 대기 및 리소스 다운로드
-        await UniTask.WaitUntil(() => ContentsDownloader.Shared != null);
-        $"[Boot] : ContentsDownloader Ready!".DLog();
-        
-        bool downloadSuccess = await ContentsDownloader.Shared.StartDownload();
-        if (!downloadSuccess)
+        if (isInitializing)
         {
-            $"[Boot] : Resource Download Failed!".DError();
+            "[Boot] 이미 초기화 중입니다. 중복 호출 무시".DWarning();
             return;
         }
-        $"[Boot] : Resource Download Complete!".DLog();
-
-        await UniTask.WaitUntil(() => UserAuth.Shared != null);
-        $"[Boot] : UserAuth Ready!".DLog();
-
-        $"[Boot] : Waiting SteamManager Initialized...".DLog();
-        int steamWaitSeconds = 0;
-        while (!SteamManager.Initialized)
+        
+        isInitializing = true;
+        
+        if (initCts != null)
         {
-            await UniTask.Delay(TimeSpan.FromSeconds(1));
-            steamWaitSeconds++;
-            if (steamWaitSeconds % 5 == 0)
-            {
-                $"[Boot] : SteamManager not ready yet ({steamWaitSeconds}s). SteamAPI_Init 실패 여부 확인 필요".DLog();
-            }
+            try { initCts.Dispose(); } catch { }
+            initCts = null;
         }
-        $"[Boot] : SteamManager Initialized after {steamWaitSeconds}s".DLog();
-
-        UserAuth.Shared.Initialize();
-
-        isInit = true;
-        $"[Boot] : Initialize Success".DLog();
-        if (isInit)
+        
+        initCts = new CancellationTokenSource();
+        var token = initCts.Token;
+        
+        if (isFirstInitComplete)
         {
-            if (!isSystemContinue)
+            "[Boot] 로그아웃 후 재진입 - 로그인 서버 재연결".DLog();
+            
+            await UniTask.Delay(100, cancellationToken: token);
+            
+            var loginScreen = FindAnyObjectByType<LoginScreen>(FindObjectsInactive.Include);
+            if (loginScreen != null)
+            {
+                LogInCanvas = loginScreen.GetComponent<Canvas>();
+            }
+            else
+            {
+                "[Boot] LoginScreen을 찾을 수 없습니다!".DError();
+            }
+            
+            await UniTask.WaitUntil(() => ContentsDownloader.Shared != null, cancellationToken: token);
+            if (ContentsDownloader.Shared?.loadingCanvas != null)
             {
                 ContentsDownloader.Shared.loadingCanvas.gameObject.SetActive(false);
+            }
+            
+            await UniTask.WaitUntil(() => GameSession.Shared != null && GameSession.Shared.IsInitialized, cancellationToken: token);
+            loginServerConnected = await GameSession.Shared.ConnectionToLoginServer();
+            
+            if (!loginServerConnected)
+            {
+                "[Boot] LoginServer Connection Fail".DError();
+            }
+            else
+            {
+                "[Boot] LoginServer Connection Success!".DLog();
+            }
+            
+            if (LogInCanvas != null)
+            {
                 LogInCanvas.gameObject.SetActive(true);
             }
             else
             {
-                SceneLoadHelper.Shared?.LoadSceneSingleMode(ResourceKeyConst.Ks_Mainmenu,false);
+                "[Boot] LogInCanvas를 찾을 수 없습니다!".DError();
+            }
+            
+            isInit = true;
+            isInitializing = false;
+            return;
+        }
+        
+        try
+        {
+            "[Boot] Initializing...".DLog();
+
+            await UniTask.WaitUntil(() => ContentsDownloader.Shared != null, cancellationToken: token);
+            
+            bool downloadSuccess = await ContentsDownloader.Shared.StartDownload();
+            if (!downloadSuccess)
+            {
+                "[Boot] Resource Download Failed!".DError();
+                return;
+            }
+            "[Boot] Resource Download Complete!".DLog();
+
+            await UniTask.WaitUntil(() => NetworkManager.Shared != null, cancellationToken: token);
+            await UniTask.WaitUntil(() => GameSession.Shared != null && GameSession.Shared.IsInitialized, cancellationToken: token);
+
+            loginServerConnected = await GameSession.Shared.ConnectionToLoginServer();
+            if (!loginServerConnected)
+            {
+                "[Boot] LoginServer Connection Fail".DError();
+            }
+            else
+            {
+                "[Boot] LoginServer Connection Success!".DLog();
+            }
+
+            await UniTask.WaitUntil(() => UserAuth.Shared != null, cancellationToken: token);
+
+            int steamWaitSeconds = 0;
+            while (!SteamManager.Initialized && !token.IsCancellationRequested)
+            {
+                await UniTask.Delay(TimeSpan.FromSeconds(1), cancellationToken: token);
+                steamWaitSeconds++;
+                if (steamWaitSeconds % 5 == 0)
+                {
+                    $"[Boot] SteamManager not ready yet ({steamWaitSeconds}s)".DLog();
+                }
+            }
+            
+            if (token.IsCancellationRequested)
+            {
+                "[Boot] 초기화가 취소되었습니다".DLog();
+                return;
+            }
+
+            UserAuth.Shared.Initialize();
+
+            isInit = true;
+            isFirstInitComplete = true;
+            "[Boot] Initialize Success".DLog();
+            
+            if (isInit)
+            {
+                if (!isSystemContinue)
+                {
+                    ContentsDownloader.Shared.loadingCanvas.gameObject.SetActive(false);
+                    LogInCanvas.gameObject.SetActive(true);
+                }
+                else
+                {
+                    SceneLoadHelper.Shared?.LoadSceneSingleMode(ResourceKeyConst.Ks_Mainmenu, false);
+                }
             }
         }
-    }
-    private void Start()
-    {
-      
+        catch (OperationCanceledException)
+        {
+            "[Boot] 초기화가 취소되었습니다".DLog();
+        }
+        catch (Exception e)
+        {
+            $"[Boot] 초기화 중 에러 발생: {e.Message}".DError();
+        }
+        finally
+        {
+            isInitializing = false;
+        }
     }
 
     protected override void OnDestroy()
     {
+        if (initCts != null && !initCts.IsCancellationRequested)
+        {
+            try
+            {
+                initCts.Cancel();
+                initCts.Dispose();
+            }
+            catch { }
+            finally
+            {
+                initCts = null;
+            }
+        }
+        
         base.OnDestroy();
     }
 }
