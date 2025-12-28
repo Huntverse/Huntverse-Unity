@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 6024447696156967341}
   - component: {fileID: 6581976675647463066}
   - component: {fileID: 7039653305979165604}
+  - component: {fileID: 4651595121674331468}
   m_Layer: 0
   m_Name: leuon_npc
   m_TagString: Untagged
@@ -151,6 +152,29 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 0}
   m_Size: {x: 2.1583333, y: 3.3166666}
   m_Direction: 0
+--- !u!114 &4651595121674331468
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 978078849353062966}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b42a88885fecc184c8686a4919256cbe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  npcData:
+    npcId: 0
+    npcName: 
+    npcNameKey: 
+    npcType: 0
+    portaitSpriteKey: 
+    modelPrefabKey: 
+    desc: 
+  interactionTriggerRange: 3
+  currentNotification: 1
+  notificationIcon: {fileID: 5403853655124593991}
 --- !u!1001 &5906703142849422901
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -159,6 +183,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8929564114305319256}
     m_Modifications:
+    - target: {fileID: 1416951950547558172, guid: 940a9996b7a94784f90ba320bb369044, type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1969034422130032477, guid: 940a9996b7a94784f90ba320bb369044, type: 3}
       propertyPath: m_Name
       value: rollName
@@ -449,7 +477,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1535407013501885835, guid: a06e7f9e9dd226244a984977cdfa7416, type: 3}
       propertyPath: m_Name
-      value: notipos
+      value: notiIcon
       objectReference: {fileID: 0}
     - target: {fileID: 4539970709149623225, guid: a06e7f9e9dd226244a984977cdfa7416, type: 3}
       propertyPath: m_LocalPosition.x
@@ -501,6 +529,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a06e7f9e9dd226244a984977cdfa7416, type: 3}
+--- !u!1 &5403853655124593991 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1535407013501885835, guid: a06e7f9e9dd226244a984977cdfa7416, type: 3}
+  m_PrefabInstance: {fileID: 6895157056287379660}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &6967547468959658869 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4539970709149623225, guid: a06e7f9e9dd226244a984977cdfa7416, type: 3}

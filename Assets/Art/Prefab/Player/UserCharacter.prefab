@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 605394507488536732}
   - component: {fileID: 1359625169138974492}
-  - component: {fileID: 6025211981181059759}
+  - component: {fileID: 5656638671077247083}
   - component: {fileID: 1061231504897951527}
   - component: {fileID: 7212270052690455473}
   m_Layer: 6
@@ -50,7 +50,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2a003f7caac65a429b4e1833449305d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &6025211981181059759
+--- !u!114 &5656638671077247083
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -59,7 +59,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2203575790663535969}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c9c3fe8bf1e013c41a872c0c6a89984d, type: 3}
+  m_Script: {fileID: 11500000, guid: e2bae6f848ba98e448d0c147a0687a44, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 5
@@ -69,7 +69,7 @@ MonoBehaviour:
   coyoteTime: 0.15
   jumpBufferTime: 0.2
   groundCheckPoint: {fileID: 6937321253123338166}
-  groundCheckDistance: 0.15
+  groundCheckDistance: 0.1
   groundLayer:
     serializedVersion: 2
     m_Bits: 256
