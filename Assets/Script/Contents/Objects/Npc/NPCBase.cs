@@ -1,23 +1,38 @@
+﻿using Cysharp.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.UI;
+using System.Collections.Generic;
 
 namespace Hunt
 {
-    public class NPCBase : MonoBehaviour, IInteractable
+    [RequireComponent(typeof(CapsuleCollider2D))]
+    public class NPCBase : InteractionBase
     {
-        [Header("SETTINGS")]
+        [Header("DATA")]
         [SerializeField] protected NPCData npcData;
-        [SerializeField] protected float interactionTriggerRange = 3f;
         [SerializeField] protected NPCNotiType currentNotification = NPCNotiType.None;
+
+        [Header("DETECTION")]
+        [SerializeField] protected float detectionRange = 10f;
 
         [Header("VISUAL")]
         [SerializeField] protected GameObject notificationIcon;
 
+        private CapsuleCollider2D detectionTrigger;
+        private Transform localPlayer;
+        private bool isLocalPlayerInRange;
+
         protected bool isInteracting;
 
         public NPCData Data => npcData;
+        public NPCNotiType NotificationType => currentNotification;
         public bool IsInteracting => isInteracting;
+        public bool HasPlayerNearby => isLocalPlayerInRange;
 
-        #region Life
+        protected virtual void Awake()
+        {
+            InitializeTrigger();
+        }
         protected virtual void Start()
         {
             InitializeNPC();
@@ -25,140 +40,381 @@ namespace Hunt
 
         protected virtual void OnDestroy()
         {
+            localPlayer = null;
+        }
 
+        private void InitializeTrigger()
+        {
+            detectionTrigger = GetComponent<CapsuleCollider2D>();
+            detectionTrigger ??= gameObject.AddComponent<CapsuleCollider2D>();
+
+            detectionTrigger.isTrigger = true;
+
+            $"[NPC] {npcData?.npcName} 감지 트리거 초기화 (반경 : {detectionRange} m)".DLog();
         }
 
         protected virtual void InitializeNPC()
         {
-            if (npcData == null)
+            if (npcData == null) return;
+
+            FindLocalPlayer();
+
+            $"[NPC] {npcData.npcName} 초기화 완료 (타입: {npcData.npcType})".DLog();
+        }
+
+        private void InitializeNotificationState()
+        {
+            // NPC 타입에 따른 기본 알림
+            switch (npcData.npcType)
             {
-                "[NPC] NPCData�� �Ҵ���� �ʾҽ��ϴ�.".DError();
-                return;
+                case NPCType.Trade:
+                    SetNotification(NPCNotiType.Sell);
+                    break;
+
+                case NPCType.QuestGiver:
+                    // TODO: QuestManager가 나중에 설정
+                    // 일단 기본값 유지
+                    break;
+
+                default:
+                    // 일반 대화 NPC는 알림 없음
+                    SetNotification(NPCNotiType.None);
+                    break;
+            }
+        }
+
+        public virtual async UniTask SetNotification(NPCNotiType type)
+        {
+            if (currentNotification == type) return;
+            currentNotification = type;
+            var image = notificationIcon.GetComponent<Image>();
+
+            if (AbLoader.Shared != null)
+            {
+                image.sprite = await AbLoader.Shared.LoadAssetAsync<Sprite>(NotiNpcConst.GetIconKeyNpcNotiType(type));
             }
 
+            $"[NPC] {npcData?.npcName} 알림 상태 변경:{type}".DLog();
         }
 
-        #endregion
-        private void CheckPlayerDistance()
+        private void FindLocalPlayer()
         {
-
-
-        }
-        public virtual bool CanInteract(Transform player)
-        {
-            if (npcData == null || isInteracting) return false;
-            float distance = Vector3.Distance(transform.position, player.position);
-            return distance < interactionTriggerRange;
-        }
-        public virtual bool CanInteract()
-        {
-            return npcData != null && !isInteracting;
-        }
-        public virtual void Interact(Transform player)
-        {
-            if (!CanInteract(player))
+            // 서버에서 할당 받은 Local ID로 바꿔야함
+            var userChar = FindAnyObjectByType<UserCharacter>();
+            if (userChar != null)
             {
-                return;
+                localPlayer = userChar.transform;
+                $"[NPC] 로컬 플레이어 발견: {localPlayer.name}".DLog();
             }
+        }
+
+
+
+        private void OnTriggerEnter2D(Collider2D other)
+        {
+            $"[NPC] {npcData?.npcName} - Trigger Enter: {other.name}".DLog();
+            if (IsLocalPlayer(other))
+            {
+                isLocalPlayerInRange = true;
+                OnPlayerEnterRange();
+            }
+        }
+        private void OnTriggerExit2D(Collider2D other)
+        {
+            if (IsLocalPlayer(other))
+            {
+                isLocalPlayerInRange = false;
+                OnPlayerExitRange();
+            }
+        }
+
+        private bool IsLocalPlayer(Collider2D collider)
+        {
+            var userChar = collider.GetComponent<UserCharacter>();
+            return userChar != null && collider.transform == localPlayer;
+        }
+
+        protected virtual void OnPlayerEnterRange()
+        {
+            $"[NPC] {npcData?.npcName} - 플레이어 범위 진입".DLog();
+            var userCharLoco = localPlayer?.GetComponent<UserCharLoco>();
+            if (userCharLoco != null)
+            {
+                userCharLoco.RegisterInteractable(this);
+            }
+        }
+
+        protected virtual void OnPlayerExitRange()
+        {
+            $"[NPC] {npcData?.npcName} - 플레이어 범위 이탈".DLog();
+
+            var userCharLoco = localPlayer?.GetComponent<UserCharLoco>();
+            if (userCharLoco != null)
+            {
+                userCharLoco.UnregisterInteractable(this);
+            }
+        }
+        public override bool CanInteract()
+        {
+            var result = npcData != null && !isInteracting && isLocalPlayerInRange;
+            $"[NPC] {npcData?.npcName} - CanInteract 체크: npcData={npcData != null}, isInteracting={isInteracting}, isLocalPlayerInRange={isLocalPlayerInRange}, 결과={result}".DLog();
+            return result;
+        }
+
+        public override string GetInteractionText()
+        {
+            if (npcData == null) return "";
+
+            return npcData.npcType switch
+            {
+                NPCType.Trade => $"[E] {npcData.npcName}과 거래하기",
+                NPCType.Healer => $"[E] {npcData.npcName}과 치료받기",
+                NPCType.Blacksmith => $"[E] {npcData.npcName}과 제작 의뢰",
+                NPCType.TalkOnly => $"[E] {npcData.npcName}과 대화하기",
+                NPCType.QuestGiver => $"[E] {npcData.npcName}과 대화하기",
+                _ => $"[E] 상호작용"
+            };
+
+        }
+
+        protected override void OnInteractLocal(InteractionEventArgs args)
+        {
+            if (!CanInteract()) return;
 
             isInteracting = true;
-            $"[NPC] {npcData?.npcName} - {player.name}".DLog();
+            args.Interactor?.GetComponent<UserCharLoco>()?.SetJumpEnabled(false);
+            $"[NPC] {npcData.npcName} - 상호작용 시작".DLog();
+
+            if (DialogManager.Shared == null)
+            {
+                $"[NPC] DialogManager 없음 - 상호작용 리셋".DWarnning();
+                EndInteraction();
+                return;
+            }
+
+            StartDialog();
+        }
+
+
+        protected virtual void OpenTradeMenu(InteractionEventArgs args)
+        {
+            $"[NPC] {npcData.npcName} 상점 열기".DLog();
+            EndInteraction();
+        }
+
+        protected virtual void OpenQuestMenu(InteractionEventArgs args)
+        {
+            $"[NPC] {npcData.npcName} 퀘스트 메뉴".DLog();
+            EndInteraction();
+        }
+
+        protected virtual void OpenHealMenu(InteractionEventArgs args)
+        {
+            $"[NPC] {npcData.npcName} 치료 메뉴".DLog();
+            EndInteraction();
+        }
+
+        protected virtual void OpenBlacksmithMenu(InteractionEventArgs args)
+        {
+            $"[NPC] {npcData.npcName} 대장간 메뉴".DLog();
+            EndInteraction();
+        }
+
+        protected virtual void OpenBankMenu(InteractionEventArgs args)
+        {
+            $"[NPC] {npcData.npcName} 은행 메뉴".DLog();
+            EndInteraction();
+        }
+
+        protected virtual void StartDialog()
+        {
+            if (DialogManager.Shared == null)
+            {
+                "[NPC] DialogManager가 없습니다".DError();
+                EndInteraction();
+                return;
+            }
+
+            $"[NPC] {npcData.npcName} 대화 시작 (타입: {npcData.npcType})".DLog();
+
+            // ✅ DialogData 로드
+            var dialogData = LoadDialogData();
+            if (dialogData == null)
+            {
+                $"[NPC] {npcData.npcName}의 DialogData가 없습니다".DWarnning();
+                EndInteraction();
+                return;
+            }
+
+            DialogManager.Shared.StartDialog(dialogData, OnChoiceSelected,OnDialogComplete);
+        }
+        private void OnDialogComplete()
+        {
+            $"[NPC] {npcData.npcName} 대화 완료".DLog();
+            currentInteractor?.GetComponent<UserCharLoco>()?.SetJumpEnabled(true);
+            EndInteraction();
+        }
+        private void OnChoiceSelected(int choiceIndex, string choiceId)
+        {
+            HandleChoiceAction(choiceId);
+        }
+        private void HandleChoiceAction(string choiceId)
+        {
+            this.DLog($"선택 행동 : {choiceId}");
+        }
+        /// <summary>
+        /// NPC ID와 타입에 따른 DialogData 로드
+        /// </summary>
+        private DialogData LoadDialogData()
+        {
+            // 임시: 기본 대화 생성
+            return new DialogData
+            {
+                npcId = npcData.npcId,
+                npcName = npcData.npcName,
+                speakerIconkey = npcData.portaitSpriteKey,
+                nodes = new List<DialogNode>
+                {
+                    new DialogNode
+                    {
+                        nodeId = 0,
+                        dialogText = GetDefaultDialogText(),
+                        choices = GetDefaultChoices() // ✅ NPC 타입별 선택지
+                    }
+                }
+            };
+
+        }
+
+        private string GetDefaultDialogText()
+        {
+            return npcData.npcType switch
+            {
+                NPCType.Trade => $"안녕하세요! {npcData.npcName}의 상점입니다.",
+                NPCType.Healer => $"치료가 필요하신가요?",
+                NPCType.Blacksmith => $"어떤 물건이든 만든 사람을 생각하면서 쓰라고!",
+                NPCType.Banker => $"{npcData.npcName} 은행입니다. 무엇을 도와드릴까요?",
+                NPCType.QuestGiver => $"모험가님, 부탁이 있습니다.",
+                _ => $"안녕하세요, {npcData.npcName}입니다."
+            };
+        }
+
+
+        private List<DialogChoice> GetDefaultChoices()
+        {
+            var choices = new List<DialogChoice>();
 
             switch (npcData.npcType)
             {
+                case NPCType.Trade:
+                    choices.Add(new DialogChoice
+                    {
+                        choiceText = "거래하기",
+                        nextNodeId = -1,
+                        choiceId = "trade"
+                    });
+                    choices.Add(new DialogChoice
+                    {
+                        choiceText = "대화 종료",
+                        nextNodeId = -1,
+                        choiceId = "exit" 
+                    });
+                    break;
 
-                case NPCType.Merchant:
-                    OpenMerchantMenu(player);
-                    break;
-                case NPCType.QuestGiver:
-                    OpenQuestMenu(player);
-                    break;
-                case NPCType.Healer:
-                    OpenHealMenu(player);
-                    break;
                 case NPCType.Blacksmith:
-                    OpenBlacksmithMenu(player);
+                    choices.Add(new DialogChoice
+                    {
+                        choiceText = "장비 수리 좀 할게요",
+                        nextNodeId = -1,
+                        choiceId = "craft" 
+                    });
+                    choices.Add(new DialogChoice
+                    {
+                        choiceText = "다음에 올게요",
+                        nextNodeId = -1,
+                        choiceId = "exit" 
+                    });
                     break;
+
+                case NPCType.Healer:
+                    choices.Add(new DialogChoice
+                    {
+                        choiceText = "치료받기",
+                        nextNodeId = -1,
+                        choiceId = "heal" 
+                    });
+                    choices.Add(new DialogChoice
+                    {
+                        choiceText = "대화 종료",
+                        nextNodeId = -1,
+                        choiceId = "exit" 
+                    });
+                    break;
+
                 case NPCType.Banker:
-                    OpenBankMenu(player);
+                    choices.Add(new DialogChoice
+                    {
+                        choiceText = "보관하기",
+                        nextNodeId = -1,
+                        choiceId = "bank"
+                    });
+                    choices.Add(new DialogChoice
+                    {
+                        choiceText = "대화 종료",
+                        nextNodeId = -1,
+                        choiceId = "exit" 
+                    });
                     break;
-                case NPCType.TalkOnly:
+
+                case NPCType.QuestGiver:
+                    choices.Add(new DialogChoice
+                    {
+                        choiceText = "퀘스트 보기",
+                        nextNodeId = -1,
+                        choiceId = "quest" 
+                    });
+                    choices.Add(new DialogChoice
+                    {
+                        choiceText = "대화 종료",
+                        nextNodeId = -1,
+                        choiceId = "exit" 
+                    });
+                    break;
+
                 default:
-                    StartDialog(player);
+                    choices.Add(new DialogChoice
+                    {
+                        choiceText = "확인",
+                        nextNodeId = -1,
+                        choiceId = "confirm"
+                    });
                     break;
             }
+
+            return choices;
         }
-
-
-        public void Interact()
-        {
-            $"[NPC] {npcData?.npcName} ��ȣ�ۿ� (�÷��̾� ������)".DLog();
-        }
-
-        public string GetInteractionText()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public float GetInteractionTriggerRange() => interactionTriggerRange;
-
-        public NPCData GetNPCData() => npcData;
-
-        public NPCNotiType GetNPCNotiType() => currentNotification;
-
-        #region Action
-        protected virtual void OpenMerchantMenu(Transform player)
-        {
-            $"[NPC] {npcData.npcName} ���� ����".DLog();
-            // NPCMerchant ������Ʈ�� ó��
-        }
-
-        protected virtual void OpenQuestMenu(Transform player)
-        {
-            $"[NPC] {npcData.npcName} ����Ʈ �޴�".DLog();
-            // NPCQuest ������Ʈ�� ó��
-        }
-
-        protected virtual void OpenHealMenu(Transform player)
-        {
-            $"[NPC] {npcData.npcName} ġ�� �޴�".DLog();
-        }
-
-        protected virtual void OpenBlacksmithMenu(Transform player)
-        {
-            $"[NPC] {npcData.npcName} ���尣 �޴�".DLog();
-        }
-
-        protected virtual void OpenBankMenu(Transform player)
-        {
-            $"[NPC] {npcData.npcName} ���� �޴�".DLog();
-        }
-
-        protected virtual void StartDialog(Transform player)
-        {
-            $"[NPC] {npcData.npcName} ��ȭ ����".DLog();
-            // NPCDialog ������Ʈ�� ó��
-        }
-
         public virtual void EndInteraction()
         {
             isInteracting = false;
+            ClearInteractor();
+
+            $"[NPC] {npcData.npcName} 상호작용 종료".DLog();
         }
 
-        public void SetNotification(NPCNotiType type)
-        {
-            currentNotification = type;
-        }
-        #endregion
-
-        #region Gizmos
 
         protected virtual void OnDrawGizmosSelected()
         {
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawWireSphere(transform.position, interactionTriggerRange);
-        }
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(transform.position, detectionRange);
 
-        #endregion
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawWireSphere(transform.position, interactionRange);
+
+            if (Application.isPlaying && localPlayer != null && isLocalPlayerInRange)
+            {
+                Gizmos.color = Color.cyan;
+                Gizmos.DrawLine(transform.position + Vector3.up * 2, localPlayer.position + Vector3.up * 2);
+            }
+        }
     }
 }

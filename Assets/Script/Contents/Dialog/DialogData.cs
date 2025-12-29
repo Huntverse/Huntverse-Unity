@@ -21,6 +21,7 @@ namespace Hunt
         public int nodeId;
         public string dialogText;
         public List<DialogChoice> choices;
+        public bool allowPrev = false;
     }
 
     /// <summary> 대화 선택지 </summary>
@@ -29,5 +30,6 @@ namespace Hunt
     {
         public string choiceText;
         public int nextNodeId;
+        public string choiceId = "";
     }
 }

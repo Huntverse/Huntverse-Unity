@@ -1,6 +1,7 @@
 using Cysharp.Threading.Tasks;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -8,15 +9,22 @@ namespace Hunt
 {
     public class DialogManager : MonoBehaviourSingleton<DialogManager>
     {
+        #region Field
         [SerializeField] private DialogPanel dialogPanel;
         [SerializeField] private float typingSpeed = 0.05f;
 
         private DialogData currentDialog;
-        private int currenNodeIndex;
+        private int currentNodeIndex;
         private Coroutine typingCoroutine;
         private bool isTyping;
+        private Action<int, string> onChoiceSelected;
         private Action onDialogEnd;
         private InputManager inputKey;
+
+        private DialogState currentState = DialogState.None;
+        private Stack<int> nodeHistory = new Stack<int>();
+
+        #endregion
         protected override bool DontDestroy => false;
         protected override void Awake()
         {
@@ -47,31 +55,40 @@ namespace Hunt
         {
             if (currentDialog == null) return;
 
-            if (isTyping)
+            switch (currentState)
             {
-                CompleteTyping();
-            }
-            else
-            {
-                ShowNextNode();
+                case DialogState.Typing:
+                    CompleteTyping();
+                    break;
+                case DialogState.WaitingForIput:    // 다음 노드로 이동
+                    ShowNextNode();
+                    break;
+                default:
+                    break;
             }
         }
 
-        public void StartDialog(DialogData data, Action onComplete = null)
+        public void StartDialog(DialogData data, Action<int, string> onChoiceSelected = null, Action onComplete = null)
         {
             if (data == null || data.nodes == null || data.nodes.Count == 0)
             {
                 $"유효하지 않은 DialogData".DError();
+                onComplete?.Invoke();
                 return;
             }
 
             currentDialog = data;
-            currenNodeIndex = 0;
-            onDialogEnd = onComplete;
+            currentNodeIndex = 0;
+            nodeHistory.Clear();
+
+            this.onChoiceSelected = onChoiceSelected;
+            this.onDialogEnd = onComplete;
 
             LoadSpeakerIcon(data.speakerIconkey);
+            dialogPanel?.Show();
 
-            dialogPanel.Show();
+            "DialogPanel Show".DLog();
+
             ShowCurrentNode();
 
         }
@@ -85,46 +102,94 @@ namespace Hunt
             }
 
             isTyping = false;
-            dialogPanel.Hide();
-            onDialogEnd?.Invoke();
-            currentDialog = null;
-        }
 
+            var callback = onDialogEnd;
+            onDialogEnd = null;
+            onChoiceSelected = null;
+
+            dialogPanel.Hide();
+            callback?.Invoke();
+
+            currentDialog = null;
+            nodeHistory.Clear();
+            ChangeState(DialogState.None);
+        }
+        private void ChangeState(DialogState newState)
+        {
+            if (currentState == newState) return;
+            $"[DialogManager] 상태 변경 : {currentState}->{newState}".DLog();
+
+            currentState = newState;
+        }
         private void ShowCurrentNode()
         {
-            if (currentDialog == null || currenNodeIndex >= currentDialog.nodes.Count)
+            if (currentDialog == null || currentNodeIndex >= currentDialog.nodes.Count)
             {
+                ChangeState(DialogState.Completed);
                 EndDialog();
                 return;
             }
 
-            DialogNode node  = currentDialog.nodes[currenNodeIndex];
+            DialogNode node = currentDialog.nodes[currentNodeIndex];
+            $"[DialogManager] 노드 표시: nodeId={node.nodeId}, text={node.dialogText}".DLog();
 
-            if (node.choices != null && node.choices.Count > 0) 
+            var allowPreviouse = node.allowPrev && nodeHistory.Count > 0;
+            dialogPanel.ShowNode(node, allowPreviouse, ShowPreviousNode);
+
+            if (node.choices != null && node.choices.Count > 0)
             {
+                ChangeState(DialogState.ShowingChoices);
                 dialogPanel.ShowChoices(node.choices, OnChoiceSelected);
-            }
 
-            if (typingCoroutine != null)
+                if (typingCoroutine != null)
+                {
+                    StopCoroutine(typingCoroutine);
+                }
+
+                typingCoroutine = StartCoroutine(TypeText(node.dialogText));
+            }
+            else
             {
-                StopCoroutine(typingCoroutine);
+                if (typingCoroutine != null)
+                {
+                    StopCoroutine(typingCoroutine);
+                }
+                typingCoroutine = StartCoroutine(TypeText(node.dialogText));
             }
 
-            typingCoroutine = StartCoroutine(TypeText(node.dialogText));
+
         }
 
         private void ShowNextNode()
         {
-            currenNodeIndex++;
+            if (currentNodeIndex >= 0 && currentNodeIndex < currentDialog.nodes.Count)
+            {
+                nodeHistory.Push(currentNodeIndex);
+            }
+            currentNodeIndex++;
+            ShowCurrentNode();
+        }
+
+        public void ShowPreviousNode()
+        {
+            if (nodeHistory.Count == 0)
+            {
+                this.DWarnning("이전 노드가 없습니다");
+                return;
+            }
+
+            currentNodeIndex = nodeHistory.Pop();
             ShowCurrentNode();
         }
 
         private IEnumerator TypeText(string text)
         {
+            ChangeState(DialogState.Typing);
             isTyping = true;
+
             dialogPanel.SetDialogText("");
 
-            foreach(char c in text)
+            foreach (char c in text)
             {
                 dialogPanel.AppenDialogText(c);
                 yield return new WaitForSeconds(typingSpeed);
@@ -132,48 +197,90 @@ namespace Hunt
 
             isTyping = false;
             typingCoroutine = null;
+
+            if (currentDialog != null && currentNodeIndex < currentDialog.nodes.Count)
+            {
+                DialogNode node = currentDialog.nodes[currentNodeIndex];
+                if (node.choices == null || node.choices.Count == 0)
+                {
+                    ChangeState(DialogState.WaitingForIput);
+                }
+                else
+                {
+                    ChangeState(DialogState.ShowingChoices);
+                }
+            }
         }
 
         private void CompleteTyping()
         {
-            if(typingCoroutine != null)
+            if (typingCoroutine != null)
             {
                 StopCoroutine(typingCoroutine);
                 typingCoroutine = null;
             }
 
-            if (currentDialog != null && currenNodeIndex < currentDialog.nodes.Count)
+            if (currentDialog != null && currentNodeIndex < currentDialog.nodes.Count)
             {
-                dialogPanel.SetDialogText(currentDialog.nodes[currenNodeIndex].dialogText);
+                dialogPanel.SetDialogText(currentDialog.nodes[currentNodeIndex].dialogText);
             }
 
-            isTyping= false;    
+            isTyping = false;
+
+            if (currentDialog != null && currentNodeIndex < currentDialog.nodes.Count)
+            {
+                var node = currentDialog.nodes[currentNodeIndex];
+                if (node.choices == null || node.choices.Count == 0)
+                {
+                    ChangeState(DialogState.WaitingForIput);
+                }
+                else
+                {
+                    ChangeState(DialogState.ShowingChoices);
+                }
+            }
+
         }
 
         private void OnChoiceSelected(int choiceIndex)
         {
-            if (currentDialog == null || currenNodeIndex >= currentDialog.nodes.Count)
+            if (currentState != DialogState.ShowingChoices)
             {
+                this.DError($"선택지 선택 불가 상태 : {currentState}");
                 return;
             }
 
-            DialogNode node = currentDialog.nodes[currenNodeIndex];
+            ChangeState(DialogState.ProcessingChoice);
+            
+            if (currentDialog == null || currentNodeIndex >= currentDialog.nodes.Count)
+            {
+                this.DError("OnChoiceSelected - currentDialog가 null이거나 인덱스 초과");
+                return;
+            }
+
+            DialogNode node = currentDialog.nodes[currentNodeIndex];
 
             if (choiceIndex < 0 || choiceIndex >= node.choices.Count)
             {
-                "잘못된 선택지 인덱스".DError();
+                this.DError("잘못된 선택지 인덱스");
+                ChangeState(DialogState.ShowingChoices);
                 return;
             }
 
             DialogChoice choice = node.choices[choiceIndex];
 
+            string choiceId = string.IsNullOrEmpty(choice.choiceId) ? choice.choiceText : choice.choiceId;
+            onChoiceSelected?.Invoke(choiceIndex, choiceId);
+            nodeHistory.Push(currentNodeIndex);
+
             if (choice.nextNodeId < 0)
             {
+                ChangeState(DialogState.Completed);
                 EndDialog();
                 return;
             }
 
-            currenNodeIndex = choice.nextNodeId;
+            currentNodeIndex = choice.nextNodeId;
             ShowCurrentNode();
         }
 

@@ -1,4 +1,5 @@
 using Cysharp.Threading.Tasks;
+using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -39,6 +40,10 @@ namespace Hunt
         private GameObject model;
         private InputManager inputKey;
         private IsAttackPointer hitpointer;
+
+        private HashSet<IInteractable> nearbyInteractables = new HashSet<IInteractable>();
+        private IInteractable currentInteractable;
+
         #endregion
         private void Awake()
         {
@@ -46,14 +51,14 @@ namespace Hunt
             inputKey = InputManager.Shared;
             inputKey.Player.Jump.performed += OnJumpPerformed;
             inputKey.Player.Attack.performed += OnAttackPerformed;
-
+            inputKey.Player.Talk.performed += OnInteractPerformed;
         }
         private void Start()
         {
             rb = GetComponent<Rigidbody2D>();
             rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
             hitpointer = GetComponentInChildren<IsAttackPointer>();
-            hitpointer.SetT(new Vector3(2.0f, 0.5f, 0f), new Vector2(1,1.25f));
+            hitpointer.SetT(new Vector3(2.0f, 0.5f, 0f), new Vector2(1,1.25f)); // Custom
         }
         private void OnEnable()
         {
@@ -95,7 +100,7 @@ namespace Hunt
 
         }
 
-        public bool isJumpping = false;
+        public bool isJumpping = true;
         private void OnJumpPerformed(InputAction.CallbackContext context)
         {
             if (!canControl) return;
@@ -110,6 +115,11 @@ namespace Hunt
 
         }
 
+        private void OnInteractPerformed(InputAction.CallbackContext context)
+        {
+            if (!canControl) return;
+            HandleInteract();
+        }
 
         // Sync NetWork
         public void HandleMovement()
@@ -129,7 +139,94 @@ namespace Hunt
 
             SpawnAttackVfx();
         }
+        public void HandleInteract()
+        {
+            if (!canControl || isAttacking) return;
 
+            var nearest = GetNearestInteractable();
+
+            if (nearest != null && nearest.CanInteract())
+            {
+                nearest.Interact(transform);
+                $"[UserCharLoco] {nearest.GetTransform().name}와 상호작용".DLog();
+            }
+            else
+            {
+                "[UserCharLoco] 상호작용 가능한 대상이 없습니다".DWarnning();
+            }
+        }
+        public void HandleJump()
+        {
+            if (!canControl || isAttacking) return;
+
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
+            coyoteTimeCounter = 0f;
+            animator?.SetBool(AniKeyConst.k_bGround, true);
+        }
+        /// <summary>
+        /// NPC가 "나랑 대화 가능해!" 알림
+        /// </summary>
+        public void RegisterInteractable(IInteractable interactable)
+        {
+            if (interactable == null) return;
+
+            nearbyInteractables.Add(interactable);
+            $"[UserCharLoco] {interactable.GetTransform().name} 등록 (총 {nearbyInteractables.Count}개)".DLog();
+            UpdateInteractionUI();
+        }
+
+        /// <summary>
+        /// NPC가 "나랑 대화 불가!" 알림
+        /// </summary>
+        public void UnregisterInteractable(IInteractable interactable)
+        {
+            if (interactable == null) return;
+
+            nearbyInteractables.Remove(interactable);
+            $"[UserCharLoco] {interactable.GetTransform().name} 해제 (남은 {nearbyInteractables.Count}개)".DLog();
+            UpdateInteractionUI();
+        }
+
+        public void SetJumpEnabled(bool enabled) => isJumpping = enabled;
+
+        private IInteractable GetNearestInteractable()
+        {
+            if (nearbyInteractables.Count == 0) return null;
+
+            IInteractable nearest = null;
+            float nearestDistance = float.MaxValue;
+
+            foreach (var interactable in nearbyInteractables)
+            {
+                if (interactable == null || !interactable.CanInteract()) continue;
+
+                float distance = Vector3.Distance(transform.position, interactable.GetTransform().position);
+                if (distance < nearestDistance)
+                {
+                    nearest = interactable;
+                    nearestDistance = distance;
+                }
+            }
+
+            return nearest;
+        }
+
+        private void UpdateInteractionUI()
+        {
+            var nearest = GetNearestInteractable();
+
+            if (nearest != null)
+            {
+                string text = nearest.GetInteractionText();
+                $"[UserCharLoco] UI 표시: {text}".DLog();
+                // TODO: InteractionUIManager.Shared.ShowPrompt(text);
+            }
+            else
+            {
+                $"[UserCharLoco] UI 숨김".DLog();
+                // TODO: InteractionUIManager.Shared.HidePrompt();
+            }
+        }
         private async void SpawnAttackVfx()
         {
             $"⚔️ [PlayerAction] SpawnAttackVfx 시작".DLog();
@@ -166,14 +263,7 @@ namespace Hunt
                 $"⚔️ [PlayerAction] VfxHandle 생성 성공!".DLog();
             }
         }
-        public void HandleJump()
-        {
-            if (!canControl || isAttacking) return;
 
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
-            coyoteTimeCounter = 0f;
-            animator?.SetBool(AniKeyConst.k_bGround, true);
-        }
 
         #region Update
         private void UpdateAnimator()
@@ -186,6 +276,7 @@ namespace Hunt
 
         private void UpdateTimers()
         {
+            
             coyoteTimeCounter -= Time.deltaTime;
             jumpBufferCounter -= Time.deltaTime;
 
@@ -243,6 +334,7 @@ namespace Hunt
             {
                 inputKey.Player.Jump.performed -= OnJumpPerformed;
                 inputKey.Player.Attack.performed -= OnAttackPerformed;
+                inputKey.Player.Talk.performed -= OnInteractPerformed;
                 inputKey.Action.Dispose();
             }
         }

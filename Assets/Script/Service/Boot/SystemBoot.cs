@@ -34,7 +34,7 @@ public class SystemBoot : MonoBehaviourSingleton<SystemBoot>
     {
         if (isInitializing)
         {
-            "[Boot] 이미 초기화 중입니다. 중복 호출 무시".DWarning();
+            "[Boot] 이미 초기화 중입니다. 중복 호출 무시".DWarnning();
             return;
         }
 

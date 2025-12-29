@@ -8,7 +8,7 @@ namespace Hunt
     {
         public int npcId;
         public string npcName;
-        public string npcNameKey;
+        //public string npcNameKey;
         public NPCType npcType;
 
         public string portaitSpriteKey;

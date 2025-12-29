@@ -2,11 +2,10 @@ using UnityEngine;
 
 namespace Hunt
 {
-
     public enum NPCType
     {
         None = 0,
-        Merchant=1,
+        Trade=1,
         QuestGiver=2,
         Healer=3,
         TalkOnly=4,

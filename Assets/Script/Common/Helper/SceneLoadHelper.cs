@@ -111,7 +111,7 @@ namespace Hunt
             }
             catch (OperationCanceledException)
             {
-                "[SceneLoadHelper] 씬 로드가 취소되었습니다.".DWarning();
+                "[SceneLoadHelper] 씬 로드가 취소되었습니다.".DWarnning();
                 ShowLoadingIndicator(false);
                 throw;
             }
@@ -211,7 +211,7 @@ namespace Hunt
             }
             catch (OperationCanceledException)
             {
-                "[SceneLoadHelper] Boot 씬 로드가 취소되었습니다".DWarning();
+                "[SceneLoadHelper] Boot 씬 로드가 취소되었습니다".DWarnning();
                 ShowLoadingIndicator(false);
             }
             catch (Exception ex)

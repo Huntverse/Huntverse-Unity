@@ -1,9 +1,10 @@
-using TMPro;
-using UnityEngine;
-using UnityEngine.UI;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using System;
+using TMPro;
+using UnityEditor.Rendering;
+using UnityEngine;
+using UnityEngine.UI;
 
 namespace Hunt
 {
@@ -11,17 +12,14 @@ namespace Hunt
     {
         [Header("UI")]
         [SerializeField] private TextMeshProUGUI dialogText;
-        [SerializeField] private Image speakerIcon;
+        [SerializeField] private Image npcIcon;
+        [SerializeField] private Image playerIcon;
         [SerializeField] private Transform choiceContainer;
         [SerializeField] private GameObject choiceButtonPrefab;
+        [SerializeField] private Button previousButton;
 
         private List<DialogChoiceButton> activeButtons = new List<DialogChoiceButton>();
         private StringBuilder dialogBuilder = new StringBuilder();
-
-        public void Start()
-        {
-            Hide();
-        }
         public void Show()
         {
             gameObject.SetActive(true);
@@ -29,13 +27,20 @@ namespace Hunt
 
         public void Hide()
         {
-            gameObject.SetActive(false);
             ClearChoices();
+            dialogText.text = "";
+            dialogBuilder.Clear();
+            gameObject.SetActive(false);
         }
+
 
         public void SetDialogText(string text)
         {
-
+            dialogBuilder.Clear();
+            if (dialogText != null)
+            {
+                dialogText.text = text ?? "";
+            }
         }
 
         public void AppenDialogText(char c)
@@ -46,13 +51,24 @@ namespace Hunt
                 dialogText.text = dialogBuilder.ToString();
             }
         }
-
+        public void ShowNode(DialogNode node, bool allowPrevious, Action onPreviouClick)
+        {
+            if (previousButton != null)
+            {
+                previousButton.gameObject.SetActive(allowPrevious);
+                previousButton.onClick.RemoveAllListeners();
+                if (allowPrevious)
+                {
+                    previousButton.onClick.AddListener(() => onPreviouClick?.Invoke());
+                }
+            }
+        }
         public void SetSpeakerIcon(Sprite sprite)
         {
-            if (speakerIcon != null)
+            if (npcIcon != null)
             {
-                speakerIcon.sprite = sprite;
-                speakerIcon.gameObject.SetActive(sprite != null);
+                npcIcon.sprite = sprite;
+                npcIcon.gameObject.SetActive(sprite != null);
             }
         }
 
@@ -86,8 +102,8 @@ namespace Hunt
                     {
                         Destroy(btn.gameObject);
                     }
-                    activeButtons.Clear();
                 }
+                activeButtons.Clear(); 
             }
         }
     }
