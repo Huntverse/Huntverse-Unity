@@ -5,11 +5,11 @@ namespace Hunt
 
     public class InputManager : MonoBehaviourSingleton<InputManager>
     {
-        public InputSystem_Actions Action;
-        public InputSystem_Actions.PlayerActions Player;
+        public HuntKeyAction Action;
+        public HuntKeyAction.PlayerActions Player;
         protected override void Awake()
         {
-            Action = new InputSystem_Actions();
+            Action = new HuntKeyAction();
             Player = Action.Player;
             base.Awake();
         }
