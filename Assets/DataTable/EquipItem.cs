@@ -24,16 +24,16 @@ namespace Hunt.Table {
     static EquipItemReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "Cg9FcXVpcEl0ZW0ucHJvdG8SCkh1bnQuVGFibGUieAoJRXF1aXBJdGVtEgoK",
-            "AmlkGAEgASgHEg8KB2pvYlR5cGUYAiABKAcSEQoJZXF1aXBUeXBlGAMgASgH",
-            "EhEKCWJhc2ljU3RhdBgEIAMoBxIVCg1zdGF0QXBwbHlUeXBlGAUgAygHEhEK",
-            "CXN0YXRWYWx1ZRgGIAMoAiI2Cg5FcXVpcEl0ZW1UYWJsZRIkCgVpbmZvcxgB",
-            "IAMoCzIVLkh1bnQuVGFibGUuRXF1aXBJdGVtQhxaGmdpdGh1Yi5jb20vSHVu",
-            "dC9UYWJsZTtIdW50YgZwcm90bzM="));
+            "Cg9FcXVpcEl0ZW0ucHJvdG8SCkh1bnQuVGFibGUifQoJRXF1aXBJdGVtEg8K",
+            "B2VxdWlwSWQYASABKAcSDwoHam9iVHlwZRgCIAEoBxIRCgllcXVpcFR5cGUY",
+            "AyABKAcSEQoJYmFzaWNTdGF0GAQgAygHEhUKDXN0YXRBcHBseVR5cGUYBSAD",
+            "KAcSEQoJc3RhdFZhbHVlGAYgAygCIjYKDkVxdWlwSXRlbVRhYmxlEiQKBWlu",
+            "Zm9zGAEgAygLMhUuSHVudC5UYWJsZS5FcXVpcEl0ZW1CHFoaZ2l0aHViLmNv",
+            "bS9IdW50L1RhYmxlO0h1bnRiBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Hunt.Table.EquipItem), global::Hunt.Table.EquipItem.Parser, new[]{ "Id", "JobType", "EquipType", "BasicStat", "StatApplyType", "StatValue" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Hunt.Table.EquipItem), global::Hunt.Table.EquipItem.Parser, new[]{ "EquipId", "JobType", "EquipType", "BasicStat", "StatApplyType", "StatValue" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Hunt.Table.EquipItemTable), global::Hunt.Table.EquipItemTable.Parser, new[]{ "Infos" }, null, null, null, null)
           }));
     }
@@ -76,7 +76,7 @@ namespace Hunt.Table {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public EquipItem(EquipItem other) : this() {
-      id_ = other.id_;
+      equipId_ = other.equipId_;
       jobType_ = other.jobType_;
       equipType_ = other.equipType_;
       basicStat_ = other.basicStat_.Clone();
@@ -91,15 +91,15 @@ namespace Hunt.Table {
       return new EquipItem(this);
     }
 
-    /// <summary>Field number for the "id" field.</summary>
-    public const int IdFieldNumber = 1;
-    private uint id_;
+    /// <summary>Field number for the "equipId" field.</summary>
+    public const int EquipIdFieldNumber = 1;
+    private uint equipId_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public uint Id {
-      get { return id_; }
+    public uint EquipId {
+      get { return equipId_; }
       set {
-        id_ = value;
+        equipId_ = value;
       }
     }
 
@@ -175,7 +175,7 @@ namespace Hunt.Table {
       if (ReferenceEquals(other, this)) {
         return true;
       }
-      if (Id != other.Id) return false;
+      if (EquipId != other.EquipId) return false;
       if (JobType != other.JobType) return false;
       if (EquipType != other.EquipType) return false;
       if(!basicStat_.Equals(other.basicStat_)) return false;
@@ -188,7 +188,7 @@ namespace Hunt.Table {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
-      if (Id != 0) hash ^= Id.GetHashCode();
+      if (EquipId != 0) hash ^= EquipId.GetHashCode();
       if (JobType != 0) hash ^= JobType.GetHashCode();
       if (EquipType != 0) hash ^= EquipType.GetHashCode();
       hash ^= basicStat_.GetHashCode();
@@ -212,9 +212,9 @@ namespace Hunt.Table {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       output.WriteRawMessage(this);
     #else
-      if (Id != 0) {
+      if (EquipId != 0) {
         output.WriteRawTag(13);
-        output.WriteFixed32(Id);
+        output.WriteFixed32(EquipId);
       }
       if (JobType != 0) {
         output.WriteRawTag(21);
@@ -237,9 +237,9 @@ namespace Hunt.Table {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (Id != 0) {
+      if (EquipId != 0) {
         output.WriteRawTag(13);
-        output.WriteFixed32(Id);
+        output.WriteFixed32(EquipId);
       }
       if (JobType != 0) {
         output.WriteRawTag(21);
@@ -262,7 +262,7 @@ namespace Hunt.Table {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
-      if (Id != 0) {
+      if (EquipId != 0) {
         size += 1 + 4;
       }
       if (JobType != 0) {
@@ -286,8 +286,8 @@ namespace Hunt.Table {
       if (other == null) {
         return;
       }
-      if (other.Id != 0) {
-        Id = other.Id;
+      if (other.EquipId != 0) {
+        EquipId = other.EquipId;
       }
       if (other.JobType != 0) {
         JobType = other.JobType;
@@ -318,7 +318,7 @@ namespace Hunt.Table {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
           case 13: {
-            Id = input.ReadFixed32();
+            EquipId = input.ReadFixed32();
             break;
           }
           case 21: {
@@ -364,7 +364,7 @@ namespace Hunt.Table {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
           case 13: {
-            Id = input.ReadFixed32();
+            EquipId = input.ReadFixed32();
             break;
           }
           case 21: {
