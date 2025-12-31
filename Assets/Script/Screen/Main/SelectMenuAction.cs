@@ -5,12 +5,8 @@ using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using Hunt.Net;
 
-namespace Hunt.ui
+namespace Hunt
 {
-    /// <summary>
-    /// �޴� ����Ʈ�� Ű����/���콺�� Ž���ϰ� ���� ���¸� ǥ��.
-    /// Enter�� ������ �ش� �׸��� Button.onClick�� ȣ��.
-    /// </summary>
     public class SelectMenuAction : MonoBehaviour
     {
         [Header("Menu Items")]
