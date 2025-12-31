@@ -8,15 +8,14 @@ namespace Hunt
     [RequireComponent(typeof(CapsuleCollider2D))]
     public class NPCBase : InteractionBase
     {
-        [Header("DATA")]
+        [Header("NPC DATA")]
         [SerializeField] protected NPCData npcData;
         [SerializeField] protected NPCNotiType currentNotification = NPCNotiType.None;
 
-        [Header("DETECTION")]
-        [SerializeField] protected float detectionRange = 10f;
+        public float detectionRange => interactionRange;
 
         [Header("VISUAL")]
-        [SerializeField] protected GameObject notificationIcon;
+        [SerializeField] protected SpriteRenderer notificationIcon;
 
         private CapsuleCollider2D detectionTrigger;
         private Transform localPlayer;
@@ -55,10 +54,14 @@ namespace Hunt
 
         protected virtual void InitializeNPC()
         {
-            if (npcData == null) return;
+            if (npcData == null)
+            {
+                this.DError("Npc Data is NULL");
+                return;
+            }
 
             FindLocalPlayer();
-
+            SetNotification(NPCNotiType.Exclamation).Forget();
             $"[NPC] {npcData.npcName} 초기화 완료 (타입: {npcData.npcType})".DLog();
         }
 
@@ -68,7 +71,7 @@ namespace Hunt
             switch (npcData.npcType)
             {
                 case NPCType.Trade:
-                    SetNotification(NPCNotiType.Sell);
+                    SetNotification(NPCNotiType.Exclamation);
                     break;
 
                 case NPCType.QuestGiver:
@@ -85,13 +88,12 @@ namespace Hunt
 
         public virtual async UniTask SetNotification(NPCNotiType type)
         {
-            if (currentNotification == type) return;
+            //if (currentNotification == type) return;
             currentNotification = type;
-            var image = notificationIcon.GetComponent<Image>();
 
             if (AbLoader.Shared != null)
             {
-                image.sprite = await AbLoader.Shared.LoadAssetAsync<Sprite>(NotiNpcConst.GetIconKeyNpcNotiType(type));
+                notificationIcon.sprite = await AbLoader.Shared.LoadAssetAsync<Sprite>(NotiInteractionConst.GetIconKeyNpcNotiType(type));
             }
 
             $"[NPC] {npcData?.npcName} 알림 상태 변경:{type}".DLog();

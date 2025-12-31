@@ -11,8 +11,8 @@ namespace Hunt
     public enum NPCNotiType
     {
         None = 0,
-        Sell = 1,
-        Quest = 2,
+        Exclamation = 1,
+        Question = 2,
 
     }
 
@@ -48,13 +48,18 @@ namespace Hunt
         }
     }
 
-    public static class NotiNpcConst
+    public static class NotiInteractionConst
     {
+        public static readonly string ks_normal_noti = "normal_noti@sprite";
+        public static readonly string ks_exclamation_noti = "exclamation_noti@sprite";
+        public static readonly string ks_question_noti = "question_noti@sprite";
         public static string GetIconKeyNpcNotiType(NPCNotiType t)
         {
             return t switch
             {
-                NPCNotiType.None => "normal",
+                NPCNotiType.None => ks_normal_noti,
+                NPCNotiType.Exclamation => ks_exclamation_noti,
+                NPCNotiType.Question => ks_question_noti,
                 _ => string.Empty
             };
         }

@@ -10,35 +10,35 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
-  m_Name: Player
+  m_Name: Noti
   m_EditorClassIdentifier: 
-  m_GroupName: Player
-  m_GUID: 071d5705d0e54854f8d763d234c12e04
+  m_GroupName: Noti
+  m_GUID: 679a7cdffbf6df94ca9fb3c318af2ccb
   m_SerializeEntries:
-  - m_GUID: 2bf146be2c905a2478455c51532de830
-    m_Address: seible@model
+  - m_GUID: 3c69e7283ed817b4b86829d7ca62cd5d
+    m_Address: normal_noti@sprite
     m_ReadOnly: 0
     m_SerializedLabels:
-    - character
     - default
+    - noti
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 5d684d3df8934cd458f8f8f6a09e4a68
-    m_Address: userChar
+  - m_GUID: 516834c2ca4621045a570ccc482d12dd
+    m_Address: exclamation_noti@sprite
     m_ReadOnly: 0
     m_SerializedLabels:
-    - character
     - default
+    - noti
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: c0f706860ff170b478070da50096990c
-    m_Address: astera@model
+  - m_GUID: 69bb05550853bfc4aa9b42ebce609cb6
+    m_Address: question_noti@sprite
     m_ReadOnly: 0
     m_SerializedLabels:
-    - character
     - default
+    - noti
     FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 10b69dd7fbc625d4892197727f109f12, type: 2}
   m_SchemaSet:
     m_Schemas:
-    - {fileID: 11400000, guid: 858e28c06337e32458b26ba870efa07f, type: 2}
-    - {fileID: 11400000, guid: 2966fb1188a4f7c4bbb13616dfb577be, type: 2}
+    - {fileID: 11400000, guid: 66c3cb526c6d33d40ac018e14402b76e, type: 2}
+    - {fileID: 11400000, guid: 5aab67aabfcbb7d48bf7fe13819fa939, type: 2}

@@ -12,7 +12,6 @@ namespace Hunt
         public NPCType npcType;
 
         public string portaitSpriteKey;
-        public string modelPrefabKey;
-        public string desc;
+        //public string desc;
     }
 }
