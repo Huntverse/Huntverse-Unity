@@ -24,14 +24,15 @@ namespace Hunt.Table {
     static BufGroupReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "Cg5CdWZHcm91cC5wcm90bxIKSHVudC5UYWJsZSIkCghCdWZHcm91cBIKCgJp",
-            "ZBgBIAEoBxIMCgRuYW1lGAIgASgJIjQKDUJ1Zkdyb3VwVGFibGUSIwoFaW5m",
-            "b3MYASADKAsyFC5IdW50LlRhYmxlLkJ1Zkdyb3VwQhxaGmdpdGh1Yi5jb20v",
-            "SHVudC9UYWJsZTtIdW50YgZwcm90bzM="));
+            "Cg5CdWZHcm91cC5wcm90bxIKSHVudC5UYWJsZRoPRW51bS9FbnVtLnByb3Rv",
+            "IjsKCEJ1Zkdyb3VwEiEKBHR5cGUYASABKA4yEy5IdW50LkVudW0uR3JvdXBf",
+            "SUQSDAoEbmFtZRgCIAEoCSI0Cg1CdWZHcm91cFRhYmxlEiMKBWluZm9zGAEg",
+            "AygLMhQuSHVudC5UYWJsZS5CdWZHcm91cEIcWhpnaXRodWIuY29tL0h1bnQv",
+            "VGFibGU7SHVudGIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
-          new pbr::FileDescriptor[] { },
+          new pbr::FileDescriptor[] { global::Hunt.Enum.EnumReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Hunt.Table.BufGroup), global::Hunt.Table.BufGroup.Parser, new[]{ "Id", "Name" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Hunt.Table.BufGroup), global::Hunt.Table.BufGroup.Parser, new[]{ "Type", "Name" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Hunt.Table.BufGroupTable), global::Hunt.Table.BufGroupTable.Parser, new[]{ "Infos" }, null, null, null, null)
           }));
     }
@@ -74,7 +75,7 @@ namespace Hunt.Table {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public BufGroup(BufGroup other) : this() {
-      id_ = other.id_;
+      type_ = other.type_;
       name_ = other.name_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
@@ -85,15 +86,15 @@ namespace Hunt.Table {
       return new BufGroup(this);
     }
 
-    /// <summary>Field number for the "id" field.</summary>
-    public const int IdFieldNumber = 1;
-    private uint id_;
+    /// <summary>Field number for the "type" field.</summary>
+    public const int TypeFieldNumber = 1;
+    private global::Hunt.Enum.Group_ID type_ = global::Hunt.Enum.Group_ID.Invalid;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public uint Id {
-      get { return id_; }
+    public global::Hunt.Enum.Group_ID Type {
+      get { return type_; }
       set {
-        id_ = value;
+        type_ = value;
       }
     }
 
@@ -124,7 +125,7 @@ namespace Hunt.Table {
       if (ReferenceEquals(other, this)) {
         return true;
       }
-      if (Id != other.Id) return false;
+      if (Type != other.Type) return false;
       if (Name != other.Name) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
@@ -133,7 +134,7 @@ namespace Hunt.Table {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
-      if (Id != 0) hash ^= Id.GetHashCode();
+      if (Type != global::Hunt.Enum.Group_ID.Invalid) hash ^= Type.GetHashCode();
       if (Name.Length != 0) hash ^= Name.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
@@ -153,9 +154,9 @@ namespace Hunt.Table {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       output.WriteRawMessage(this);
     #else
-      if (Id != 0) {
-        output.WriteRawTag(13);
-        output.WriteFixed32(Id);
+      if (Type != global::Hunt.Enum.Group_ID.Invalid) {
+        output.WriteRawTag(8);
+        output.WriteEnum((int) Type);
       }
       if (Name.Length != 0) {
         output.WriteRawTag(18);
@@ -171,9 +172,9 @@ namespace Hunt.Table {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (Id != 0) {
-        output.WriteRawTag(13);
-        output.WriteFixed32(Id);
+      if (Type != global::Hunt.Enum.Group_ID.Invalid) {
+        output.WriteRawTag(8);
+        output.WriteEnum((int) Type);
       }
       if (Name.Length != 0) {
         output.WriteRawTag(18);
@@ -189,8 +190,8 @@ namespace Hunt.Table {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
-      if (Id != 0) {
-        size += 1 + 4;
+      if (Type != global::Hunt.Enum.Group_ID.Invalid) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Type);
       }
       if (Name.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(Name);
@@ -207,8 +208,8 @@ namespace Hunt.Table {
       if (other == null) {
         return;
       }
-      if (other.Id != 0) {
-        Id = other.Id;
+      if (other.Type != global::Hunt.Enum.Group_ID.Invalid) {
+        Type = other.Type;
       }
       if (other.Name.Length != 0) {
         Name = other.Name;
@@ -232,8 +233,8 @@ namespace Hunt.Table {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
-          case 13: {
-            Id = input.ReadFixed32();
+          case 8: {
+            Type = (global::Hunt.Enum.Group_ID) input.ReadEnum();
             break;
           }
           case 18: {
@@ -259,8 +260,8 @@ namespace Hunt.Table {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
-          case 13: {
-            Id = input.ReadFixed32();
+          case 8: {
+            Type = (global::Hunt.Enum.Group_ID) input.ReadEnum();
             break;
           }
           case 18: {

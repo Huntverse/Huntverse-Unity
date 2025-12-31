@@ -24,18 +24,18 @@ namespace Hunt.Table {
     static JobDefaultReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "ChBKb2JEZWZhdWx0LnByb3RvEgpIdW50LlRhYmxlIt0BCgpKb2JEZWZhdWx0",
-            "EgwKBHR5cGUYASABKAcSEQoJYmFzZVN0YXQxGAIgASgHEhIKCnN0YXRWYWx1",
-            "ZTEYAyABKAcSEQoJYmFzZVN0YXQyGAQgASgHEhIKCnN0YXRWYWx1ZTIYBSAB",
-            "KAcSEQoJYmFzZVN0YXQzGAYgASgHEhIKCnN0YXRWYWx1ZTMYByABKAcSEQoJ",
-            "YmFzZVN0YXQ0GAggASgHEhIKCnN0YXRWYWx1ZTQYCSABKAcSEQoJYmFzZVN0",
-            "YXQ1GAogASgHEhIKCnN0YXRWYWx1ZTUYCyABKAciOAoPSm9iRGVmYXVsdFRh",
-            "YmxlEiUKBWluZm9zGAEgAygLMhYuSHVudC5UYWJsZS5Kb2JEZWZhdWx0Qhxa",
-            "GmdpdGh1Yi5jb20vSHVudC9UYWJsZTtIdW50YgZwcm90bzM="));
+            "ChBKb2JEZWZhdWx0LnByb3RvEgpIdW50LlRhYmxlIt4BCgpKb2JEZWZhdWx0",
+            "Eg0KBWpvYklkGAEgASgHEhEKCWJhc2VTdGF0MRgCIAEoBxISCgpzdGF0VmFs",
+            "dWUxGAMgASgHEhEKCWJhc2VTdGF0MhgEIAEoBxISCgpzdGF0VmFsdWUyGAUg",
+            "ASgHEhEKCWJhc2VTdGF0MxgGIAEoBxISCgpzdGF0VmFsdWUzGAcgASgHEhEK",
+            "CWJhc2VTdGF0NBgIIAEoBxISCgpzdGF0VmFsdWU0GAkgASgHEhEKCWJhc2VT",
+            "dGF0NRgKIAEoBxISCgpzdGF0VmFsdWU1GAsgASgHIjgKD0pvYkRlZmF1bHRU",
+            "YWJsZRIlCgVpbmZvcxgBIAMoCzIWLkh1bnQuVGFibGUuSm9iRGVmYXVsdEIc",
+            "WhpnaXRodWIuY29tL0h1bnQvVGFibGU7SHVudGIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Hunt.Table.JobDefault), global::Hunt.Table.JobDefault.Parser, new[]{ "Type", "BaseStat1", "StatValue1", "BaseStat2", "StatValue2", "BaseStat3", "StatValue3", "BaseStat4", "StatValue4", "BaseStat5", "StatValue5" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Hunt.Table.JobDefault), global::Hunt.Table.JobDefault.Parser, new[]{ "JobId", "BaseStat1", "StatValue1", "BaseStat2", "StatValue2", "BaseStat3", "StatValue3", "BaseStat4", "StatValue4", "BaseStat5", "StatValue5" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Hunt.Table.JobDefaultTable), global::Hunt.Table.JobDefaultTable.Parser, new[]{ "Infos" }, null, null, null, null)
           }));
     }
@@ -78,7 +78,7 @@ namespace Hunt.Table {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public JobDefault(JobDefault other) : this() {
-      type_ = other.type_;
+      jobId_ = other.jobId_;
       baseStat1_ = other.baseStat1_;
       statValue1_ = other.statValue1_;
       baseStat2_ = other.baseStat2_;
@@ -98,15 +98,15 @@ namespace Hunt.Table {
       return new JobDefault(this);
     }
 
-    /// <summary>Field number for the "type" field.</summary>
-    public const int TypeFieldNumber = 1;
-    private uint type_;
+    /// <summary>Field number for the "jobId" field.</summary>
+    public const int JobIdFieldNumber = 1;
+    private uint jobId_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public uint Type {
-      get { return type_; }
+    public uint JobId {
+      get { return jobId_; }
       set {
-        type_ = value;
+        jobId_ = value;
       }
     }
 
@@ -245,7 +245,7 @@ namespace Hunt.Table {
       if (ReferenceEquals(other, this)) {
         return true;
       }
-      if (Type != other.Type) return false;
+      if (JobId != other.JobId) return false;
       if (BaseStat1 != other.BaseStat1) return false;
       if (StatValue1 != other.StatValue1) return false;
       if (BaseStat2 != other.BaseStat2) return false;
@@ -263,7 +263,7 @@ namespace Hunt.Table {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
-      if (Type != 0) hash ^= Type.GetHashCode();
+      if (JobId != 0) hash ^= JobId.GetHashCode();
       if (BaseStat1 != 0) hash ^= BaseStat1.GetHashCode();
       if (StatValue1 != 0) hash ^= StatValue1.GetHashCode();
       if (BaseStat2 != 0) hash ^= BaseStat2.GetHashCode();
@@ -292,9 +292,9 @@ namespace Hunt.Table {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       output.WriteRawMessage(this);
     #else
-      if (Type != 0) {
+      if (JobId != 0) {
         output.WriteRawTag(13);
-        output.WriteFixed32(Type);
+        output.WriteFixed32(JobId);
       }
       if (BaseStat1 != 0) {
         output.WriteRawTag(21);
@@ -346,9 +346,9 @@ namespace Hunt.Table {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (Type != 0) {
+      if (JobId != 0) {
         output.WriteRawTag(13);
-        output.WriteFixed32(Type);
+        output.WriteFixed32(JobId);
       }
       if (BaseStat1 != 0) {
         output.WriteRawTag(21);
@@ -400,7 +400,7 @@ namespace Hunt.Table {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
-      if (Type != 0) {
+      if (JobId != 0) {
         size += 1 + 4;
       }
       if (BaseStat1 != 0) {
@@ -445,8 +445,8 @@ namespace Hunt.Table {
       if (other == null) {
         return;
       }
-      if (other.Type != 0) {
-        Type = other.Type;
+      if (other.JobId != 0) {
+        JobId = other.JobId;
       }
       if (other.BaseStat1 != 0) {
         BaseStat1 = other.BaseStat1;
@@ -498,7 +498,7 @@ namespace Hunt.Table {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
           case 13: {
-            Type = input.ReadFixed32();
+            JobId = input.ReadFixed32();
             break;
           }
           case 21: {
@@ -561,7 +561,7 @@ namespace Hunt.Table {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
           case 13: {
-            Type = input.ReadFixed32();
+            JobId = input.ReadFixed32();
             break;
           }
           case 21: {
