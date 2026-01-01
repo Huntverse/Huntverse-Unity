@@ -9,74 +9,73 @@ using pb = global::Google.Protobuf;
 using pbc = global::Google.Protobuf.Collections;
 using pbr = global::Google.Protobuf.Reflection;
 using scg = global::System.Collections.Generic;
-namespace Hunt.Common
-{
+namespace Hunt.Common {
 
-    /// <summary>Holder for reflection information generated from err_type.proto</summary>
-    public static partial class ErrTypeReflection
-    {
+  /// <summary>Holder for reflection information generated from err_type.proto</summary>
+  public static partial class ErrTypeReflection {
 
-        #region Descriptor
-        /// <summary>File descriptor for err_type.proto</summary>
-        public static pbr::FileDescriptor Descriptor
-        {
-            get { return descriptor; }
-        }
-        private static pbr::FileDescriptor descriptor;
-
-        static ErrTypeReflection()
-        {
-            byte[] descriptorData = global::System.Convert.FromBase64String(
-                string.Concat(
-                  "Cg5lcnJfdHlwZS5wcm90bxILSHVudC5Db21tb24qlgEKCUVycm9yVHlwZRIL",
-                  "CgdFUlJfTk9OEAASGwoXRVJSX0lOVkFMSURfUEFDS0VUX1RZUEUQARIKCgZF",
-                  "UlJfREIQAhIZChVFUlJfQUNDT1VOVF9OT1RfRVhJU1QQAxIRCg1FUlJfRFVQ",
-                  "X0xPR0lOEAQSDgoKRVJSX0RVUF9JRBAFEhUKEUVSUl9EVVBfTklDS19OQU1F",
-                  "EAZiBnByb3RvMw=="));
-            descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
-                new pbr::FileDescriptor[] { },
-                new pbr::GeneratedClrTypeInfo(new[] { typeof(global::Hunt.Common.ErrorType), }, null, null));
-        }
-        #endregion
-
+    #region Descriptor
+    /// <summary>File descriptor for err_type.proto</summary>
+    public static pbr::FileDescriptor Descriptor {
+      get { return descriptor; }
     }
-    #region Enums
-    /// <summary>
-    ///ErrType은 SYSTEM으로 
-    /// </summary>
-    public enum ErrorType
-    {
-        /// <summary>
-        ///에러가 없는 경우
-        /// </summary>
-        [pbr::OriginalName("ERR_NON")] ErrNon = 0,
-        /// <summary>
-        /// 잘못된 패킷 타입이 내려간경우
-        /// </summary>
-        [pbr::OriginalName("ERR_INVALID_PACKET_TYPE")] ErrInvalidPacketType = 1,
-        /// <summary>
-        ///DB에러가 뜬 경우, 스팀, mysql 등등...
-        /// </summary>
-        [pbr::OriginalName("ERR_DB")] ErrDb = 2,
-        /// <summary>
-        /// 로그인 - 계정이 없는 경우
-        /// </summary>
-        [pbr::OriginalName("ERR_ACCOUNT_NOT_EXIST")] ErrAccountNotExist = 3,
-        /// <summary>
-        ///중복 로그인인 경우
-        /// </summary>
-        [pbr::OriginalName("ERR_DUP_LOGIN")] ErrDupLogin = 4,
-        /// <summary>
-        ///계정 생성에서 ID가 겹치는 경우
-        /// </summary>
-        [pbr::OriginalName("ERR_DUP_ID")] ErrDupId = 5,
-        /// <summary>
-        ///닉네임 중복 - 생성에서 발생할 수 있음
-        /// </summary>
-        [pbr::OriginalName("ERR_DUP_NICK_NAME")] ErrDupNickName = 6,
-    }
+    private static pbr::FileDescriptor descriptor;
 
+    static ErrTypeReflection() {
+      byte[] descriptorData = global::System.Convert.FromBase64String(
+          string.Concat(
+            "Cg5lcnJfdHlwZS5wcm90bxILSHVudC5Db21tb24qqwEKCUVycm9yVHlwZRIL",
+            "CgdFUlJfTk9OEAASEwoPRVJSX0lOVkFMSURfUkVREAESGwoXRVJSX0lOVkFM",
+            "SURfUEFDS0VUX1RZUEUQAhIKCgZFUlJfREIQAxIZChVFUlJfQUNDT1VOVF9O",
+            "T1RfRVhJU1QQBBIRCg1FUlJfRFVQX0xPR0lOEAUSDgoKRVJSX0RVUF9JRBAG",
+            "EhUKEUVSUl9EVVBfTklDS19OQU1FEAdiBnByb3RvMw=="));
+      descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
+          new pbr::FileDescriptor[] { },
+          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Hunt.Common.ErrorType), }, null, null));
+    }
     #endregion
+
+  }
+  #region Enums
+  /// <summary>
+  ///ErrType은 SYSTEM으로 
+  /// </summary>
+  public enum ErrorType {
+    /// <summary>
+    ///에러가 없는 경우
+    /// </summary>
+    [pbr::OriginalName("ERR_NON")] ErrNon = 0,
+    /// <summary>
+    ///요청이 잘못된 경우
+    /// </summary>
+    [pbr::OriginalName("ERR_INVALID_REQ")] ErrInvalidReq = 1,
+    /// <summary>
+    /// 잘못된 패킷 타입이 내려간경우    
+    /// </summary>
+    [pbr::OriginalName("ERR_INVALID_PACKET_TYPE")] ErrInvalidPacketType = 2,
+    /// <summary>
+    ///DB에러가 뜬 경우, 스팀, mysql 등등...
+    /// </summary>
+    [pbr::OriginalName("ERR_DB")] ErrDb = 3,
+    /// <summary>
+    /// 로그인 - 계정이 없는 경우
+    /// </summary>
+    [pbr::OriginalName("ERR_ACCOUNT_NOT_EXIST")] ErrAccountNotExist = 4,
+    /// <summary>
+    ///중복 로그인인 경우
+    /// </summary>
+    [pbr::OriginalName("ERR_DUP_LOGIN")] ErrDupLogin = 5,
+    /// <summary>
+    ///계정 생성에서 ID가 겹치는 경우
+    /// </summary>
+    [pbr::OriginalName("ERR_DUP_ID")] ErrDupId = 6,
+    /// <summary>
+    ///닉네임 중복 - 생성에서 발생할 수 있음
+    /// </summary>
+    [pbr::OriginalName("ERR_DUP_NICK_NAME")] ErrDupNickName = 7,
+  }
+
+  #endregion
 
 }
 
