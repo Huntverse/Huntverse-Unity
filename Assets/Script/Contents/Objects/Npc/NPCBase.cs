@@ -292,11 +292,12 @@ namespace Hunt
         {
             return npcData.npcType switch
             {
-                NPCType.Trade => $"안녕하세요! {npcData.npcName}의 상점입니다.",
-                NPCType.Healer => $"치료가 필요하신가요?",
+                NPCType.Trade => $"{npcData.npcName} 물건들은 잠경촌에서 최고라고!",
+                NPCType.Healer => $"언제든 쉬다 가십쇼.. 건강이 우선입니다.",
                 NPCType.Blacksmith => $"어떤 물건이든 만든 사람을 생각하면서 쓰라고!",
                 NPCType.Banker => $"{npcData.npcName} 은행입니다. 무엇을 도와드릴까요?",
-                NPCType.QuestGiver => $"모험가님, 부탁이 있습니다.",
+                NPCType.QuestGiver => $"헌터님! 부탁이 있습니다.",
+                NPCType.Obstacle => "오래된 비석처럼 보인다. '\n' 누가 지은걸까.",
                 _ => $"안녕하세요, {npcData.npcName}입니다."
             };
         }
