@@ -1,6 +1,5 @@
 using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
-using System.Threading;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -40,7 +39,7 @@ namespace Hunt
         private GameObject model;
         private InputManager inputKey;
         private IsAttackPointer hitpointer;
-
+        private IsNotiPoint notiPoint;
         private HashSet<IInteractable> nearbyInteractables = new HashSet<IInteractable>();
         private IInteractable currentInteractable;
 
@@ -59,6 +58,7 @@ namespace Hunt
             rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
             hitpointer = GetComponentInChildren<IsAttackPointer>();
             hitpointer.SetT(new Vector3(2.0f, 0.5f, 0f), new Vector2(1,1.25f)); // Custom
+            notiPoint = GetComponentInChildren<IsNotiPoint>();
         }
         private void OnEnable()
         {
@@ -172,7 +172,7 @@ namespace Hunt
 
             nearbyInteractables.Add(interactable);
             $"[UserCharLoco] {interactable.GetTransform().name} 등록 (총 {nearbyInteractables.Count}개)".DLog();
-            UpdateInteractionUI();
+            UpdateInteractionUI().Forget();
         }
 
         /// <summary>
@@ -184,7 +184,7 @@ namespace Hunt
 
             nearbyInteractables.Remove(interactable);
             $"[UserCharLoco] {interactable.GetTransform().name} 해제 (남은 {nearbyInteractables.Count}개)".DLog();
-            UpdateInteractionUI();
+            UpdateInteractionUI().Forget();
         }
 
         public void SetJumpEnabled(bool enabled) => isJumpping = enabled;
@@ -211,20 +211,28 @@ namespace Hunt
             return nearest;
         }
 
-        private void UpdateInteractionUI()
+        private async UniTask UpdateInteractionUI()
         {
             var nearest = GetNearestInteractable();
 
-            if (nearest != null)
+            if (nearest != null && notiPoint != null && notiPoint.renderer != null)
             {
                 string text = nearest.GetInteractionText();
-                $"[UserCharLoco] UI 표시: {text}".DLog();
-                // TODO: InteractionUIManager.Shared.ShowPrompt(text);
+
+                var sprite = await AbLoader.Shared.LoadAssetAsync<Sprite>(NotiInteractionConst.ks_normal_noti);
+                if (sprite != null)
+                {
+                    notiPoint.renderer.sprite = sprite;
+                    $"[UserCharLoco] Noti 활성화".DLog();
+                }
             }
             else
             {
                 $"[UserCharLoco] UI 숨김".DLog();
-                // TODO: InteractionUIManager.Shared.HidePrompt();
+                if (notiPoint != null && notiPoint.renderer != null)
+                {
+                    notiPoint.renderer.sprite = null;
+                }
             }
         }
         private async void SpawnAttackVfx()
