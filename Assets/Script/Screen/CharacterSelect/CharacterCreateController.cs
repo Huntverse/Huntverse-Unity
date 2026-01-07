@@ -13,12 +13,8 @@ namespace Hunt
         [SerializeField] private List<GenerateCharInfoField> newCharacterInfoFields;
 
         [Header("UI Panels")]
-        [SerializeField] private GenerateCharPanel generationcharacterPanel;
+        [SerializeField] private GenerateCharDocuPanel generationcharacterPanel;
         [SerializeField] private UserCharacterPanel userCharacterPanel;
-
-        [Header("Navigation Buttons")]
-        [SerializeField] private Button nextButton;
-        [SerializeField] private Button prevButton;
         #endregion
 
         #region Private Fields
@@ -36,9 +32,7 @@ namespace Hunt
         #region Unity Lifecycle
         protected override void Awake()
         {
-            base.Awake();
-            InitializeButtons();
-            
+            base.Awake();            
         }
 
         private async void OnEnable()
@@ -55,23 +49,9 @@ namespace Hunt
 
         protected override void OnDestroy()
         {
-            CleanupButtons();
             base.OnDestroy();
         }
-        #endregion
-
-        #region Initialization
-        private void InitializeButtons()
-        {
-            nextButton.onClick.AddListener(() => OnShowChracterInfo(1));
-            prevButton.onClick.AddListener(() => OnShowChracterInfo(-1));
-        }
-
-        private void CleanupButtons()
-        {
-            nextButton.onClick.RemoveAllListeners();
-            prevButton.onClick.RemoveAllListeners();
-        }
+   
         #endregion
 
         /// <summary>
@@ -147,7 +127,6 @@ namespace Hunt
             UpdateCurrentGenerationIndex(indexOffset);
             UpdateGenerationFieldsVisibility();
             UpdateGenerationPanelContent();
-            UpdateGenerationPanelButtons();
         }
 
         /// <summary>
@@ -386,18 +365,6 @@ namespace Hunt
             $"[Character] Updated panel - Index: {currentGenerationCharacterIndex}, Name: {currentField.characterName}".DLog();
         }
 
-        private void UpdateGenerationPanelButtons()
-        {
-            if (prevButton != null)
-            {
-                prevButton.interactable = currentGenerationCharacterIndex > 0;
-            }
-
-            if (nextButton != null)
-            {
-                nextButton.interactable = currentGenerationCharacterIndex < newCharacterInfoFields.Count - 1;
-            }
-        }
         #endregion
 
         #region Character Creation

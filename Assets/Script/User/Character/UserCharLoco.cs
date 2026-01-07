@@ -245,7 +245,7 @@ namespace Hunt
                 return;
             }
                         
-            if (VfxHelper.Shared == null)
+            if (VfxManager.Shared == null)
             {
                 $"⚔️ [PlayerAction] VfxHelper.Shared가 null!".DError();
                 return;
@@ -254,7 +254,7 @@ namespace Hunt
             var playerScale = transform.localScale;
             var vfxScale = new Vector3(playerScale.x, 1f, 1f);
             
-            var vfxHandle = await VfxHelper.Shared.PlayOneShot(
+            var vfxHandle = await VfxManager.Shared.PlayOneShot(
                 VfxKetConst.Kp_plain_hit_astera,
                 hitpointer.GetT().position,
                 hitpointer.GetT().rotation,

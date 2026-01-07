@@ -6,8 +6,8 @@ public class VillageScreen : MonoBehaviour
 {
     private async void Start()
     {
-        await UniTask.WaitUntil(() => AudioHelper.Shared);
-        AudioHelper.Shared.PlayBgm(AudioKeyConst.GetSfxKey(Hunt.AudioType.BGM_VILLAGE));
+        await UniTask.WaitUntil(() => AudioManager.Shared);
+        AudioManager.Shared.PlayBgm(AudioKeyConst.GetSfxKey(Hunt.AudioType.BGM_VILLAGE));
     }
 
     // Update is called once per frame
