@@ -33,31 +33,32 @@ namespace Hunt.Login {
             "YXJJZBgCIAEoBhIMCgRuYW1lGAMgASgJEhEKCWNsYXNzVHlwZRgEIAEoDRIN",
             "CgVsZXZlbBgFIAEoBhINCgVtYXBJZBgGIAEoBhImCglzdGF0SW5mb3MYByAD",
             "KAsyEy5IdW50LkdhbWUuU3RhdEluZm8iOgoWU2ltcGxlQ2hhcmFjdGVyQnlX",
-            "b3JsZBIPCgd3b3JsZElkGAEgASgHEg8KB2NoYXJDbnQYAiABKAci3wEKCExv",
+            "b3JsZBIPCgd3b3JsZElkGAEgASgHEg8KB2NoYXJDbnQYAiABKAci7gEKCExv",
             "Z2luQW5zEicKB2VyclR5cGUYASABKA4yFi5IdW50LkNvbW1vbi5FcnJvclR5",
-            "cGUSOQoPY29uZ2VzdGlvbkluZm9zGAMgAygLMiAuSHVudC5Mb2dpbi5TZXJ2",
-            "ZXJDb25nZXN0aW9uSW5mbxI1CgljaGFySW5mb3MYBCADKAsyIi5IdW50Lkxv",
-            "Z2luLlNpbXBsZUNoYXJhY3RlckJ5V29ybGQSOAoTc2VydmVyRW5kUG9pbnRJ",
-            "bmZvcxgFIAMoCzIbLkh1bnQuQ29tbW9uLlNlcnZlckVuZHBvaW50IjQKEFJl",
-            "dHVyblRvTG9naW5SZXESEQoJYWNjb3VudElkGAEgASgGEg0KBXRva2VuGAIg",
-            "ASgGIjsKEFJldHVyblRvTG9naW5BbnMSJwoHZXJyVHlwZRgBIAEoDjIWLkh1",
-            "bnQuQ29tbW9uLkVycm9yVHlwZSIhCg5TZWxlY3RXb3JsZFJlcRIPCgd3b3Js",
-            "ZElkGAEgASgHInMKDlNlbGVjdFdvcmxkQW5zEicKB2VyclR5cGUYASABKA4y",
-            "Fi5IdW50LkNvbW1vbi5FcnJvclR5cGUSOAoPU2ltcGxlQ2hhckluZm9zGAIg",
-            "AygLMh8uSHVudC5Mb2dpbi5TaW1wbGVDaGFyYWN0ZXJJbmZvIioKEENyZWF0",
-            "ZUFjY291bnRSZXESCgoCaWQYASABKAkSCgoCcHcYAiABKAkiOwoQQ3JlYXRl",
-            "QWNjb3VudEFucxInCgdlcnJUeXBlGAEgASgOMhYuSHVudC5Db21tb24uRXJy",
-            "b3JUeXBlIkEKDUNyZWF0ZUNoYXJSZXESDwoHd29ybGRJZBgBIAEoBxIMCgRu",
-            "YW1lGAIgASgJEhEKCWNsYXNzVHlwZRgDIAEoDSJrCg1DcmVhdGVDaGFyQW5z",
-            "EicKB2VyclR5cGUYASABKA4yFi5IdW50LkNvbW1vbi5FcnJvclR5cGUSMQoI",
-            "Y2hhckluZm8YAiABKAsyHy5IdW50LkxvZ2luLlNpbXBsZUNoYXJhY3Rlcklu",
-            "Zm8iGgoMQ29uZmlybUlkUmVxEgoKAmlkGAEgASgJIkYKDENvbmZpcm1JZEFu",
-            "cxInCgdlcnJUeXBlGAEgASgOMhYuSHVudC5Db21tb24uRXJyb3JUeXBlEg0K",
-            "BWlzRHVwGAIgASgIIh4KDkNvbmZpcm1OYW1lUmVxEgwKBG5hbWUYASABKAki",
-            "SAoOQ29uZmlybU5hbWVBbnMSJwoHZXJyVHlwZRgBIAEoDjIWLkh1bnQuQ29t",
-            "bW9uLkVycm9yVHlwZRINCgVpc0R1cBgCIAEoCCIpCgxMb2dpblRlc3RSZXES",
-            "DAoEZGF0YRgBIAEoCRILCgNudW0YAiABKAciKQoMTG9naW5UZXN0QW5zEgwK",
-            "BGRhdGEYASABKAkSCwoDbnVtGAIgASgHYgZwcm90bzM="));
+            "cGUSDQoFdG9rZW4YAiABKAYSOQoPY29uZ2VzdGlvbkluZm9zGAMgAygLMiAu",
+            "SHVudC5Mb2dpbi5TZXJ2ZXJDb25nZXN0aW9uSW5mbxI1CgljaGFySW5mb3MY",
+            "BCADKAsyIi5IdW50LkxvZ2luLlNpbXBsZUNoYXJhY3RlckJ5V29ybGQSOAoT",
+            "c2VydmVyRW5kUG9pbnRJbmZvcxgFIAMoCzIbLkh1bnQuQ29tbW9uLlNlcnZl",
+            "ckVuZHBvaW50IjQKEFJldHVyblRvTG9naW5SZXESEQoJYWNjb3VudElkGAEg",
+            "ASgGEg0KBXRva2VuGAIgASgGIjsKEFJldHVyblRvTG9naW5BbnMSJwoHZXJy",
+            "VHlwZRgBIAEoDjIWLkh1bnQuQ29tbW9uLkVycm9yVHlwZSIhCg5TZWxlY3RX",
+            "b3JsZFJlcRIPCgd3b3JsZElkGAEgASgHInMKDlNlbGVjdFdvcmxkQW5zEicK",
+            "B2VyclR5cGUYASABKA4yFi5IdW50LkNvbW1vbi5FcnJvclR5cGUSOAoPU2lt",
+            "cGxlQ2hhckluZm9zGAIgAygLMh8uSHVudC5Mb2dpbi5TaW1wbGVDaGFyYWN0",
+            "ZXJJbmZvIioKEENyZWF0ZUFjY291bnRSZXESCgoCaWQYASABKAkSCgoCcHcY",
+            "AiABKAkiOwoQQ3JlYXRlQWNjb3VudEFucxInCgdlcnJUeXBlGAEgASgOMhYu",
+            "SHVudC5Db21tb24uRXJyb3JUeXBlIkEKDUNyZWF0ZUNoYXJSZXESDwoHd29y",
+            "bGRJZBgBIAEoBxIMCgRuYW1lGAIgASgJEhEKCWNsYXNzVHlwZRgDIAEoDSJr",
+            "Cg1DcmVhdGVDaGFyQW5zEicKB2VyclR5cGUYASABKA4yFi5IdW50LkNvbW1v",
+            "bi5FcnJvclR5cGUSMQoIY2hhckluZm8YAiABKAsyHy5IdW50LkxvZ2luLlNp",
+            "bXBsZUNoYXJhY3RlckluZm8iGgoMQ29uZmlybUlkUmVxEgoKAmlkGAEgASgJ",
+            "IkYKDENvbmZpcm1JZEFucxInCgdlcnJUeXBlGAEgASgOMhYuSHVudC5Db21t",
+            "b24uRXJyb3JUeXBlEg0KBWlzRHVwGAIgASgIIh4KDkNvbmZpcm1OYW1lUmVx",
+            "EgwKBG5hbWUYASABKAkiSAoOQ29uZmlybU5hbWVBbnMSJwoHZXJyVHlwZRgB",
+            "IAEoDjIWLkh1bnQuQ29tbW9uLkVycm9yVHlwZRINCgVpc0R1cBgCIAEoCCIp",
+            "CgxMb2dpblRlc3RSZXESDAoEZGF0YRgBIAEoCRILCgNudW0YAiABKAciKQoM",
+            "TG9naW5UZXN0QW5zEgwKBGRhdGEYASABKAkSCwoDbnVtGAIgASgHYgZwcm90",
+            "bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Hunt.Common.CommonTypeReflection.Descriptor, global::Hunt.Common.ErrTypeReflection.Descriptor, global::Hunt.Common.CommonReflection.Descriptor, global::Hunt.Game.GameReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
@@ -65,7 +66,7 @@ namespace Hunt.Login {
             new pbr::GeneratedClrTypeInfo(typeof(global::Hunt.Login.LoginReq), global::Hunt.Login.LoginReq.Parser, new[]{ "Id", "Pw" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Hunt.Login.SimpleCharacterInfo), global::Hunt.Login.SimpleCharacterInfo.Parser, new[]{ "WorldId", "CharId", "Name", "ClassType", "Level", "MapId", "StatInfos" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Hunt.Login.SimpleCharacterByWorld), global::Hunt.Login.SimpleCharacterByWorld.Parser, new[]{ "WorldId", "CharCnt" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Hunt.Login.LoginAns), global::Hunt.Login.LoginAns.Parser, new[]{ "ErrType", "CongestionInfos", "CharInfos", "ServerEndPointInfos" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Hunt.Login.LoginAns), global::Hunt.Login.LoginAns.Parser, new[]{ "ErrType", "Token", "CongestionInfos", "CharInfos", "ServerEndPointInfos" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Hunt.Login.ReturnToLoginReq), global::Hunt.Login.ReturnToLoginReq.Parser, new[]{ "AccountId", "Token" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Hunt.Login.ReturnToLoginAns), global::Hunt.Login.ReturnToLoginAns.Parser, new[]{ "ErrType" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Hunt.Login.SelectWorldReq), global::Hunt.Login.SelectWorldReq.Parser, new[]{ "WorldId" }, null, null, null, null),
@@ -1269,6 +1270,7 @@ namespace Hunt.Login {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public LoginAns(LoginAns other) : this() {
       errType_ = other.errType_;
+      token_ = other.token_;
       congestionInfos_ = other.congestionInfos_.Clone();
       charInfos_ = other.charInfos_.Clone();
       serverEndPointInfos_ = other.serverEndPointInfos_.Clone();
@@ -1290,6 +1292,18 @@ namespace Hunt.Login {
       get { return errType_; }
       set {
         errType_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "token" field.</summary>
+    public const int TokenFieldNumber = 2;
+    private ulong token_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public ulong Token {
+      get { return token_; }
+      set {
+        token_ = value;
       }
     }
 
@@ -1351,6 +1365,7 @@ namespace Hunt.Login {
         return true;
       }
       if (ErrType != other.ErrType) return false;
+      if (Token != other.Token) return false;
       if(!congestionInfos_.Equals(other.congestionInfos_)) return false;
       if(!charInfos_.Equals(other.charInfos_)) return false;
       if(!serverEndPointInfos_.Equals(other.serverEndPointInfos_)) return false;
@@ -1362,6 +1377,7 @@ namespace Hunt.Login {
     public override int GetHashCode() {
       int hash = 1;
       if (ErrType != global::Hunt.Common.ErrorType.ErrNon) hash ^= ErrType.GetHashCode();
+      if (Token != 0UL) hash ^= Token.GetHashCode();
       hash ^= congestionInfos_.GetHashCode();
       hash ^= charInfos_.GetHashCode();
       hash ^= serverEndPointInfos_.GetHashCode();
@@ -1387,6 +1403,10 @@ namespace Hunt.Login {
         output.WriteRawTag(8);
         output.WriteEnum((int) ErrType);
       }
+      if (Token != 0UL) {
+        output.WriteRawTag(17);
+        output.WriteFixed64(Token);
+      }
       congestionInfos_.WriteTo(output, _repeated_congestionInfos_codec);
       charInfos_.WriteTo(output, _repeated_charInfos_codec);
       serverEndPointInfos_.WriteTo(output, _repeated_serverEndPointInfos_codec);
@@ -1404,6 +1424,10 @@ namespace Hunt.Login {
         output.WriteRawTag(8);
         output.WriteEnum((int) ErrType);
       }
+      if (Token != 0UL) {
+        output.WriteRawTag(17);
+        output.WriteFixed64(Token);
+      }
       congestionInfos_.WriteTo(ref output, _repeated_congestionInfos_codec);
       charInfos_.WriteTo(ref output, _repeated_charInfos_codec);
       serverEndPointInfos_.WriteTo(ref output, _repeated_serverEndPointInfos_codec);
@@ -1419,6 +1443,9 @@ namespace Hunt.Login {
       int size = 0;
       if (ErrType != global::Hunt.Common.ErrorType.ErrNon) {
         size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) ErrType);
+      }
+      if (Token != 0UL) {
+        size += 1 + 8;
       }
       size += congestionInfos_.CalculateSize(_repeated_congestionInfos_codec);
       size += charInfos_.CalculateSize(_repeated_charInfos_codec);
@@ -1437,6 +1464,9 @@ namespace Hunt.Login {
       }
       if (other.ErrType != global::Hunt.Common.ErrorType.ErrNon) {
         ErrType = other.ErrType;
+      }
+      if (other.Token != 0UL) {
+        Token = other.Token;
       }
       congestionInfos_.Add(other.congestionInfos_);
       charInfos_.Add(other.charInfos_);
@@ -1462,6 +1492,10 @@ namespace Hunt.Login {
             break;
           case 8: {
             ErrType = (global::Hunt.Common.ErrorType) input.ReadEnum();
+            break;
+          }
+          case 17: {
+            Token = input.ReadFixed64();
             break;
           }
           case 26: {
@@ -1497,6 +1531,10 @@ namespace Hunt.Login {
             break;
           case 8: {
             ErrType = (global::Hunt.Common.ErrorType) input.ReadEnum();
+            break;
+          }
+          case 17: {
+            Token = input.ReadFixed64();
             break;
           }
           case 26: {
