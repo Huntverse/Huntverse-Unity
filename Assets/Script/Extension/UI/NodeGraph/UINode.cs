@@ -11,7 +11,7 @@ namespace Hunt
         public string nodeName;
         
         public abstract UINodeType GetNodeType();
-        public abstract UIGraphExecutionStep CreateExecutionStep();
+        public abstract UIGraphExecutionStep CreateExecutionStep(UINodeGraph graph);
     }
     
     public enum UINodeType
@@ -26,4 +26,3 @@ namespace Hunt
         Delay
     }
 }
-

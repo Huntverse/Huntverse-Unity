@@ -8,25 +8,14 @@ namespace Hunt
     {
         public float delaySeconds = 1.0f;
         
-        public DelayNode()
-        {
-            nodeName = "Delay";
-        }
-        
+        public DelayNode() => nodeName = "Delay";
         public override UINodeType GetNodeType() => UINodeType.Delay;
         
-        public override UIGraphExecutionStep CreateExecutionStep()
+        public override UIGraphExecutionStep CreateExecutionStep(UINodeGraph graph)
         {
-            var step = new UIGraphExecutionStep
-            {
-                nodeType = UINodeType.Delay,
-                nodeGuid = guid
-            };
-            
+            var step = new UIGraphExecutionStep { nodeType = UINodeType.Delay, nodeGuid = guid };
             step.floatParams.Add("delaySeconds", delaySeconds);
-            
             return step;
         }
     }
 }
-

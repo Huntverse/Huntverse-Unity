@@ -8,61 +8,20 @@ namespace Hunt
     {
         public GameObject[] targetGameObjects;
         
-        public ShowGameObjectNode()
-        {
-            nodeName = "Show GameObject";
-        }
-        
+        public ShowGameObjectNode() => nodeName = "Show GameObject";
         public override UINodeType GetNodeType() => UINodeType.ShowGameObject;
         
-        public override UIGraphExecutionStep CreateExecutionStep()
+        public override UIGraphExecutionStep CreateExecutionStep(UINodeGraph graph)
         {
-            var step = new UIGraphExecutionStep
-            {
-                nodeType = UINodeType.ShowGameObject,
-                nodeGuid = guid
-            };
-            
-            if (targetGameObjects != null && targetGameObjects.Length > 0)
+            var step = new UIGraphExecutionStep { nodeType = UINodeType.ShowGameObject, nodeGuid = guid };
+            if (targetGameObjects != null && targetGameObjects.Length > 0 && graph != null)
             {
                 step.gameObjectIds = new string[targetGameObjects.Length];
                 for (int i = 0; i < targetGameObjects.Length; i++)
-                {
                     if (targetGameObjects[i] != null)
-                    {
-                        step.gameObjectIds[i] = GetOrCreateTargetId(targetGameObjects[i]);
-                    }
-                }
+                        step.gameObjectIds[i] = graph.GetOrCreateTargetId(targetGameObjects[i]);
             }
-            
             return step;
-        }
-        
-        private string GetOrCreateTargetId(GameObject obj)
-        {
-            if (obj == null) return string.Empty;
-            
-#if UNITY_EDITOR
-            var target = obj.GetComponent<UIGraphTarget>();
-            if (target == null)
-            {
-                target = obj.AddComponent<UIGraphTarget>();
-            }
-            
-            if (string.IsNullOrEmpty(target.TargetId))
-            {
-                string newId = System.Guid.NewGuid().ToString();
-                target.SetTargetId(newId);
-                UnityEditor.EditorUtility.SetDirty(target);
-                UnityEditor.EditorUtility.SetDirty(obj);
-            }
-            
-            return target.TargetId;
-#else
-            var target = obj.GetComponent<UIGraphTarget>();
-            return target != null ? target.TargetId : string.Empty;
-#endif
         }
     }
 }
-
