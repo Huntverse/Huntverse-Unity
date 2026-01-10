@@ -1,9 +1,11 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
+
 namespace Hunt
 {
     [CustomEditor(typeof(VfxObject))]
+    [CanEditMultipleObjects]
     public class VfxObjectEditor : Editor
     {
         public override void OnInspectorGUI()
