@@ -458,7 +458,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: New State
+  m_Name: dancing
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -570,13 +570,13 @@ AnimatorStateMachine:
     m_Position: {x: 280, y: 190, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 6562425665035513074}
-    m_Position: {x: 300, y: -90, z: 0}
+    m_Position: {x: 280, y: -90, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 4915143422307110732}
     m_Position: {x: 280, y: 300, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -2942655520999777913}
-    m_Position: {x: 300, y: -30, z: 0}
+    m_Position: {x: 280, y: -30, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -2613457170887605258}
     m_Position: {x: 540, y: 300, z: 0}
@@ -591,7 +591,7 @@ AnimatorStateMachine:
     m_Position: {x: 280, y: 100, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 5953006387932707596}
-    m_Position: {x: -40, y: 140, z: 0}
+    m_Position: {x: 50, y: 140, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions:
   - {fileID: 6885999533774586768}
