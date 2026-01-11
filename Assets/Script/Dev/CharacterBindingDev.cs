@@ -13,15 +13,15 @@ namespace Hunt.dev
         void Start()
         {
             // 채널 "그라시아"의 캐릭터 리스트
-            var graciaCharacters = new List<CharacterModel>
+            var graciaCharacters = new List<CharModel>
             {
                 // 비어있음 - 캐릭터 없는 채널
             };
 
             // 채널 "라비올래"의 캐릭터 리스트
-            var rabiolleCharacters = new List<CharacterModel>
+            var rabiolleCharacters = new List<CharModel>
             {
-                new CharacterModel
+                new CharModel
                 {
                     worldId = 1,
                     charId = 1001,
@@ -41,9 +41,9 @@ namespace Hunt.dev
             };
 
             // 채널 "카탄"의 캐릭터 리스트
-            var katanCharacters = new List<CharacterModel>
+            var katanCharacters = new List<CharModel>
             {
-                new CharacterModel
+                new CharModel
                 {
                     worldId = 1,
                     charId = 2001,
@@ -60,7 +60,7 @@ namespace Hunt.dev
                         new StatInfo { Type = 4, Point = 60 }
                     }
                 },
-                new CharacterModel
+                new CharModel
                 {
                     worldId = 1,
                     charId = 2002,
@@ -77,7 +77,7 @@ namespace Hunt.dev
                         new StatInfo { Type = 4, Point = 45 }
                     }
                 },
-                new CharacterModel
+                new CharModel
                 {
                     worldId = 1,
                     charId = 2003,
@@ -96,12 +96,12 @@ namespace Hunt.dev
                 }
             };
 
-            if (CharacterCreateController.Shared != null)
+            if (CharacterSetupController.Shared != null)
             {
                 // ✅ CharacterModel 리스트를 직접 전달
-                CharacterCreateController.Shared.OnRecvCharacterList("그라시아", graciaCharacters);
-                CharacterCreateController.Shared.OnRecvCharacterList("라비올래", rabiolleCharacters);
-                CharacterCreateController.Shared.OnRecvCharacterList("카탄", katanCharacters);
+                CharacterSetupController.Shared.OnRecvCharacterList("그라시아", graciaCharacters);
+                CharacterSetupController.Shared.OnRecvCharacterList("라비올래", rabiolleCharacters);
+                CharacterSetupController.Shared.OnRecvCharacterList("카탄", katanCharacters);
 
                 // MapId 테스트
                 foreach (var character in katanCharacters)

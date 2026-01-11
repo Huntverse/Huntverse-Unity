@@ -3,6 +3,7 @@ using UnityEditor;
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using System.Reflection;
 using Hunt;
 
 namespace Hunt
@@ -107,6 +108,12 @@ namespace Hunt
                         toggleNode.targetGameObjects = restoredArray;
                         restored = true;
                     }
+                }
+                else if (node is ExecuteMethodNode execNode && (execNode.targetObject == null || !execNode.targetObject) && step.gameObjectIds.Length > 0 &&
+                    targetMap.TryGetValue(step.gameObjectIds[0], out var execObj))
+                {
+                    execNode.targetObject = execObj;
+                    restored = true;
                 }
             }
             
@@ -264,6 +271,7 @@ namespace Hunt
                 case UINodeType.ShowGameObject:
                 case UINodeType.ToggleGameObject: DrawGameObjectArrayInNode(node); break;
                 case UINodeType.Delay: DrawDelayNode(node as DelayNode); break;
+                case UINodeType.ExecuteMethod: DrawExecuteMethodNode(node as ExecuteMethodNode); break;
             }
             
             if (EditorGUI.EndChangeCheck()) EditorUtility.SetDirty(currentGraph);
@@ -283,6 +291,123 @@ namespace Hunt
             GUILayout.Label("Delay", EditorStyles.boldLabel);
             var rect = GUILayoutUtility.GetRect(0, EditorGUIUtility.singleLineHeight);
             node.delaySeconds = EditorGUI.FloatField(rect, "Seconds", node.delaySeconds);
+        }
+        
+        private void DrawExecuteMethodNode(ExecuteMethodNode node)
+        {
+            if (node == null) return;
+            GUILayout.Label("Execute Method", EditorStyles.boldLabel);
+            
+            var objRect = GUILayoutUtility.GetRect(0, EditorGUIUtility.singleLineHeight);
+            var newObj = EditorGUI.ObjectField(objRect, "Target Object", node.targetObject, typeof(GameObject), true) as GameObject;
+            if (newObj != node.targetObject)
+            {
+                node.targetObject = newObj;
+                node.componentTypeName = "";
+                node.methodName = "";
+                EditorUtility.SetDirty(currentGraph);
+            }
+            
+            if (node.targetObject != null)
+            {
+                var components = node.targetObject.GetComponents<Component>();
+                var componentNames = new List<string> { "None" };
+                var componentTypes = new List<System.Type> { null };
+                
+                foreach (var comp in components)
+                {
+                    if (comp == null) continue;
+                    var type = comp.GetType();
+                    componentNames.Add($"{type.Name} ({type.Namespace})");
+                    componentTypes.Add(type);
+                }
+                
+                int currentIndex = 0;
+                if (!string.IsNullOrEmpty(node.componentTypeName) && componentTypes.Count > 1)
+                {
+                    var targetType = System.Type.GetType(node.componentTypeName);
+                    if (targetType == null) targetType = System.Reflection.Assembly.GetExecutingAssembly().GetType(node.componentTypeName);
+                    if (targetType == null)
+                    {
+                        foreach (var asm in System.AppDomain.CurrentDomain.GetAssemblies())
+                        {
+                            targetType = asm.GetType(node.componentTypeName);
+                            if (targetType != null) break;
+                        }
+                    }
+                    if (targetType != null)
+                    {
+                        var foundIndex = componentTypes.FindIndex(t => t == targetType);
+                        if (foundIndex >= 0 && foundIndex < componentTypes.Count)
+                            currentIndex = foundIndex;
+                    }
+                }
+                
+                if (currentIndex < 0 || currentIndex >= componentNames.Count)
+                    currentIndex = 0;
+                
+                var compRect = GUILayoutUtility.GetRect(0, EditorGUIUtility.singleLineHeight);
+                int newIndex = EditorGUI.Popup(compRect, "Component", currentIndex, componentNames.ToArray());
+                
+                if (newIndex >= 0 && newIndex < componentNames.Count && newIndex < componentTypes.Count)
+                {
+                    if (newIndex != currentIndex)
+                    {
+                        if (newIndex > 0 && newIndex < componentTypes.Count)
+                        {
+                            node.componentTypeName = componentTypes[newIndex]?.FullName ?? "";
+                            node.methodName = "";
+                            EditorUtility.SetDirty(currentGraph);
+                        }
+                        else if (newIndex == 0)
+                        {
+                            node.componentTypeName = "";
+                            node.methodName = "";
+                            EditorUtility.SetDirty(currentGraph);
+                        }
+                    }
+                    
+                    if (!string.IsNullOrEmpty(node.componentTypeName) && newIndex > 0 && newIndex < componentTypes.Count)
+                    {
+                        var selectedType = componentTypes[newIndex];
+                        if (selectedType != null)
+                        {
+                            var methods = selectedType.GetMethods(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
+                                .Where(m => m.GetParameters().Length == 0 && !m.IsSpecialName && m.ReturnType == typeof(void))
+                                .ToList();
+                            
+                            var methodNames = new List<string> { "None" };
+                            methods.ForEach(m => methodNames.Add(m.Name));
+                            
+                            int methodIndex = 0;
+                            if (!string.IsNullOrEmpty(node.methodName) && methods.Count > 0)
+                            {
+                                var foundMethodIndex = methods.FindIndex(m => m.Name == node.methodName);
+                                if (foundMethodIndex >= 0 && foundMethodIndex < methods.Count)
+                                    methodIndex = foundMethodIndex + 1;
+                            }
+                            
+                            if (methodIndex < 0 || methodIndex >= methodNames.Count)
+                                methodIndex = 0;
+                            
+                            var methodRect = GUILayoutUtility.GetRect(0, EditorGUIUtility.singleLineHeight);
+                            int newMethodIndex = EditorGUI.Popup(methodRect, "Method", methodIndex, methodNames.ToArray());
+                            
+                            if (newMethodIndex >= 0 && newMethodIndex < methodNames.Count)
+                            {
+                                if (newMethodIndex != methodIndex)
+                                {
+                                    if (newMethodIndex > 0 && newMethodIndex <= methods.Count)
+                                        node.methodName = methods[newMethodIndex - 1].Name;
+                                    else
+                                        node.methodName = "";
+                                    EditorUtility.SetDirty(currentGraph);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
         
         private void DrawLayerArrayInNode(UINode node)
@@ -427,12 +552,15 @@ namespace Hunt
         {
             var menu = new GenericMenu();
             var nodeTypes = new[] { UINodeType.ButtonClick, UINodeType.HideLayer, UINodeType.ShowLayer, UINodeType.ToggleLayer, 
-                UINodeType.HideGameObject, UINodeType.ShowGameObject, UINodeType.ToggleGameObject, UINodeType.Delay };
+                UINodeType.HideGameObject, UINodeType.ShowGameObject, UINodeType.ToggleGameObject, UINodeType.Delay, UINodeType.ExecuteMethod };
             var nodeNames = new[] { "Button Click", "Hide Layer", "Show Layer", "Toggle Layer", 
-                "Hide GameObject", "Show GameObject", "Toggle GameObject", "Delay" };
+                "Hide GameObject", "Show GameObject", "Toggle GameObject", "Delay", "Execute Method" };
             
             for (int i = 0; i < nodeTypes.Length; i++)
-                menu.AddItem(new GUIContent($"Add {nodeNames[i]} Node"), false, () => CreateNode(nodeTypes[i], mousePosition - panOffset));
+            {
+                int index = i;
+                menu.AddItem(new GUIContent($"Add {nodeNames[index]} Node"), false, () => CreateNode(nodeTypes[index], mousePosition - panOffset));
+            }
             
             menu.ShowAsContext();
         }
@@ -453,6 +581,7 @@ namespace Hunt
                 UINodeType.ShowGameObject => new ShowGameObjectNode { targetGameObjects = new GameObject[0] },
                 UINodeType.ToggleGameObject => new ToggleGameObjectNode { targetGameObjects = new GameObject[0] },
                 UINodeType.Delay => new DelayNode { delaySeconds = 1f },
+                UINodeType.ExecuteMethod => new ExecuteMethodNode(),
                 _ => null
             };
             

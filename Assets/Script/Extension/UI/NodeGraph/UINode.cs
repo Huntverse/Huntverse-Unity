@@ -23,6 +23,7 @@ namespace Hunt
         HideGameObject,
         ShowGameObject,
         ToggleGameObject,
-        Delay
+        Delay,
+        ExecuteMethod
     }
 }

@@ -102,6 +102,8 @@ namespace Hunt
             {
                 foreach (var obj in toggleNode.targetGameObjects) if (obj != null) EditorUtility.SetDirty(obj);
             }
+            else if (node is ExecuteMethodNode execNode && execNode.targetObject != null)
+                EditorUtility.SetDirty(execNode.targetObject);
 #endif
         }
         

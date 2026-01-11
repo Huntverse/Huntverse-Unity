@@ -307,21 +307,9 @@ namespace Hunt
                 Debug.LogWarning($"[UIManager] FindGameObjectById: targetId가 비어있습니다.");
                 return null;
             }
-            
-            Debug.Log($"[UIManager] FindGameObjectById: ID {targetId}로 찾는 중... graphTargetMap 개수: {graphTargetMap.Count}");
-            
-            if (graphTargetMap.Count > 0)
-            {
-                Debug.Log($"[UIManager] graphTargetMap에 등록된 ID들:");
-                foreach (var kvp in graphTargetMap)
-                {
-                    Debug.Log($"  - {kvp.Key}: {(kvp.Value != null ? kvp.Value.gameObject.name : "null")}");
-                }
-            }
-            
+         
             if (graphTargetMap.TryGetValue(targetId, out var target) && target != null)
             {
-                Debug.Log($"[UIManager] FindGameObjectById: {target.gameObject.name} 찾음");
                 return target.gameObject;
             }
             
@@ -621,6 +609,40 @@ namespace Hunt
                     
                 case UINodeType.ButtonClick:
                     // ButtonClickNode는 실행하지 않음 (이미 버튼이 클릭되었으므로)
+                    break;
+                    
+                case UINodeType.ExecuteMethod:
+                    if (step.gameObjectIds != null && step.gameObjectIds.Length > 0 && 
+                        step.stringParams.TryGetValue("componentType", out var compType) &&
+                        step.stringParams.TryGetValue("methodName", out var methodName) &&
+                        !string.IsNullOrEmpty(compType) && !string.IsNullOrEmpty(methodName))
+                    {
+                        var go = FindGameObjectById(step.gameObjectIds[0]);
+                        if (go != null)
+                        {
+                            var componentType = System.Type.GetType(compType);
+                            if (componentType == null) componentType = System.Reflection.Assembly.GetExecutingAssembly().GetType(compType);
+                            if (componentType == null)
+                            {
+                                foreach (var asm in System.AppDomain.CurrentDomain.GetAssemblies())
+                                {
+                                    componentType = asm.GetType(compType);
+                                    if (componentType != null) break;
+                                }
+                            }
+                            
+                            if (componentType != null)
+                            {
+                                var component = go.GetComponent(componentType);
+                                if (component != null)
+                                {
+                                    var method = componentType.GetMethod(methodName, System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+                                    if (method != null && method.GetParameters().Length == 0)
+                                        method.Invoke(component, null);
+                                }
+                            }
+                        }
+                    }
                     break;
             }
             }
