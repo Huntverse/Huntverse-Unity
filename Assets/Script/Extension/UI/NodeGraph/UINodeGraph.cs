@@ -21,7 +21,7 @@ namespace Hunt
         public void Bake()
         {
 #if UNITY_EDITOR
-            Debug.Log($"========== [UINodeGraph] Bake 시작 - Graph: {name} ==========");
+            $"[Bake] 시작 - Graph: {name}".DLog();
             EditorUtility.SetDirty(this);
             AssetDatabase.SaveAssets();
             
@@ -33,67 +33,50 @@ namespace Hunt
             
             EditorUtility.SetDirty(this);
             AssetDatabase.SaveAssets();
-            Debug.Log($"========== [UINodeGraph] Bake 완료 - Graph: {name} ==========");
+            $"[Bake] 완료 - Graph: {name}".DLog();
 #endif
         }
         
         private void CleanupOldBakedEvents()
         {
 #if UNITY_EDITOR
-            Debug.Log($"[Cleanup] 시작 - nodes 개수: {nodes?.Count ?? 0}");
             var processedButtons = new HashSet<GameObject>();
             var processedKeyboardObjects = new HashSet<GameObject>();
+            int totalRemoved = 0;
             
             foreach (var node in nodes)
             {
                 if (node is ButtonClickNode btnNode && btnNode.targetButton != null)
                 {
-                    if (!processedButtons.Add(btnNode.targetButton))
-                    {
-                        Debug.Log($"[Cleanup] Button 스킵 (이미 처리됨): {btnNode.targetButton.name}");
-                        continue;
-                    }
+                    if (!processedButtons.Add(btnNode.targetButton)) continue;
                     
                     var allComponents = btnNode.targetButton.GetComponents<UIGraphBakedEvent>();
-                    Debug.Log($"[Cleanup] Button: {btnNode.targetButton.name}, 기존 컴포넌트 개수: {allComponents.Length}");
-                    
                     foreach (var comp in allComponents)
                     {
                         if (comp != null)
                         {
-                            Debug.Log($"[Cleanup]   - 컴포넌트 제거 (Graph: {comp.graph?.name ?? "null"})");
                             UnityEngine.Object.DestroyImmediate(comp);
+                            totalRemoved++;
                         }
                     }
-                    
-                    var afterCleanup = btnNode.targetButton.GetComponents<UIGraphBakedEvent>();
-                    Debug.Log($"[Cleanup] Button: {btnNode.targetButton.name}, 제거 후 남은 개수: {afterCleanup.Length}");
                 }
                 else if (node is KeyboardInputNode keyNode && keyNode.targetGameObject != null)
                 {
-                    if (!processedKeyboardObjects.Add(keyNode.targetGameObject))
-                    {
-                        Debug.Log($"[Cleanup] KeyboardObject 스킵 (이미 처리됨): {keyNode.targetGameObject.name}");
-                        continue;
-                    }
+                    if (!processedKeyboardObjects.Add(keyNode.targetGameObject)) continue;
                     
                     var allComponents = keyNode.targetGameObject.GetComponents<UIGraphBakedKeyboardEvent>();
-                    Debug.Log($"[Cleanup] KeyboardObject: {keyNode.targetGameObject.name}, 기존 컴포넌트 개수: {allComponents.Length}");
-                    
                     foreach (var comp in allComponents)
                     {
                         if (comp != null)
                         {
-                            Debug.Log($"[Cleanup]   - 컴포넌트 제거 (Graph: {comp.graph?.name ?? "null"})");
                             UnityEngine.Object.DestroyImmediate(comp);
+                            totalRemoved++;
                         }
                     }
-                    
-                    var afterCleanup = keyNode.targetGameObject.GetComponents<UIGraphBakedKeyboardEvent>();
-                    Debug.Log($"[Cleanup] KeyboardObject: {keyNode.targetGameObject.name}, 제거 후 남은 개수: {afterCleanup.Length}");
                 }
             }
-            Debug.Log($"[Cleanup] 완료");
+            
+            $"[Cleanup] 제거된 컴포넌트: {totalRemoved}개".DLog();
 #endif
         }
         
@@ -122,65 +105,45 @@ namespace Hunt
         private void BakeButtonEvents()
         {
 #if UNITY_EDITOR
-            Debug.Log($"[Bake] 시작 - nodes 개수: {nodes?.Count ?? 0}");
             var processedButtons = new HashSet<GameObject>();
             var processedKeyboardObjects = new HashSet<GameObject>();
+            int buttonCount = 0;
+            int keyboardCount = 0;
             
             foreach (var node in nodes)
             {
                 if (node is ButtonClickNode btnNode && btnNode.targetButton != null)
                 {
-                    if (!processedButtons.Add(btnNode.targetButton))
-                    {
-                        Debug.Log($"[Bake] Button 스킵 (이미 처리됨): {btnNode.targetButton.name}");
-                        continue;
-                    }
+                    if (!processedButtons.Add(btnNode.targetButton)) continue;
                     
                     var button = btnNode.targetButton.GetComponent<UnityEngine.UI.Button>();
-                    if (button == null)
-                    {
-                        Debug.LogWarning($"[Bake] Button 컴포넌트 없음: {btnNode.targetButton.name}");
-                        continue;
-                    }
-                    
-                    var beforeAdd = btnNode.targetButton.GetComponents<UIGraphBakedEvent>();
-                    Debug.Log($"[Bake] Button: {btnNode.targetButton.name}, 추가 전 컴포넌트 개수: {beforeAdd.Length}");
+                    if (button == null) continue;
                     
                     var bakedEvent = btnNode.targetButton.AddComponent<UIGraphBakedEvent>();
                     bakedEvent.SetGraph(this);
                     bakedEvent.SetStartNodeGuid(btnNode.guid);
                     
-                    var afterAdd = btnNode.targetButton.GetComponents<UIGraphBakedEvent>();
-                    Debug.Log($"[Bake] Button: {btnNode.targetButton.name}, 추가 후 컴포넌트 개수: {afterAdd.Length}, GUID: {btnNode.guid}");
-                    
                     EditorUtility.SetDirty(bakedEvent);
                     EditorUtility.SetDirty(button);
                     EditorUtility.SetDirty(btnNode.targetButton);
+                    buttonCount++;
                 }
                 else if (node is KeyboardInputNode keyNode && keyNode.targetGameObject != null && keyNode.targetKeyCode != KeyCode.None)
                 {
-                    if (!processedKeyboardObjects.Add(keyNode.targetGameObject))
-                    {
-                        Debug.Log($"[Bake] KeyboardObject 스킵 (이미 처리됨): {keyNode.targetGameObject.name}");
-                        continue;
-                    }
-                    
-                    var beforeAdd = keyNode.targetGameObject.GetComponents<UIGraphBakedKeyboardEvent>();
-                    Debug.Log($"[Bake] KeyboardObject: {keyNode.targetGameObject.name}, 추가 전 컴포넌트 개수: {beforeAdd.Length}");
+                    if (!processedKeyboardObjects.Add(keyNode.targetGameObject)) continue;
                     
                     var bakedKeyboardEvent = keyNode.targetGameObject.AddComponent<UIGraphBakedKeyboardEvent>();
                     bakedKeyboardEvent.SetGraph(this);
                     bakedKeyboardEvent.SetStartNodeGuid(keyNode.guid);
                     bakedKeyboardEvent.SetKeyCode(keyNode.targetKeyCode);
                     
-                    var afterAdd = keyNode.targetGameObject.GetComponents<UIGraphBakedKeyboardEvent>();
-                    Debug.Log($"[Bake] KeyboardObject: {keyNode.targetGameObject.name}, 추가 후 컴포넌트 개수: {afterAdd.Length}, GUID: {keyNode.guid}, KeyCode: {keyNode.targetKeyCode}");
-                    
                     EditorUtility.SetDirty(bakedKeyboardEvent);
                     EditorUtility.SetDirty(keyNode.targetGameObject);
+                    keyboardCount++;
                 }
             }
-            Debug.Log($"[Bake] 완료");
+            
+            $"[Bake] 추가된 컴포넌트 - Button: {buttonCount}개, Keyboard: {keyboardCount}개".DLog();
 #endif
         }
         
