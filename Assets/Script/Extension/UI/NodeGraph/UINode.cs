@@ -17,6 +17,7 @@ namespace Hunt
     public enum UINodeType
     {
         ButtonClick,
+        KeyboardInput,
         HideLayer,
         ShowLayer,
         ToggleLayer,

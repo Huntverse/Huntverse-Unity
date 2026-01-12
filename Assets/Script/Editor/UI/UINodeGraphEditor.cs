@@ -264,6 +264,7 @@ namespace Hunt
             switch (node.GetNodeType())
             {
                 case UINodeType.ButtonClick: DrawButtonClickNode(node as ButtonClickNode); break;
+                case UINodeType.KeyboardInput: DrawKeyboardInputNode(node as KeyboardInputNode); break;
                 case UINodeType.HideLayer:
                 case UINodeType.ShowLayer:
                 case UINodeType.ToggleLayer: DrawLayerArrayInNode(node); break;
@@ -283,6 +284,16 @@ namespace Hunt
             GUILayout.Label("Button Click", EditorStyles.boldLabel);
             var rect = GUILayoutUtility.GetRect(0, EditorGUIUtility.singleLineHeight);
             node.targetButton = EditorGUI.ObjectField(rect, "Button", node.targetButton, typeof(GameObject), true) as GameObject;
+        }
+        
+        private void DrawKeyboardInputNode(KeyboardInputNode node)
+        {
+            if (node == null) return;
+            GUILayout.Label("Keyboard Input", EditorStyles.boldLabel);
+            var objRect = GUILayoutUtility.GetRect(0, EditorGUIUtility.singleLineHeight);
+            node.targetGameObject = EditorGUI.ObjectField(objRect, "Target GameObject", node.targetGameObject, typeof(GameObject), true) as GameObject;
+            var keyRect = GUILayoutUtility.GetRect(0, EditorGUIUtility.singleLineHeight);
+            node.targetKeyCode = (KeyCode)EditorGUI.EnumPopup(keyRect, "Key Code", node.targetKeyCode);
         }
         
         private void DrawDelayNode(DelayNode node)
@@ -551,9 +562,9 @@ namespace Hunt
         private void ShowContextMenu(Vector2 mousePosition)
         {
             var menu = new GenericMenu();
-            var nodeTypes = new[] { UINodeType.ButtonClick, UINodeType.HideLayer, UINodeType.ShowLayer, UINodeType.ToggleLayer, 
+            var nodeTypes = new[] { UINodeType.ButtonClick, UINodeType.KeyboardInput, UINodeType.HideLayer, UINodeType.ShowLayer, UINodeType.ToggleLayer, 
                 UINodeType.HideGameObject, UINodeType.ShowGameObject, UINodeType.ToggleGameObject, UINodeType.Delay, UINodeType.ExecuteMethod };
-            var nodeNames = new[] { "Button Click", "Hide Layer", "Show Layer", "Toggle Layer", 
+            var nodeNames = new[] { "Button Click", "Keyboard Input", "Hide Layer", "Show Layer", "Toggle Layer", 
                 "Hide GameObject", "Show GameObject", "Toggle GameObject", "Delay", "Execute Method" };
             
             for (int i = 0; i < nodeTypes.Length; i++)
@@ -574,6 +585,7 @@ namespace Hunt
             UINode node = type switch
             {
                 UINodeType.ButtonClick => new ButtonClickNode(),
+                UINodeType.KeyboardInput => new KeyboardInputNode { targetKeyCode = KeyCode.None },
                 UINodeType.HideLayer => new HideLayerNode { targetLayers = new UILayer[0] },
                 UINodeType.ShowLayer => new ShowLayerNode { targetLayers = new UILayer[0] },
                 UINodeType.ToggleLayer => new ToggleLayerNode { targetLayers = new UILayer[0] },

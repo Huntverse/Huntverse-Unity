@@ -81,6 +81,20 @@ namespace Hunt
                     }
                     break;
                     
+                case UINodeType.KeyboardInput:
+                    var keyNode = node as KeyboardInputNode;
+                    if (keyNode != null)
+                    {
+                        keyNode.targetGameObject = EditorGUILayout.ObjectField(
+                            "Target GameObject",
+                            keyNode.targetGameObject,
+                            typeof(GameObject),
+                            true
+                        ) as GameObject;
+                        keyNode.targetKeyCode = (KeyCode)EditorGUILayout.EnumPopup("Key Code", keyNode.targetKeyCode);
+                    }
+                    break;
+                    
                 case UINodeType.HideLayer:
                 case UINodeType.ShowLayer:
                 case UINodeType.ToggleLayer:

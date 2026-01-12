@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 namespace Hunt
 {
@@ -13,14 +14,160 @@ namespace Hunt
         private Dictionary<UILayer,HashSet<UILayerGroup>> layerGroupMap = new Dictionary<UILayer,HashSet<UILayerGroup>>();
         private Dictionary<InputAction,UILayer> inputLayerMap = new Dictionary<InputAction,UILayer>();
         private Dictionary<string, UIGraphTarget> graphTargetMap = new Dictionary<string, UIGraphTarget>();
+        private Dictionary<KeyCode, List<UIGraphBakedKeyboardEvent>> keyboardEventMap = new Dictionary<KeyCode, List<UIGraphBakedKeyboardEvent>>();
 
         protected override bool DontDestroy => base.DontDestroy;
 
         protected override void Awake()
         {
             base.Awake();
+            SceneManager.sceneLoaded += OnSceneLoaded;
+            SceneManager.sceneUnloaded += OnSceneUnloaded;
             RegisterAllGraphTargetsInScene();
             RegisterAllLayerGroupsInScene();
+            UpdateAllBakedEvents();
+        }
+        
+        private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+        {
+            RegisterAllGraphTargetsInScene();
+            RegisterAllLayerGroupsInScene();
+            UpdateAllBakedEvents();
+        }
+        
+        private void OnSceneUnloaded(Scene scene)
+        {
+            UnregisterAllBakedEventsInScene(scene);
+        }
+        
+        
+        private void UpdateAllBakedEvents()
+        {
+            RegisterAllKeyboardEventsInScene();
+            RegisterAllButtonEventsInScene();
+        }
+        
+        private void UnregisterAllBakedEvents()
+        {
+            UnregisterAllKeyboardEvents();
+            UnregisterAllButtonEvents();
+        }
+        
+        private void UnregisterAllBakedEventsInScene(Scene scene)
+        {
+            var rootObjects = scene.GetRootGameObjects();
+            foreach (var rootObj in rootObjects)
+            {
+                UnregisterBakedEventsRecursive(rootObj);
+            }
+        }
+        
+        private void UnregisterBakedEventsRecursive(GameObject obj)
+        {
+            var keyboardEvent = obj.GetComponent<UIGraphBakedKeyboardEvent>();
+            if (keyboardEvent != null)
+            {
+                UnregisterKeyboardEvent(keyboardEvent);
+            }
+            
+            var buttonEvent = obj.GetComponent<UIGraphBakedEvent>();
+            if (buttonEvent != null)
+            {
+                buttonEvent.UnregisterFromButton();
+            }
+            
+            for (int i = 0; i < obj.transform.childCount; i++)
+            {
+                UnregisterBakedEventsRecursive(obj.transform.GetChild(i).gameObject);
+            }
+        }
+        
+        private void UnregisterAllKeyboardEvents()
+        {
+            keyboardEventMap.Clear();
+        }
+        
+        private void UnregisterAllButtonEvents()
+        {
+            var allButtonEvents = FindObjectsOfType<UIGraphBakedEvent>(true);
+            foreach (var buttonEvent in allButtonEvents)
+            {
+                if (buttonEvent != null)
+                {
+                    buttonEvent.UnregisterFromButton();
+                }
+            }
+        }
+        
+        private void RegisterAllButtonEventsInScene()
+        {
+            var allButtonEvents = FindObjectsOfType<UIGraphBakedEvent>(true);
+            foreach (var buttonEvent in allButtonEvents)
+            {
+                if (buttonEvent != null && buttonEvent.graph != null && !string.IsNullOrEmpty(buttonEvent.startNodeGuid))
+                {
+                    buttonEvent.RegisterToButton();
+                }
+            }
+        }
+        
+        public void RegisterKeyboardEvent(UIGraphBakedKeyboardEvent keyboardEvent)
+        {
+            if (keyboardEvent == null || keyboardEvent.targetKeyCode == KeyCode.None) return;
+            
+            if (!keyboardEventMap.ContainsKey(keyboardEvent.targetKeyCode))
+            {
+                keyboardEventMap[keyboardEvent.targetKeyCode] = new List<UIGraphBakedKeyboardEvent>();
+            }
+            
+            if (!keyboardEventMap[keyboardEvent.targetKeyCode].Contains(keyboardEvent))
+            {
+                keyboardEventMap[keyboardEvent.targetKeyCode].Add(keyboardEvent);
+            }
+        }
+        
+        private void RegisterAllKeyboardEventsInScene()
+        {
+            var allKeyboardEvents = FindObjectsOfType<UIGraphBakedKeyboardEvent>(true);
+            foreach (var keyboardEvent in allKeyboardEvents)
+            {
+                if (keyboardEvent != null && keyboardEvent.targetKeyCode != KeyCode.None)
+                {
+                    keyboardEvent.RegisterToManager();
+                }
+            }
+        }
+        
+        public void UnregisterKeyboardEvent(UIGraphBakedKeyboardEvent keyboardEvent)
+        {
+            if (keyboardEvent == null || keyboardEvent.targetKeyCode == KeyCode.None) return;
+            
+            if (keyboardEventMap.TryGetValue(keyboardEvent.targetKeyCode, out var events))
+            {
+                events.Remove(keyboardEvent);
+                if (events.Count == 0)
+                {
+                    keyboardEventMap.Remove(keyboardEvent.targetKeyCode);
+                }
+            }
+        }
+        
+        private void Update()
+        {
+            foreach (var kvp in keyboardEventMap)
+            {
+                if (Input.GetKeyDown(kvp.Key))
+                {
+                    foreach (var keyboardEvent in kvp.Value)
+                    {
+                        if (keyboardEvent != null && keyboardEvent.gameObject != null && keyboardEvent.gameObject.activeInHierarchy && 
+                            keyboardEvent.graph != null && !string.IsNullOrEmpty(keyboardEvent.startNodeGuid))
+                        {
+                            ExecuteGraphFromNode(keyboardEvent.graph, keyboardEvent.startNodeGuid).Forget();
+                        }
+                    }
+                }
+            }
         }
         
         private void RegisterAllGraphTargetsInScene()
@@ -79,7 +226,10 @@ namespace Hunt
 
         protected override void OnDestroy()
         {
+            SceneManager.sceneLoaded -= OnSceneLoaded;
+            SceneManager.sceneUnloaded -= OnSceneUnloaded;
             UnregisterAllInputEvents();
+            UnregisterAllBakedEvents();
             graphTargetMap.Clear();
             base.OnDestroy();
         }
@@ -470,8 +620,8 @@ namespace Hunt
             {
                 var currentGuid = queue.Dequeue();
                 
-                // ButtonClickNode는 실행하지 않음
-                if (stepMap.TryGetValue(currentGuid, out var step) && step.nodeType != UINodeType.ButtonClick)
+                // ButtonClickNode와 KeyboardInputNode는 실행하지 않음
+                if (stepMap.TryGetValue(currentGuid, out var step) && step.nodeType != UINodeType.ButtonClick && step.nodeType != UINodeType.KeyboardInput)
                 {
                     result.Add(step);
                     Debug.Log($"[UIManager] 실행할 step 추가: {step.nodeType} ({currentGuid})");
@@ -609,6 +759,10 @@ namespace Hunt
                     
                 case UINodeType.ButtonClick:
                     // ButtonClickNode는 실행하지 않음 (이미 버튼이 클릭되었으므로)
+                    break;
+                    
+                case UINodeType.KeyboardInput:
+                    // KeyboardInputNode는 실행하지 않음 (이미 키보드 입력이 감지되었으므로)
                     break;
                     
                 case UINodeType.ExecuteMethod:
