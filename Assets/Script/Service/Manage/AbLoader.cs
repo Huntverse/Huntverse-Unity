@@ -68,7 +68,7 @@ namespace Hunt
             }
 
         }
-        public async UniTask<GameObject> InstantiateAsync(string key, Vector3 position = default, Quaternion rotation = default)
+        public async UniTask<GameObject> LoadInstantiateAsync(string key, Vector3 position = default, Quaternion rotation = default)
         {
             var prefab = await LoadAssetAsync<GameObject>(key);
 

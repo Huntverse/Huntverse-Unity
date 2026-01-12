@@ -36,6 +36,9 @@ namespace Hunt
         public static readonly string Kp_Model_Seible = "seible@model";
         public static readonly string Kp_Model_Astera = "astera@model";
         public static readonly string Kp_Model_Brunt = "brunt@model";
+
+        // Prefab
+        public static readonly string Kp_Portrait_Cam = "port_cam@prefab";
     }
     public static class AniKeyConst
     {
@@ -46,6 +49,7 @@ namespace Hunt
         public static readonly int k_bSelect = Animator.StringToHash("IsSelect");
         public static readonly int k_bValid = Animator.StringToHash("IsVaild");
         public static readonly int k_tFail = Animator.StringToHash("tFail");
+        public static readonly int k_cDancing = Animator.StringToHash("Dancing");
     }
     public enum AudioType
     {
