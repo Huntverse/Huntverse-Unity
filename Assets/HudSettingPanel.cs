@@ -45,7 +45,7 @@ namespace Hunt
             else
             {
                 this.DError("캐릭터 정보를 찾을 수 없습니다.");
-                await UpdateCharInfo("Hunt", 13, ClassType.Sword);
+                await UpdateCharInfo("Hunt", 13, ClassType.Archer);
             }
         }
 
