@@ -35,30 +35,27 @@ namespace Hunt.Login {
             "KAsyEy5IdW50LkdhbWUuU3RhdEluZm8iOgoWU2ltcGxlQ2hhcmFjdGVyQnlX",
             "b3JsZBIPCgd3b3JsZElkGAEgASgHEg8KB2NoYXJDbnQYAiABKAci7gEKCExv",
             "Z2luQW5zEicKB2VyclR5cGUYASABKA4yFi5IdW50LkNvbW1vbi5FcnJvclR5",
-            "cGUSDQoFdG9rZW4YAiABKAYSOQoPY29uZ2VzdGlvbkluZm9zGAMgAygLMiAu",
+            "cGUSDQoFdG9rZW4YAiABKAkSOQoPY29uZ2VzdGlvbkluZm9zGAMgAygLMiAu",
             "SHVudC5Mb2dpbi5TZXJ2ZXJDb25nZXN0aW9uSW5mbxI1CgljaGFySW5mb3MY",
             "BCADKAsyIi5IdW50LkxvZ2luLlNpbXBsZUNoYXJhY3RlckJ5V29ybGQSOAoT",
             "c2VydmVyRW5kUG9pbnRJbmZvcxgFIAMoCzIbLkh1bnQuQ29tbW9uLlNlcnZl",
-            "ckVuZHBvaW50IjQKEFJldHVyblRvTG9naW5SZXESEQoJYWNjb3VudElkGAEg",
-            "ASgGEg0KBXRva2VuGAIgASgGIjsKEFJldHVyblRvTG9naW5BbnMSJwoHZXJy",
-            "VHlwZRgBIAEoDjIWLkh1bnQuQ29tbW9uLkVycm9yVHlwZSIhCg5TZWxlY3RX",
-            "b3JsZFJlcRIPCgd3b3JsZElkGAEgASgHInMKDlNlbGVjdFdvcmxkQW5zEicK",
-            "B2VyclR5cGUYASABKA4yFi5IdW50LkNvbW1vbi5FcnJvclR5cGUSOAoPU2lt",
-            "cGxlQ2hhckluZm9zGAIgAygLMh8uSHVudC5Mb2dpbi5TaW1wbGVDaGFyYWN0",
-            "ZXJJbmZvIioKEENyZWF0ZUFjY291bnRSZXESCgoCaWQYASABKAkSCgoCcHcY",
-            "AiABKAkiOwoQQ3JlYXRlQWNjb3VudEFucxInCgdlcnJUeXBlGAEgASgOMhYu",
-            "SHVudC5Db21tb24uRXJyb3JUeXBlIkEKDUNyZWF0ZUNoYXJSZXESDwoHd29y",
-            "bGRJZBgBIAEoBxIMCgRuYW1lGAIgASgJEhEKCWNsYXNzVHlwZRgDIAEoDSJr",
-            "Cg1DcmVhdGVDaGFyQW5zEicKB2VyclR5cGUYASABKA4yFi5IdW50LkNvbW1v",
-            "bi5FcnJvclR5cGUSMQoIY2hhckluZm8YAiABKAsyHy5IdW50LkxvZ2luLlNp",
-            "bXBsZUNoYXJhY3RlckluZm8iGgoMQ29uZmlybUlkUmVxEgoKAmlkGAEgASgJ",
-            "IkYKDENvbmZpcm1JZEFucxInCgdlcnJUeXBlGAEgASgOMhYuSHVudC5Db21t",
-            "b24uRXJyb3JUeXBlEg0KBWlzRHVwGAIgASgIIh4KDkNvbmZpcm1OYW1lUmVx",
-            "EgwKBG5hbWUYASABKAkiSAoOQ29uZmlybU5hbWVBbnMSJwoHZXJyVHlwZRgB",
-            "IAEoDjIWLkh1bnQuQ29tbW9uLkVycm9yVHlwZRINCgVpc0R1cBgCIAEoCCIp",
-            "CgxMb2dpblRlc3RSZXESDAoEZGF0YRgBIAEoCRILCgNudW0YAiABKAciKQoM",
-            "TG9naW5UZXN0QW5zEgwKBGRhdGEYASABKAkSCwoDbnVtGAIgASgHYgZwcm90",
-            "bzM="));
+            "ckVuZHBvaW50IiEKDlNlbGVjdFdvcmxkUmVxEg8KB3dvcmxkSWQYASABKAci",
+            "cwoOU2VsZWN0V29ybGRBbnMSJwoHZXJyVHlwZRgBIAEoDjIWLkh1bnQuQ29t",
+            "bW9uLkVycm9yVHlwZRI4Cg9TaW1wbGVDaGFySW5mb3MYAiADKAsyHy5IdW50",
+            "LkxvZ2luLlNpbXBsZUNoYXJhY3RlckluZm8iKgoQQ3JlYXRlQWNjb3VudFJl",
+            "cRIKCgJpZBgBIAEoCRIKCgJwdxgCIAEoCSI7ChBDcmVhdGVBY2NvdW50QW5z",
+            "EicKB2VyclR5cGUYASABKA4yFi5IdW50LkNvbW1vbi5FcnJvclR5cGUiQQoN",
+            "Q3JlYXRlQ2hhclJlcRIPCgd3b3JsZElkGAEgASgHEgwKBG5hbWUYAiABKAkS",
+            "EQoJY2xhc3NUeXBlGAMgASgNImsKDUNyZWF0ZUNoYXJBbnMSJwoHZXJyVHlw",
+            "ZRgBIAEoDjIWLkh1bnQuQ29tbW9uLkVycm9yVHlwZRIxCghjaGFySW5mbxgC",
+            "IAEoCzIfLkh1bnQuTG9naW4uU2ltcGxlQ2hhcmFjdGVySW5mbyIaCgxDb25m",
+            "aXJtSWRSZXESCgoCaWQYASABKAkiRgoMQ29uZmlybUlkQW5zEicKB2VyclR5",
+            "cGUYASABKA4yFi5IdW50LkNvbW1vbi5FcnJvclR5cGUSDQoFaXNEdXAYAiAB",
+            "KAgiHgoOQ29uZmlybU5hbWVSZXESDAoEbmFtZRgBIAEoCSJICg5Db25maXJt",
+            "TmFtZUFucxInCgdlcnJUeXBlGAEgASgOMhYuSHVudC5Db21tb24uRXJyb3JU",
+            "eXBlEg0KBWlzRHVwGAIgASgIIikKDExvZ2luVGVzdFJlcRIMCgRkYXRhGAEg",
+            "ASgJEgsKA251bRgCIAEoByIpCgxMb2dpblRlc3RBbnMSDAoEZGF0YRgBIAEo",
+            "CRILCgNudW0YAiABKAdiBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Hunt.Common.CommonTypeReflection.Descriptor, global::Hunt.Common.ErrTypeReflection.Descriptor, global::Hunt.Common.CommonReflection.Descriptor, global::Hunt.Game.GameReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
@@ -67,8 +64,6 @@ namespace Hunt.Login {
             new pbr::GeneratedClrTypeInfo(typeof(global::Hunt.Login.SimpleCharacterInfo), global::Hunt.Login.SimpleCharacterInfo.Parser, new[]{ "WorldId", "CharId", "Name", "ClassType", "Level", "MapId", "StatInfos" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Hunt.Login.SimpleCharacterByWorld), global::Hunt.Login.SimpleCharacterByWorld.Parser, new[]{ "WorldId", "CharCnt" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Hunt.Login.LoginAns), global::Hunt.Login.LoginAns.Parser, new[]{ "ErrType", "Token", "CongestionInfos", "CharInfos", "ServerEndPointInfos" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Hunt.Login.ReturnToLoginReq), global::Hunt.Login.ReturnToLoginReq.Parser, new[]{ "AccountId", "Token" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Hunt.Login.ReturnToLoginAns), global::Hunt.Login.ReturnToLoginAns.Parser, new[]{ "ErrType" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Hunt.Login.SelectWorldReq), global::Hunt.Login.SelectWorldReq.Parser, new[]{ "WorldId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Hunt.Login.SelectWorldAns), global::Hunt.Login.SelectWorldAns.Parser, new[]{ "ErrType", "SimpleCharInfos" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Hunt.Login.CreateAccountReq), global::Hunt.Login.CreateAccountReq.Parser, new[]{ "Id", "Pw" }, null, null, null, null),
@@ -1297,13 +1292,13 @@ namespace Hunt.Login {
 
     /// <summary>Field number for the "token" field.</summary>
     public const int TokenFieldNumber = 2;
-    private ulong token_;
+    private string token_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public ulong Token {
+    public string Token {
       get { return token_; }
       set {
-        token_ = value;
+        token_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
       }
     }
 
@@ -1377,7 +1372,7 @@ namespace Hunt.Login {
     public override int GetHashCode() {
       int hash = 1;
       if (ErrType != global::Hunt.Common.ErrorType.ErrNon) hash ^= ErrType.GetHashCode();
-      if (Token != 0UL) hash ^= Token.GetHashCode();
+      if (Token.Length != 0) hash ^= Token.GetHashCode();
       hash ^= congestionInfos_.GetHashCode();
       hash ^= charInfos_.GetHashCode();
       hash ^= serverEndPointInfos_.GetHashCode();
@@ -1403,9 +1398,9 @@ namespace Hunt.Login {
         output.WriteRawTag(8);
         output.WriteEnum((int) ErrType);
       }
-      if (Token != 0UL) {
-        output.WriteRawTag(17);
-        output.WriteFixed64(Token);
+      if (Token.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(Token);
       }
       congestionInfos_.WriteTo(output, _repeated_congestionInfos_codec);
       charInfos_.WriteTo(output, _repeated_charInfos_codec);
@@ -1424,9 +1419,9 @@ namespace Hunt.Login {
         output.WriteRawTag(8);
         output.WriteEnum((int) ErrType);
       }
-      if (Token != 0UL) {
-        output.WriteRawTag(17);
-        output.WriteFixed64(Token);
+      if (Token.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(Token);
       }
       congestionInfos_.WriteTo(ref output, _repeated_congestionInfos_codec);
       charInfos_.WriteTo(ref output, _repeated_charInfos_codec);
@@ -1444,8 +1439,8 @@ namespace Hunt.Login {
       if (ErrType != global::Hunt.Common.ErrorType.ErrNon) {
         size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) ErrType);
       }
-      if (Token != 0UL) {
-        size += 1 + 8;
+      if (Token.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Token);
       }
       size += congestionInfos_.CalculateSize(_repeated_congestionInfos_codec);
       size += charInfos_.CalculateSize(_repeated_charInfos_codec);
@@ -1465,7 +1460,7 @@ namespace Hunt.Login {
       if (other.ErrType != global::Hunt.Common.ErrorType.ErrNon) {
         ErrType = other.ErrType;
       }
-      if (other.Token != 0UL) {
+      if (other.Token.Length != 0) {
         Token = other.Token;
       }
       congestionInfos_.Add(other.congestionInfos_);
@@ -1494,8 +1489,8 @@ namespace Hunt.Login {
             ErrType = (global::Hunt.Common.ErrorType) input.ReadEnum();
             break;
           }
-          case 17: {
-            Token = input.ReadFixed64();
+          case 18: {
+            Token = input.ReadString();
             break;
           }
           case 26: {
@@ -1533,8 +1528,8 @@ namespace Hunt.Login {
             ErrType = (global::Hunt.Common.ErrorType) input.ReadEnum();
             break;
           }
-          case 17: {
-            Token = input.ReadFixed64();
+          case 18: {
+            Token = input.ReadString();
             break;
           }
           case 26: {
@@ -1547,445 +1542,6 @@ namespace Hunt.Login {
           }
           case 42: {
             serverEndPointInfos_.AddEntriesFrom(ref input, _repeated_serverEndPointInfos_codec);
-            break;
-          }
-        }
-      }
-    }
-    #endif
-
-  }
-
-  /// <summary>
-  ///Game에서 로그인 서버로 다시 오는 경우 -> ex) 인게임 -> 캐선창/월드 선택창
-  /// </summary>
-  [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
-  public sealed partial class ReturnToLoginReq : pb::IMessage<ReturnToLoginReq>
-  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      , pb::IBufferMessage
-  #endif
-  {
-    private static readonly pb::MessageParser<ReturnToLoginReq> _parser = new pb::MessageParser<ReturnToLoginReq>(() => new ReturnToLoginReq());
-    private pb::UnknownFieldSet _unknownFields;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public static pb::MessageParser<ReturnToLoginReq> Parser { get { return _parser; } }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public static pbr::MessageDescriptor Descriptor {
-      get { return global::Hunt.Login.LoginReflection.Descriptor.MessageTypes[5]; }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    pbr::MessageDescriptor pb::IMessage.Descriptor {
-      get { return Descriptor; }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public ReturnToLoginReq() {
-      OnConstruction();
-    }
-
-    partial void OnConstruction();
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public ReturnToLoginReq(ReturnToLoginReq other) : this() {
-      accountId_ = other.accountId_;
-      token_ = other.token_;
-      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public ReturnToLoginReq Clone() {
-      return new ReturnToLoginReq(this);
-    }
-
-    /// <summary>Field number for the "accountId" field.</summary>
-    public const int AccountIdFieldNumber = 1;
-    private ulong accountId_;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public ulong AccountId {
-      get { return accountId_; }
-      set {
-        accountId_ = value;
-      }
-    }
-
-    /// <summary>Field number for the "token" field.</summary>
-    public const int TokenFieldNumber = 2;
-    private ulong token_;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public ulong Token {
-      get { return token_; }
-      set {
-        token_ = value;
-      }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public override bool Equals(object other) {
-      return Equals(other as ReturnToLoginReq);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool Equals(ReturnToLoginReq other) {
-      if (ReferenceEquals(other, null)) {
-        return false;
-      }
-      if (ReferenceEquals(other, this)) {
-        return true;
-      }
-      if (AccountId != other.AccountId) return false;
-      if (Token != other.Token) return false;
-      return Equals(_unknownFields, other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public override int GetHashCode() {
-      int hash = 1;
-      if (AccountId != 0UL) hash ^= AccountId.GetHashCode();
-      if (Token != 0UL) hash ^= Token.GetHashCode();
-      if (_unknownFields != null) {
-        hash ^= _unknownFields.GetHashCode();
-      }
-      return hash;
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public override string ToString() {
-      return pb::JsonFormatter.ToDiagnosticString(this);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void WriteTo(pb::CodedOutputStream output) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      output.WriteRawMessage(this);
-    #else
-      if (AccountId != 0UL) {
-        output.WriteRawTag(9);
-        output.WriteFixed64(AccountId);
-      }
-      if (Token != 0UL) {
-        output.WriteRawTag(17);
-        output.WriteFixed64(Token);
-      }
-      if (_unknownFields != null) {
-        _unknownFields.WriteTo(output);
-      }
-    #endif
-    }
-
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (AccountId != 0UL) {
-        output.WriteRawTag(9);
-        output.WriteFixed64(AccountId);
-      }
-      if (Token != 0UL) {
-        output.WriteRawTag(17);
-        output.WriteFixed64(Token);
-      }
-      if (_unknownFields != null) {
-        _unknownFields.WriteTo(ref output);
-      }
-    }
-    #endif
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public int CalculateSize() {
-      int size = 0;
-      if (AccountId != 0UL) {
-        size += 1 + 8;
-      }
-      if (Token != 0UL) {
-        size += 1 + 8;
-      }
-      if (_unknownFields != null) {
-        size += _unknownFields.CalculateSize();
-      }
-      return size;
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void MergeFrom(ReturnToLoginReq other) {
-      if (other == null) {
-        return;
-      }
-      if (other.AccountId != 0UL) {
-        AccountId = other.AccountId;
-      }
-      if (other.Token != 0UL) {
-        Token = other.Token;
-      }
-      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void MergeFrom(pb::CodedInputStream input) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      input.ReadRawMessage(this);
-    #else
-      uint tag;
-      while ((tag = input.ReadTag()) != 0) {
-      if ((tag & 7) == 4) {
-        // Abort on any end group tag.
-        return;
-      }
-      switch(tag) {
-          default:
-            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
-            break;
-          case 9: {
-            AccountId = input.ReadFixed64();
-            break;
-          }
-          case 17: {
-            Token = input.ReadFixed64();
-            break;
-          }
-        }
-      }
-    #endif
-    }
-
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
-      uint tag;
-      while ((tag = input.ReadTag()) != 0) {
-      if ((tag & 7) == 4) {
-        // Abort on any end group tag.
-        return;
-      }
-      switch(tag) {
-          default:
-            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
-            break;
-          case 9: {
-            AccountId = input.ReadFixed64();
-            break;
-          }
-          case 17: {
-            Token = input.ReadFixed64();
-            break;
-          }
-        }
-      }
-    }
-    #endif
-
-  }
-
-  /// <summary>
-  ///Simple Char 정보는 클라에 남아있을거니까
-  /// </summary>
-  [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
-  public sealed partial class ReturnToLoginAns : pb::IMessage<ReturnToLoginAns>
-  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      , pb::IBufferMessage
-  #endif
-  {
-    private static readonly pb::MessageParser<ReturnToLoginAns> _parser = new pb::MessageParser<ReturnToLoginAns>(() => new ReturnToLoginAns());
-    private pb::UnknownFieldSet _unknownFields;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public static pb::MessageParser<ReturnToLoginAns> Parser { get { return _parser; } }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public static pbr::MessageDescriptor Descriptor {
-      get { return global::Hunt.Login.LoginReflection.Descriptor.MessageTypes[6]; }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    pbr::MessageDescriptor pb::IMessage.Descriptor {
-      get { return Descriptor; }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public ReturnToLoginAns() {
-      OnConstruction();
-    }
-
-    partial void OnConstruction();
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public ReturnToLoginAns(ReturnToLoginAns other) : this() {
-      errType_ = other.errType_;
-      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public ReturnToLoginAns Clone() {
-      return new ReturnToLoginAns(this);
-    }
-
-    /// <summary>Field number for the "errType" field.</summary>
-    public const int ErrTypeFieldNumber = 1;
-    private global::Hunt.Common.ErrorType errType_ = global::Hunt.Common.ErrorType.ErrNon;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public global::Hunt.Common.ErrorType ErrType {
-      get { return errType_; }
-      set {
-        errType_ = value;
-      }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public override bool Equals(object other) {
-      return Equals(other as ReturnToLoginAns);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool Equals(ReturnToLoginAns other) {
-      if (ReferenceEquals(other, null)) {
-        return false;
-      }
-      if (ReferenceEquals(other, this)) {
-        return true;
-      }
-      if (ErrType != other.ErrType) return false;
-      return Equals(_unknownFields, other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public override int GetHashCode() {
-      int hash = 1;
-      if (ErrType != global::Hunt.Common.ErrorType.ErrNon) hash ^= ErrType.GetHashCode();
-      if (_unknownFields != null) {
-        hash ^= _unknownFields.GetHashCode();
-      }
-      return hash;
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public override string ToString() {
-      return pb::JsonFormatter.ToDiagnosticString(this);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void WriteTo(pb::CodedOutputStream output) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      output.WriteRawMessage(this);
-    #else
-      if (ErrType != global::Hunt.Common.ErrorType.ErrNon) {
-        output.WriteRawTag(8);
-        output.WriteEnum((int) ErrType);
-      }
-      if (_unknownFields != null) {
-        _unknownFields.WriteTo(output);
-      }
-    #endif
-    }
-
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (ErrType != global::Hunt.Common.ErrorType.ErrNon) {
-        output.WriteRawTag(8);
-        output.WriteEnum((int) ErrType);
-      }
-      if (_unknownFields != null) {
-        _unknownFields.WriteTo(ref output);
-      }
-    }
-    #endif
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public int CalculateSize() {
-      int size = 0;
-      if (ErrType != global::Hunt.Common.ErrorType.ErrNon) {
-        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) ErrType);
-      }
-      if (_unknownFields != null) {
-        size += _unknownFields.CalculateSize();
-      }
-      return size;
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void MergeFrom(ReturnToLoginAns other) {
-      if (other == null) {
-        return;
-      }
-      if (other.ErrType != global::Hunt.Common.ErrorType.ErrNon) {
-        ErrType = other.ErrType;
-      }
-      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void MergeFrom(pb::CodedInputStream input) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      input.ReadRawMessage(this);
-    #else
-      uint tag;
-      while ((tag = input.ReadTag()) != 0) {
-      if ((tag & 7) == 4) {
-        // Abort on any end group tag.
-        return;
-      }
-      switch(tag) {
-          default:
-            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
-            break;
-          case 8: {
-            ErrType = (global::Hunt.Common.ErrorType) input.ReadEnum();
-            break;
-          }
-        }
-      }
-    #endif
-    }
-
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
-      uint tag;
-      while ((tag = input.ReadTag()) != 0) {
-      if ((tag & 7) == 4) {
-        // Abort on any end group tag.
-        return;
-      }
-      switch(tag) {
-          default:
-            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
-            break;
-          case 8: {
-            ErrType = (global::Hunt.Common.ErrorType) input.ReadEnum();
             break;
           }
         }
@@ -2010,7 +1566,7 @@ namespace Hunt.Login {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Hunt.Login.LoginReflection.Descriptor.MessageTypes[7]; }
+      get { return global::Hunt.Login.LoginReflection.Descriptor.MessageTypes[5]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2208,7 +1764,7 @@ namespace Hunt.Login {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Hunt.Login.LoginReflection.Descriptor.MessageTypes[8]; }
+      get { return global::Hunt.Login.LoginReflection.Descriptor.MessageTypes[6]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2432,7 +1988,7 @@ namespace Hunt.Login {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Hunt.Login.LoginReflection.Descriptor.MessageTypes[9]; }
+      get { return global::Hunt.Login.LoginReflection.Descriptor.MessageTypes[7]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2667,7 +2223,7 @@ namespace Hunt.Login {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Hunt.Login.LoginReflection.Descriptor.MessageTypes[10]; }
+      get { return global::Hunt.Login.LoginReflection.Descriptor.MessageTypes[8]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2865,7 +2421,7 @@ namespace Hunt.Login {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Hunt.Login.LoginReflection.Descriptor.MessageTypes[11]; }
+      get { return global::Hunt.Login.LoginReflection.Descriptor.MessageTypes[9]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -3146,7 +2702,7 @@ namespace Hunt.Login {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Hunt.Login.LoginReflection.Descriptor.MessageTypes[12]; }
+      get { return global::Hunt.Login.LoginReflection.Descriptor.MessageTypes[10]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -3393,7 +2949,7 @@ namespace Hunt.Login {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Hunt.Login.LoginReflection.Descriptor.MessageTypes[13]; }
+      get { return global::Hunt.Login.LoginReflection.Descriptor.MessageTypes[11]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -3591,7 +3147,7 @@ namespace Hunt.Login {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Hunt.Login.LoginReflection.Descriptor.MessageTypes[14]; }
+      get { return global::Hunt.Login.LoginReflection.Descriptor.MessageTypes[12]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -3826,7 +3382,7 @@ namespace Hunt.Login {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Hunt.Login.LoginReflection.Descriptor.MessageTypes[15]; }
+      get { return global::Hunt.Login.LoginReflection.Descriptor.MessageTypes[13]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -4024,7 +3580,7 @@ namespace Hunt.Login {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Hunt.Login.LoginReflection.Descriptor.MessageTypes[16]; }
+      get { return global::Hunt.Login.LoginReflection.Descriptor.MessageTypes[14]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -4259,7 +3815,7 @@ namespace Hunt.Login {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Hunt.Login.LoginReflection.Descriptor.MessageTypes[17]; }
+      get { return global::Hunt.Login.LoginReflection.Descriptor.MessageTypes[15]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -4494,7 +4050,7 @@ namespace Hunt.Login {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Hunt.Login.LoginReflection.Descriptor.MessageTypes[18]; }
+      get { return global::Hunt.Login.LoginReflection.Descriptor.MessageTypes[16]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]

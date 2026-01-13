@@ -24,11 +24,12 @@ namespace Hunt.Common {
     static ErrTypeReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "Cg5lcnJfdHlwZS5wcm90bxILSHVudC5Db21tb24qqwEKCUVycm9yVHlwZRIL",
+            "Cg5lcnJfdHlwZS5wcm90bxILSHVudC5Db21tb24qwQEKCUVycm9yVHlwZRIL",
             "CgdFUlJfTk9OEAASEwoPRVJSX0lOVkFMSURfUkVREAESGwoXRVJSX0lOVkFM",
             "SURfUEFDS0VUX1RZUEUQAhIKCgZFUlJfREIQAxIZChVFUlJfQUNDT1VOVF9O",
             "T1RfRVhJU1QQBBIRCg1FUlJfRFVQX0xPR0lOEAUSDgoKRVJSX0RVUF9JRBAG",
-            "EhUKEUVSUl9EVVBfTklDS19OQU1FEAdiBnByb3RvMw=="));
+            "EhUKEUVSUl9EVVBfTklDS19OQU1FEAcSFAoQRVJSX0lOVkFMSURfQVVUSBAI",
+            "YgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Hunt.Common.ErrorType), }, null, null));
@@ -73,6 +74,10 @@ namespace Hunt.Common {
     ///닉네임 중복 - 생성에서 발생할 수 있음
     /// </summary>
     [pbr::OriginalName("ERR_DUP_NICK_NAME")] ErrDupNickName = 7,
+    /// <summary>
+    /// LoginByKey에서 token이 맞지 않는 경우, 클라이언트 재 로그인 시도해야함
+    /// </summary>
+    [pbr::OriginalName("ERR_INVALID_AUTH")] ErrInvalidAuth = 8,
   }
 
   #endregion
