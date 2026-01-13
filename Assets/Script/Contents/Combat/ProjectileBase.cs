@@ -57,7 +57,7 @@ namespace Hunt
                 $"Asset Loader is NULL!".DError();
                 return;
             }
-            var go = await AbLoader.Shared.InstantiateAsync(key);
+            var go = await AbLoader.Shared.LoadInstantiateAsync(key);
             go.transform.SetParent(this.transform);
             go.transform.localPosition = Vector3.zero;
             go.transform.localRotation = Quaternion.identity;

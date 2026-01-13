@@ -1,0 +1,72 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa19225b90888974c8e83b56590f7df6, type: 3}
+  m_Name: InGameUIGraph
+  m_EditorClassIdentifier: 
+  nodes:
+  - rid: 8005846811012497512
+  - rid: 8005846811012497515
+  connections:
+  - fromNodeGuid: f0eeffaa-5bc4-40c2-975e-95faa17d97f6
+    toNodeGuid: 27447ef6-3fd7-499b-84c6-ea695b562097
+    fromPortIndex: 0
+    toPortIndex: 0
+  bakedData:
+    executionSteps:
+    - nodeType: 1
+      nodeGuid: f0eeffaa-5bc4-40c2-975e-95faa17d97f6
+      stringParams:
+        keys: []
+        values: []
+      intParams:
+        keys:
+        - keyCode
+        values: 1b000000
+      floatParams:
+        keys: []
+        values: []
+      layerParams: []
+      gameObjectIds:
+      - 2eb9648f-ac27-4908-9248-859937b5caf3
+    - nodeType: 7
+      nodeGuid: 27447ef6-3fd7-499b-84c6-ea695b562097
+      stringParams:
+        keys: []
+        values: []
+      intParams:
+        keys: []
+        values: 
+      floatParams:
+        keys: []
+        values: []
+      layerParams: []
+      gameObjectIds:
+      - 47272711-7838-44f1-9a79-e1c2b82cd408
+  references:
+    version: 2
+    RefIds:
+    - rid: 8005846811012497512
+      type: {class: KeyboardInputNode, ns: Hunt, asm: Assembly-CSharp}
+      data:
+        guid: f0eeffaa-5bc4-40c2-975e-95faa17d97f6
+        position: {x: 72, y: 145}
+        nodeName: Keyboard Input
+        targetGameObject: {fileID: 0}
+        targetKeyCode: 27
+    - rid: 8005846811012497515
+      type: {class: ToggleGameObjectNode, ns: Hunt, asm: Assembly-CSharp}
+      data:
+        guid: 27447ef6-3fd7-499b-84c6-ea695b562097
+        position: {x: 76, y: 334}
+        nodeName: Toggle GameObject
+        targetGameObjects:
+        - {fileID: 0}

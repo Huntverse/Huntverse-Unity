@@ -195,8 +195,8 @@ namespace Hunt
 
         #region Dev
         // Dev
-        public CharacterModel SelectedCharacterModel { get; protected set; }
-        public void SelectCharacterModel(CharacterModel model)
+        public CharModel SelectedCharacterModel { get; protected set; }
+        public void SelectCharacterModel(CharModel model)
         {
             SelectedCharacterModel = model;
             $"[GameSession] 선택된 캐릭터 (Model): {model.name} (ClassType: {model.classtype})".DLog();

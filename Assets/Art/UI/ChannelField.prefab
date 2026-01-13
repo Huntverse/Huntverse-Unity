@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6182795703598168140}
   - component: {fileID: 7407218113612425151}
   m_Layer: 5
-  m_Name: ChannelNameArea
+  m_Name: ChannelName
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -629,7 +629,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4872212571329443642}
-  - component: {fileID: 1220116086607438145}
+  - component: {fileID: 9143149544088683488}
   m_Layer: 5
   m_Name: ChannelField
   m_TagString: Untagged
@@ -657,7 +657,7 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1220116086607438145
+--- !u!114 &9143149544088683488
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -666,12 +666,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 7098133712942444827}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f0a40df884c4025479bc548cf6d6005a, type: 3}
+  m_Script: {fileID: 11500000, guid: 6e744471fb8bb45418f53f8e9f141fda, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   channelNameText: {fileID: 638943950053439495}
   congestionText: {fileID: 7646036676533472665}
   myCharCountText: {fileID: 5502030770903395898}
+  channelButton: {fileID: 7787861966896998647}
 --- !u!1 &7601148246445008559
 GameObject:
   m_ObjectHideFlags: 0
@@ -685,7 +686,7 @@ GameObject:
   - component: {fileID: 4710081782823616513}
   - component: {fileID: 6711218841644392045}
   m_Layer: 5
-  m_Name: CongestionArea
+  m_Name: Congestion
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -776,7 +777,7 @@ GameObject:
   - component: {fileID: 2434168129233452702}
   - component: {fileID: 8360350750949927362}
   m_Layer: 5
-  m_Name: Dummy
+  m_Name: List
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -944,7 +945,7 @@ GameObject:
   - component: {fileID: 4961658035750202615}
   - component: {fileID: 2423774696283613546}
   m_Layer: 5
-  m_Name: MyCharacterCountArea
+  m_Name: MyCharacterCount
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

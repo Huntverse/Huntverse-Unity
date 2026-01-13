@@ -36,6 +36,9 @@ namespace Hunt
         public static readonly string Kp_Model_Seible = "seible@model";
         public static readonly string Kp_Model_Astera = "astera@model";
         public static readonly string Kp_Model_Brunt = "brunt@model";
+
+        // Prefab
+        public static readonly string Kp_Portrait_Cam = "port_cam@prefab";
     }
     public static class AniKeyConst
     {
@@ -46,6 +49,7 @@ namespace Hunt
         public static readonly int k_bSelect = Animator.StringToHash("IsSelect");
         public static readonly int k_bValid = Animator.StringToHash("IsVaild");
         public static readonly int k_tFail = Animator.StringToHash("tFail");
+        public static readonly int k_cDancing = Animator.StringToHash("Dancing");
     }
     public enum AudioType
     {
@@ -77,13 +81,13 @@ namespace Hunt
     }
     public static class BindKeyConst
     {
-        public static string GetProfessionMatchName(ClassType profession)
+        public static string GetProfessionMatchName(ClassType profession, bool eng = false)
         {
             return profession switch
             {
-                ClassType.Sword => "아스트라",
-                ClassType.Archer => "세이블",
-                ClassType.Fighter => "브런트",
+                ClassType.Sword => eng ? "ASTRA" : "아스트라",
+                ClassType.Archer => eng ? "SEIBLE" : "세이블",
+                ClassType.Fighter => eng ? "BRUNT" : "브런트",
                 _ => string.Empty
             };
         }
@@ -138,8 +142,8 @@ namespace Hunt
         {
             return t switch
             {
-                CharStatType.HP=>"체력",
-                CharStatType.MP=> "마력",
+                CharStatType.HP => "체력",
+                CharStatType.MP => "마력",
                 CharStatType.STR => "힘",
                 CharStatType.INT => "지능",
                 CharStatType.PATK => "물리공격",

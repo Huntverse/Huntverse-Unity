@@ -5,7 +5,7 @@ namespace Hunt
 
     public class InGameHud : MonoBehaviourSingleton<InGameHud>
     {
-        protected override bool DontDestroy => false;
+        protected override bool DontDestroy => true;
 
         protected override void Awake()
         {

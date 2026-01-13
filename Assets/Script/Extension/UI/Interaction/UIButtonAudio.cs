@@ -9,9 +9,10 @@ namespace Hunt
         [SerializeField] private float volumeScale = 1.0f;
         protected override void OnClickEvent()
         {
-            if (!IsActive) return;
+            if (AudioManager.Shared == null) return;
             string audioKey = AudioKeyConst.GetSfxKey(sfxType);
-            AudioHelper.Shared.PlaySfx(audioKey, volumeScale);
+            if (string.IsNullOrEmpty(audioKey)) return;
+            AudioManager.Shared.PlaySfx(audioKey, volumeScale);
         }
     }
 }

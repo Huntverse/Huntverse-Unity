@@ -1,0 +1,204 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa19225b90888974c8e83b56590f7df6, type: 3}
+  m_Name: Demo
+  m_EditorClassIdentifier: 
+  nodes:
+  - rid: 8005846746065010688
+  - rid: 8005846746065010793
+  - rid: 8005846746763100264
+  - rid: 8005846746763100267
+  - rid: 8005846746763100268
+  - rid: 8005846746763100269
+  - rid: 8005846746763100270
+  connections:
+  - fromNodeGuid: f6768ee7-22aa-43e7-b35c-fa93924d528c
+    toNodeGuid: e414105e-a059-4214-b86a-3611f2bdaba4
+    fromPortIndex: 0
+    toPortIndex: 0
+  - fromNodeGuid: f6768ee7-22aa-43e7-b35c-fa93924d528c
+    toNodeGuid: 89b5e7b9-7ab3-4e61-b37c-93767e763c3d
+    fromPortIndex: 0
+    toPortIndex: 0
+  - fromNodeGuid: f6768ee7-22aa-43e7-b35c-fa93924d528c
+    toNodeGuid: bbacd759-afc6-4710-9386-b255a0577efb
+    fromPortIndex: 0
+    toPortIndex: 0
+  - fromNodeGuid: f6768ee7-22aa-43e7-b35c-fa93924d528c
+    toNodeGuid: b57d6159-66c9-428b-b473-7232d451f644
+    fromPortIndex: 0
+    toPortIndex: 0
+  - fromNodeGuid: e414105e-a059-4214-b86a-3611f2bdaba4
+    toNodeGuid: 739b3333-931a-4d4f-b737-79c65a3e8624
+    fromPortIndex: 0
+    toPortIndex: 0
+  - fromNodeGuid: 739b3333-931a-4d4f-b737-79c65a3e8624
+    toNodeGuid: bd8ddcc7-d3dd-4e13-9f78-a3825a04a662
+    fromPortIndex: 0
+    toPortIndex: 0
+  bakedData:
+    executionSteps:
+    - nodeType: 0
+      nodeGuid: f6768ee7-22aa-43e7-b35c-fa93924d528c
+      stringParams:
+        keys: []
+        values: []
+      intParams:
+        keys: []
+        values: 
+      floatParams:
+        keys: []
+        values: []
+      layerParams: []
+      gameObjectIds:
+      - c2e94f81-ce59-4345-9660-6e9b768a01f4
+    - nodeType: 4
+      nodeGuid: e414105e-a059-4214-b86a-3611f2bdaba4
+      stringParams:
+        keys: []
+        values: []
+      intParams:
+        keys: []
+        values: 
+      floatParams:
+        keys: []
+        values: []
+      layerParams: []
+      gameObjectIds:
+      - 2013e013-ca83-4777-86b0-a8f045b437f2
+    - nodeType: 7
+      nodeGuid: 739b3333-931a-4d4f-b737-79c65a3e8624
+      stringParams:
+        keys: []
+        values: []
+      intParams:
+        keys: []
+        values: 
+      floatParams:
+        keys:
+        - delaySeconds
+        values:
+        - 1
+      layerParams: []
+      gameObjectIds: []
+    - nodeType: 4
+      nodeGuid: bd8ddcc7-d3dd-4e13-9f78-a3825a04a662
+      stringParams:
+        keys: []
+        values: []
+      intParams:
+        keys: []
+        values: 
+      floatParams:
+        keys: []
+        values: []
+      layerParams: []
+      gameObjectIds:
+      - 0bff964e-ffd4-4f0b-b89c-2586cad8b152
+    - nodeType: 2
+      nodeGuid: 89b5e7b9-7ab3-4e61-b37c-93767e763c3d
+      stringParams:
+        keys: []
+        values: []
+      intParams:
+        keys: []
+        values: 
+      floatParams:
+        keys: []
+        values: []
+      layerParams:
+      - CharacterGen
+      gameObjectIds: []
+    - nodeType: 4
+      nodeGuid: bbacd759-afc6-4710-9386-b255a0577efb
+      stringParams:
+        keys: []
+        values: []
+      intParams:
+        keys: []
+        values: 
+      floatParams:
+        keys: []
+        values: []
+      layerParams: []
+      gameObjectIds:
+      - 9e77eccf-9f0b-481d-bb47-b0517bd35e1b
+    - nodeType: 6
+      nodeGuid: b57d6159-66c9-428b-b473-7232d451f644
+      stringParams:
+        keys: []
+        values: []
+      intParams:
+        keys: []
+        values: 
+      floatParams:
+        keys: []
+        values: []
+      layerParams: []
+      gameObjectIds:
+      - 7713b25e-ef64-427f-afb9-dedfefff6b9a
+  references:
+    version: 2
+    RefIds:
+    - rid: 8005846746065010688
+      type: {class: ButtonClickNode, ns: Hunt, asm: Assembly-CSharp}
+      data:
+        guid: f6768ee7-22aa-43e7-b35c-fa93924d528c
+        position: {x: 31.5, y: 240.5}
+        nodeName: Button Click
+        targetButton: {fileID: 0}
+    - rid: 8005846746065010793
+      type: {class: HideGameObjectNode, ns: Hunt, asm: Assembly-CSharp}
+      data:
+        guid: e414105e-a059-4214-b86a-3611f2bdaba4
+        position: {x: 22, y: 475}
+        nodeName: Hide GameObject
+        targetGameObjects:
+        - {fileID: 0}
+    - rid: 8005846746763100264
+      type: {class: ShowLayerNode, ns: Hunt, asm: Assembly-CSharp}
+      data:
+        guid: 89b5e7b9-7ab3-4e61-b37c-93767e763c3d
+        position: {x: 328, y: 244}
+        nodeName: Show Layer
+        targetLayers: 03000000
+    - rid: 8005846746763100267
+      type: {class: ToggleGameObjectNode, ns: Hunt, asm: Assembly-CSharp}
+      data:
+        guid: b57d6159-66c9-428b-b473-7232d451f644
+        position: {x: 324, y: 412}
+        nodeName: Toggle GameObject
+        targetGameObjects:
+        - {fileID: 0}
+    - rid: 8005846746763100268
+      type: {class: HideGameObjectNode, ns: Hunt, asm: Assembly-CSharp}
+      data:
+        guid: bbacd759-afc6-4710-9386-b255a0577efb
+        position: {x: 327, y: 597}
+        nodeName: Hide GameObject
+        targetGameObjects:
+        - {fileID: 0}
+    - rid: 8005846746763100269
+      type: {class: DelayNode, ns: Hunt, asm: Assembly-CSharp}
+      data:
+        guid: 739b3333-931a-4d4f-b737-79c65a3e8624
+        position: {x: 19, y: 663}
+        nodeName: Delay
+        delaySeconds: 1
+    - rid: 8005846746763100270
+      type: {class: HideGameObjectNode, ns: Hunt, asm: Assembly-CSharp}
+      data:
+        guid: bd8ddcc7-d3dd-4e13-9f78-a3825a04a662
+        position: {x: 29, y: 885}
+        nodeName: Hide GameObject
+        targetGameObjects:
+        - {fileID: 0}

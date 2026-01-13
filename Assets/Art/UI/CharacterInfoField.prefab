@@ -560,7 +560,7 @@ GameObject:
   - component: {fileID: 453334720767502008}
   - component: {fileID: 3934376868550869978}
   m_Layer: 5
-  m_Name: Button
+  m_Name: confirmButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1022,8 +1022,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7492519119347584478}
-  - component: {fileID: 1702179412952683522}
   - component: {fileID: 5476207972510337003}
+  - component: {fileID: 3229542977766865256}
   m_Layer: 5
   m_Name: CharacterInfoField
   m_TagString: Untagged
@@ -1053,25 +1053,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1702179412952683522
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8010405147979616717}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b2ec2e8fdd4cd9947b4e9bcd8f26f79a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  createPannel: {fileID: 5039749195058824453}
-  userInfoPannel: {fileID: 5875809925858427598}
-  professionIcon: {fileID: 6124196562276534078}
-  levelText: {fileID: 8829934643145185093}
-  nameText: {fileID: 8899658832362881896}
-  savePointText: {fileID: 1197474654626985379}
-  selectButton: {fileID: 453334720767502008}
 --- !u!95 &5476207972510337003
 Animator:
   serializedVersion: 7
@@ -1094,6 +1075,25 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &3229542977766865256
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8010405147979616717}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ad679b9fd57fc34cb2e6d293e7b0504, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  createPannel: {fileID: 5039749195058824453}
+  userInfoPannel: {fileID: 5875809925858427598}
+  professionIcon: {fileID: 6124196562276534078}
+  levelText: {fileID: 8899658832362881896}
+  nameText: {fileID: 8829934643145185093}
+  savePointText: {fileID: 1197474654626985379}
+  selectButton: {fileID: 453334720767502008}
 --- !u!1 &8161049030478811329
 GameObject:
   m_ObjectHideFlags: 0
