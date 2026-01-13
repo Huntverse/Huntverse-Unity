@@ -42,13 +42,13 @@ namespace Hunt.Net
         public async Task<bool> ConnLoginServer(Action<NetModule.ERROR, string>? disconnectHandler, Action connSuccessHandler, Action<SocketException> connFailHandler)
         {
             m_loginConnection = new NetModule(NetModule.ServiceType.Login, disconnectHandler, connSuccessHandler, connFailHandler);
-            return await m_loginConnection.AsyncConn("127.0.0.1", 9000);
+            return await m_loginConnection.AsyncConn("220.120.128.18", 9000);
         }
 
         public bool ConnLoginServerSync(Action<NetModule.ERROR, string>? disconnectHandler, Action connSuccessHandler, Action<SocketException> connFailHandler)
         {
             m_loginConnection = new NetModule(NetModule.ServiceType.Login, disconnectHandler, connSuccessHandler, connFailHandler);
-            return m_loginConnection.SyncConn("127.0.0.1", 9000);
+            return m_loginConnection.SyncConn("220.120.128.18", 9000);
         }
 
         public void StartLoginServer()
