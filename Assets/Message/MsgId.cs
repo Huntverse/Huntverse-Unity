@@ -24,17 +24,16 @@ namespace Hunt.Common {
     static MsgIdReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "Cgxtc2dfaWQucHJvdG8SC0h1bnQuQ29tbW9uKqADCgVNc2dJZBILCgdJTlZB",
+            "Cgxtc2dfaWQucHJvdG8SC0h1bnQuQ29tbW9uKvICCgVNc2dJZBILCgdJTlZB",
             "TElEEAASCgoGU1lTVEVNEAESDQoJTE9HSU5fUkVREAISDQoJTE9HSU5fQU5T",
-            "EAMSFAoQTE9HSU5fQllfS0VZX1JFURAEEhQKEExPR0lOX0JZX0tFWV9BTlMQ",
-            "BRIXChNSRVRVUk5fVE9fTE9HSU5fUkVREAYSFwoTUkVUVVJOX1RPX0xPR0lO",
-            "X0FOUxAHEhQKEFNFTEVDVF9XT1JMRF9SRVEQCBIUChBTRUxFQ1RfV09STERf",
-            "QU5TEAkSFgoSQ1JFQVRFX0FDQ09VTlRfUkVREAoSFgoSQ1JFQVRFX0FDQ09V",
-            "TlRfQU5TEAsSEwoPQ1JFQVRFX0NIQVJfUkVREAwSEwoPQ1JFQVRFX0NIQVJf",
-            "QU5TEA0SFAoQQ09ORklSTV9OQU1FX1JFURAOEhQKEENPTkZJUk1fTkFNRV9B",
-            "TlMQDxISCg5DT05GSVJNX0lEX1JFURAQEhIKDkNPTkZJUk1fSURfQU5TEBES",
-            "EwoOTE9HSU5fVEVTVF9SRVEQj04SEwoOTE9HSU5fVEVTVF9BTlMQkE5iBnBy",
-            "b3RvMw=="));
+            "EAMSFgoSTE9HSU5fQllfVE9LRU5fUkVREAQSFgoSTE9HSU5fQllfVE9LRU5f",
+            "QU5TEAUSFAoQU0VMRUNUX1dPUkxEX1JFURAIEhQKEFNFTEVDVF9XT1JMRF9B",
+            "TlMQCRIWChJDUkVBVEVfQUNDT1VOVF9SRVEQChIWChJDUkVBVEVfQUNDT1VO",
+            "VF9BTlMQCxITCg9DUkVBVEVfQ0hBUl9SRVEQDBITCg9DUkVBVEVfQ0hBUl9B",
+            "TlMQDRIUChBDT05GSVJNX05BTUVfUkVREA4SFAoQQ09ORklSTV9OQU1FX0FO",
+            "UxAPEhIKDkNPTkZJUk1fSURfUkVREBASEgoOQ09ORklSTV9JRF9BTlMQERIT",
+            "Cg5MT0dJTl9URVNUX1JFURCPThITCg5MT0dJTl9URVNUX0FOUxCQTmIGcHJv",
+            "dG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Hunt.Common.MsgId), }, null, null));
@@ -59,10 +58,8 @@ namespace Hunt.Common {
     [pbr::OriginalName("LOGIN_ANS")] LoginAns = 3,
     /// <summary>
     /// </summary>
-    [pbr::OriginalName("LOGIN_BY_KEY_REQ")] LoginByKeyReq = 4,
-    [pbr::OriginalName("LOGIN_BY_KEY_ANS")] LoginByKeyAns = 5,
-    [pbr::OriginalName("RETURN_TO_LOGIN_REQ")] ReturnToLoginReq = 6,
-    [pbr::OriginalName("RETURN_TO_LOGIN_ANS")] ReturnToLoginAns = 7,
+    [pbr::OriginalName("LOGIN_BY_TOKEN_REQ")] LoginByTokenReq = 4,
+    [pbr::OriginalName("LOGIN_BY_TOKEN_ANS")] LoginByTokenAns = 5,
     [pbr::OriginalName("SELECT_WORLD_REQ")] SelectWorldReq = 8,
     [pbr::OriginalName("SELECT_WORLD_ANS")] SelectWorldAns = 9,
     [pbr::OriginalName("CREATE_ACCOUNT_REQ")] CreateAccountReq = 10,

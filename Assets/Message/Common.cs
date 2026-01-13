@@ -28,14 +28,14 @@ namespace Hunt.Common {
             "bxoOZXJyX3R5cGUucHJvdG8icAoOU2VydmVyRW5kcG9pbnQSDAoEbmFtZRgB",
             "IAEoCRIlCgRUeXBlGAIgASgOMhcuSHVudC5Db21tb24uU2VydmVyVHlwZRIP",
             "Cgd3b3JsZElkGAMgASgHEgoKAmlwGAQgASgJEgwKBHBvcnQYBSABKAciQwoP",
-            "TG9naW5CeVRva2VuUmVxEhEKCWFjY291bnRJZBgBIAEoBhINCgV0b2tlbhgC",
-            "IAEoBhIOCgZjaGFySWQYAyABKAYiOgoPTG9naW5CeVRva2VuQW5zEicKB2Vy",
+            "TG9naW5CeVRva2VuUmVxEhEKCWFjY291bnRJZBgBIAEoBhIOCgZjaGFySWQY",
+            "AiABKAYSDQoFdG9rZW4YAyABKAkiOgoPTG9naW5CeVRva2VuQW5zEicKB2Vy",
             "clR5cGUYASABKA4yFi5IdW50LkNvbW1vbi5FcnJvclR5cGViBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Hunt.Common.CommonTypeReflection.Descriptor, global::Hunt.Common.ErrTypeReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Hunt.Common.ServerEndpoint), global::Hunt.Common.ServerEndpoint.Parser, new[]{ "Name", "Type", "WorldId", "Ip", "Port" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Hunt.Common.LoginByTokenReq), global::Hunt.Common.LoginByTokenReq.Parser, new[]{ "AccountId", "Token", "CharId" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Hunt.Common.LoginByTokenReq), global::Hunt.Common.LoginByTokenReq.Parser, new[]{ "AccountId", "CharId", "Token" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Hunt.Common.LoginByTokenAns), global::Hunt.Common.LoginByTokenAns.Parser, new[]{ "ErrType" }, null, null, null, null)
           }));
     }
@@ -437,8 +437,8 @@ namespace Hunt.Common {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public LoginByTokenReq(LoginByTokenReq other) : this() {
       accountId_ = other.accountId_;
-      token_ = other.token_;
       charId_ = other.charId_;
+      token_ = other.token_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -460,20 +460,8 @@ namespace Hunt.Common {
       }
     }
 
-    /// <summary>Field number for the "token" field.</summary>
-    public const int TokenFieldNumber = 2;
-    private ulong token_;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public ulong Token {
-      get { return token_; }
-      set {
-        token_ = value;
-      }
-    }
-
     /// <summary>Field number for the "charId" field.</summary>
-    public const int CharIdFieldNumber = 3;
+    public const int CharIdFieldNumber = 2;
     private ulong charId_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -481,6 +469,18 @@ namespace Hunt.Common {
       get { return charId_; }
       set {
         charId_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "token" field.</summary>
+    public const int TokenFieldNumber = 3;
+    private string token_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string Token {
+      get { return token_; }
+      set {
+        token_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
       }
     }
 
@@ -500,8 +500,8 @@ namespace Hunt.Common {
         return true;
       }
       if (AccountId != other.AccountId) return false;
-      if (Token != other.Token) return false;
       if (CharId != other.CharId) return false;
+      if (Token != other.Token) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -510,8 +510,8 @@ namespace Hunt.Common {
     public override int GetHashCode() {
       int hash = 1;
       if (AccountId != 0UL) hash ^= AccountId.GetHashCode();
-      if (Token != 0UL) hash ^= Token.GetHashCode();
       if (CharId != 0UL) hash ^= CharId.GetHashCode();
+      if (Token.Length != 0) hash ^= Token.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -534,13 +534,13 @@ namespace Hunt.Common {
         output.WriteRawTag(9);
         output.WriteFixed64(AccountId);
       }
-      if (Token != 0UL) {
-        output.WriteRawTag(17);
-        output.WriteFixed64(Token);
-      }
       if (CharId != 0UL) {
-        output.WriteRawTag(25);
+        output.WriteRawTag(17);
         output.WriteFixed64(CharId);
+      }
+      if (Token.Length != 0) {
+        output.WriteRawTag(26);
+        output.WriteString(Token);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
@@ -556,13 +556,13 @@ namespace Hunt.Common {
         output.WriteRawTag(9);
         output.WriteFixed64(AccountId);
       }
-      if (Token != 0UL) {
-        output.WriteRawTag(17);
-        output.WriteFixed64(Token);
-      }
       if (CharId != 0UL) {
-        output.WriteRawTag(25);
+        output.WriteRawTag(17);
         output.WriteFixed64(CharId);
+      }
+      if (Token.Length != 0) {
+        output.WriteRawTag(26);
+        output.WriteString(Token);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
@@ -577,11 +577,11 @@ namespace Hunt.Common {
       if (AccountId != 0UL) {
         size += 1 + 8;
       }
-      if (Token != 0UL) {
-        size += 1 + 8;
-      }
       if (CharId != 0UL) {
         size += 1 + 8;
+      }
+      if (Token.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Token);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -598,11 +598,11 @@ namespace Hunt.Common {
       if (other.AccountId != 0UL) {
         AccountId = other.AccountId;
       }
-      if (other.Token != 0UL) {
-        Token = other.Token;
-      }
       if (other.CharId != 0UL) {
         CharId = other.CharId;
+      }
+      if (other.Token.Length != 0) {
+        Token = other.Token;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -628,11 +628,11 @@ namespace Hunt.Common {
             break;
           }
           case 17: {
-            Token = input.ReadFixed64();
+            CharId = input.ReadFixed64();
             break;
           }
-          case 25: {
-            CharId = input.ReadFixed64();
+          case 26: {
+            Token = input.ReadString();
             break;
           }
         }
@@ -659,11 +659,11 @@ namespace Hunt.Common {
             break;
           }
           case 17: {
-            Token = input.ReadFixed64();
+            CharId = input.ReadFixed64();
             break;
           }
-          case 25: {
-            CharId = input.ReadFixed64();
+          case 26: {
+            Token = input.ReadString();
             break;
           }
         }
