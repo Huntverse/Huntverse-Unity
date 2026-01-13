@@ -1,0 +1,37 @@
+[
+	{
+		"QueryId":"QID_SELECT_ACCOUNT",
+		"Query":"SELECT `a_id`,`user_shard` FROM `user_account` WHERE (`id`=? AND `pw`=?);",
+		"Comment":"계정 확인"
+	},
+	{
+		"QueryId":"QID_CREATE_ACOUNT",
+		"Query":"CALL create_account(?,?);",
+		"Comment":"sp 테스트"
+	},
+	{
+		"QueryId":"QID_TEST_INSERT_ACCOUNT",
+		"Query":"INSERT INTO user_account (`id`,`pw`) VALUES(?,?);",
+		"Comment":"계정 삽입 테스트"
+	},
+	{
+		"QueryId":"QID_TEST_UPDATE_ACCOUNT",
+		"Query":"UPDATE user_account SET `last_login`=? WHERE (`a_id`=?);",
+		"Comment":"계정 업데이트 확인"
+	},
+	{
+		"QueryId":"QID_TEST_SELECT_RANGE_ACCOUNT",
+		"Query":"SELECT `user_shard` FROM `user_account` WHERE (`a_id` BETWEEN (?,?));",
+		"Comment":"BETWEEN 테스트"
+	},
+	{
+		"QueryId":"QID_CONFIRM_DUP_NAME",
+		"Query":"SELECT count(*) FROM `characters_name` WHERE (`name`=?);",
+		"Comment":"닉네임 중복 확인"
+	},
+	{
+		"QueryId":"QID_CONFIRM_DUP_ID",
+		"Query":"SELECT count(*) FROM `user_account` WHERE (`id`=?);",
+		"Comment":"ID 중복 확인"
+	}
+]
