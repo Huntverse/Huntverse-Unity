@@ -17,7 +17,8 @@ namespace Hunt
         public static event Action<ErrorType> OnLoginResponse;
         public static event Action<ErrorType> OnCreateAccountResponse;
         public static event Action<ErrorType, bool> OnConfirmIdResponse;
-        public static event Action<ErrorType> OnCreateCharResponse;
+        public static event Action<ErrorType, bool> OnConfirmNameResponse;
+        public static event Action<ErrorType, Hunt.Login.SimpleCharacterInfo> OnCreateCharResponse;
         public LoginService(NetworkManager networkManager = null)
         {
             this.networkManager = networkManager ?? NetworkManager.Shared;
@@ -55,41 +56,59 @@ namespace Hunt
             OnCreateAccountResponse?.Invoke(t);
         }
 
-        /// <summary> 아이디 중복 확인 응답 처리 </summary>
-        public static void NotifyConfirmIdResponse(ErrorType t, bool isDup)
+    /// <summary> 아이디 중복 확인 응답 처리 </summary>
+    public static void NotifyConfirmIdResponse(ErrorType t, bool isDup)
+    {
+        $"[LoginService] 아이디 중복확인 응답 수신: {t}, IsDup: {isDup}".DLog();
+        if (OnConfirmIdResponse == null)
         {
-            $"[LoginService] 아이디 중복확인 응답 수신: {t}, IsDup: {isDup}".DLog();
-            if (OnConfirmIdResponse == null)
-            {
-                $"[LoginService] OnConfirmIdResponse 이벤트 구독자 없음!".DError();
-                return;
-            }
-            NotifyConfirmIdResponseAsync(t, isDup).Forget();
+            $"[LoginService] OnConfirmIdResponse 이벤트 구독자 없음!".DError();
+            return;
         }
+        NotifyConfirmIdResponseAsync(t, isDup).Forget();
+    }
 
-        private static async UniTaskVoid NotifyConfirmIdResponseAsync(ErrorType t, bool isDup)
-        {
-            await UniTask.SwitchToMainThread();
-            OnConfirmIdResponse?.Invoke(t, isDup);
-        }
+    private static async UniTaskVoid NotifyConfirmIdResponseAsync(ErrorType t, bool isDup)
+    {
+        await UniTask.SwitchToMainThread();
+        OnConfirmIdResponse?.Invoke(t, isDup);
+    }
 
-        /// <summary> 캐릭터 생성 응답 처리 </summary>
-        public static void NotifyCreateCharResponse(ErrorType t)
+    /// <summary> 닉네임 중복 확인 응답 처리 </summary>
+    public static void NotifyConfirmNameResponse(ErrorType t, bool isDup)
+    {
+        $"[LoginService] 닉네임 중복확인 응답 수신: {t}, IsDup: {isDup}".DLog();
+        if (OnConfirmNameResponse == null)
         {
-            $"[LoginService] 캐릭터 생성 응답 수신: {t}".DLog();
-            if (OnCreateCharResponse == null)
-            {
-                $"[LoginService] OnCreateCharResponse 이벤트 구독자 없음!".DError();
-                return;
-            }
-            NotifyCreateCharResponseAsync(t).Forget();
+            $"[LoginService] OnConfirmNameResponse 이벤트 구독자 없음!".DError();
+            return;
         }
+        NotifyConfirmNameResponseAsync(t, isDup).Forget();
+    }
 
-        private static async UniTaskVoid NotifyCreateCharResponseAsync(ErrorType t)
+    private static async UniTaskVoid NotifyConfirmNameResponseAsync(ErrorType t, bool isDup)
+    {
+        await UniTask.SwitchToMainThread();
+        OnConfirmNameResponse?.Invoke(t, isDup);
+    }
+
+    /// <summary> 캐릭터 생성 응답 처리 </summary>
+    public static void NotifyCreateCharResponse(ErrorType t, Hunt.Login.SimpleCharacterInfo charInfo)
+    {
+        $"[LoginService] 캐릭터 생성 응답 수신: {t}".DLog();
+        if (OnCreateCharResponse == null)
         {
-            await UniTask.SwitchToMainThread();
-            OnCreateCharResponse?.Invoke(t);
+            $"[LoginService] OnCreateCharResponse 이벤트 구독자 없음!".DError();
+            return;
         }
+        NotifyCreateCharResponseAsync(t, charInfo).Forget();
+    }
+
+    private static async UniTaskVoid NotifyCreateCharResponseAsync(ErrorType t, Hunt.Login.SimpleCharacterInfo charInfo)
+    {
+        await UniTask.SwitchToMainThread();
+        OnCreateCharResponse?.Invoke(t, charInfo);
+    }
 
         public void ReqAuthVaild(string id, string pw)
         {
@@ -121,11 +140,16 @@ namespace Hunt
             networkManager.SendToLogin(Hunt.Common.MsgId.ConfirmNameReq, req);
             $"[LoginService] 닉네임 중복확인 요청: Nickname={nickname}".DLog();
         }
-        public void ReqCreateChar(string nickname)
+        public void ReqCreateChar(string nickname,uint worldId,uint classType)
         {
-            var req = new CreateCharReq { Name = nickname };
+            var req = new CreateCharReq 
+            { 
+                Name = nickname,
+                WorldId = worldId,
+                ClassType = classType
+            };
             networkManager.SendToLogin(Hunt.Common.MsgId.CreateCharReq, req);
-            $"[LoginService] 캐릭터 생성 요청: Nickname={nickname}".DLog();
+            $"[LoginService] 캐릭터 생성 요청: Nickname={nickname}, WorldId={worldId}, ClassType={classType}".DLog();
         }
 
     }

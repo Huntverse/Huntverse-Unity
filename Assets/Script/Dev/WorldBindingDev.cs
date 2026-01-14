@@ -5,8 +5,17 @@ namespace Hunt.dev
 {
     public class WorldBindingDev : MonoBehaviour
     {
+        [SerializeField] private bool forceUseDevData = false;
+        
         void Start()
         {
+            // 서버에 연결되어 있고 강제 사용이 아니면 Dev 데이터를 사용하지 않음
+            if (SystemBoot.Shared != null && SystemBoot.Shared.LoginServerConnected && !forceUseDevData)
+            {
+                $"[Dev] 서버 연결됨 - Dev 데이터 스킵".DLog();
+                return;
+            }
+            
             var dummy = new WorldListRequest
             {
                 channels = new List<WorldModel>
@@ -17,7 +26,7 @@ namespace Hunt.dev
                 }
             };
             
-            $"[Dev] 채널 리스트 생성: {dummy.channels.Count}개".DLog();
+            $"[Dev] 채널 리스트 생성: {dummy.channels.Count}개 (Dev 모드)".DLog();
             
             if (GameWorldController.Shared != null)
             {

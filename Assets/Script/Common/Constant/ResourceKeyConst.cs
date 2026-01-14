@@ -1,3 +1,4 @@
+using Hunt.Enum;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System;
@@ -81,6 +82,28 @@ namespace Hunt
     }
     public static class BindKeyConst
     {
+
+        public static string GetWorldNameByWorldId(uint worldId)
+        {
+            return worldId switch
+            {
+                1 => "그라시아",
+                2 => "라비올래",
+                3 => "카탄",
+                _ => $"World_{worldId}",
+            };
+        }
+
+        public static uint GetWorldIdByWorldName(string worldName)
+        {
+            return worldName switch
+            {
+                "그라시아" => 1,
+                "라비올래" => 2,
+                "카탄" => 3,
+                _ => 0
+            };
+        }
         public static string GetProfessionMatchName(ClassType profession, bool eng = false)
         {
             return profession switch
@@ -126,7 +149,27 @@ namespace Hunt
             };
 
         }
+        public static Job_ID GetJobIdByClassType(ClassType type)
+        {
+            return type switch
+            {
+                ClassType.Sword => Job_ID.JobWarrior,      // 101
+                ClassType.Archer => Job_ID.JobArcher,      // 102
+                ClassType.Fighter => Job_ID.JobBoxer,      // 103
+                _ => Job_ID.JobWarrior
+            };
+        }
 
+        public static ClassType GetClassTypeByJobId(uint jobId)
+        {
+            return jobId switch
+            {
+                101 => ClassType.Sword,      // JobWarrior
+                102 => ClassType.Archer,     // JobArcher
+                103 => ClassType.Fighter,    // JobBoxer
+                _ => ClassType.Sword
+            };
+        }
         public static string GetMapNameByMapId(ulong mapId)
         {
             return mapId switch

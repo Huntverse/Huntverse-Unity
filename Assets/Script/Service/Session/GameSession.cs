@@ -18,6 +18,7 @@ namespace Hunt
         private string gameServerIp;
         private int gameServerPort;
         private UInt64 gameServerKey;
+        public uint CurrentSelectedWorldId { get; private set; }
 
         private bool isInitialized = false;
         public bool IsInitialized => isInitialized;
@@ -171,12 +172,25 @@ namespace Hunt
         #region Bind
         public List<SimpleCharacterInfo> CharacterInfos { get; protected set; }
         public SimpleCharacterInfo SelectedCharacter { get; protected set; }
+        public WorldListRequest CachedWorldList { get; private set; }
+        public Dictionary<string, List<CharModel>> CachedCharactersByWorld { get; private set; } = new Dictionary<string, List<CharModel>>();
         // Login
         public void SetCharacterList(List<SimpleCharacterInfo> characters)
         {
             CharacterInfos = new List<SimpleCharacterInfo>(characters);
             $"[GameSession] 캐릭터 리스트 저장 : {characters.Count}개".DLog();
         }
+
+        public void AddCharacterInfo(SimpleCharacterInfo character)
+        {
+            if (CharacterInfos == null)
+            {
+                CharacterInfos = new List<SimpleCharacterInfo>();
+            }
+            CharacterInfos.Add(character);
+            $"[GameSession] 캐릭터 추가: {character.Name} (CharId: {character.CharId})".DLog();
+        }
+
         public void SelectCharacter(SimpleCharacterInfo character)
         {
             SelectedCharacter = character;
@@ -190,6 +204,17 @@ namespace Hunt
             {
                 $"[GameSession] 캐릭터 선택 : {SelectedCharacter.Name}".DLog();
             }
+        }
+        public void SetSelectedWorld(uint worldId)
+        {
+            CurrentSelectedWorldId = worldId;
+            $"[GameSession] ✅ 선택된 월드 ID 설정됨: {worldId}".DLog();
+        }
+        
+        public void SetWorldList(WorldListRequest worldList)
+        {
+            CachedWorldList = worldList;
+            $"[GameSession] 월드 리스트 캐싱: {worldList?.channels?.Count ?? 0}개".DLog();
         }
         #endregion
 

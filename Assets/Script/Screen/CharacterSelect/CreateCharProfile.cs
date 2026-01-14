@@ -19,14 +19,17 @@ namespace Hunt
         [SerializeField] private TMP_InputField nickNameField;
 
         [Header("SETUP")]
-        private ClassType professionType;
+        private ClassType classType;
         [SerializeField] private Image portraitImage;
         [SerializeField] private TextMeshProUGUI characterNameText;
         public Image PortraitImage => portraitImage;
-        public ClassType ProfessionType => professionType;
-        public string characterName => BindKeyConst.GetProfessionMatchName(professionType);
+        public ClassType ProfessionType => classType;
+        public string characterName => BindKeyConst.GetProfessionMatchName(classType);
         public List<StatInfo> stats = new List<StatInfo>();
         public string charStory;
+
+        private bool isNicknameChecked = false;
+        private string checkedNickname = string.Empty;
 
         /// <summary>
         /// professionType이 변경될 때 UI를 업데이트합니다.
@@ -51,12 +54,14 @@ namespace Hunt
 
         public void SetProfession(ClassType profession)
         {
-            professionType = profession;
+            classType = profession;
         }
         private void OnEnable()
         {
             dupNickButton.onClick.AddListener(() => ReqNickNameDuplicate());
             createButton.onClick.AddListener(() => ReqCreateChar());
+            nickNameField.onValueChanged.AddListener(OnNicknameChanged);
+            LoginService.OnConfirmNameResponse += HandleNotiConfirmNameResponse;
             LoginService.OnCreateCharResponse += HandleNotiCreateCharResponse;
             createWindow.SetActive(false);
         }
@@ -64,15 +69,26 @@ namespace Hunt
         {
             dupNickButton.onClick.RemoveListener(() => ReqNickNameDuplicate());
             createButton.onClick.RemoveListener(() => ReqCreateChar());
+            nickNameField.onValueChanged.RemoveListener(OnNicknameChanged);
+            LoginService.OnConfirmNameResponse -= HandleNotiConfirmNameResponse;
             LoginService.OnCreateCharResponse -= HandleNotiCreateCharResponse;
             
         }
         public void OnClickCreateCharacter()
         {
-            CharacterSetupController.Shared.OnCreateNewCharacter(this.professionType);
+            CharacterSetupController.Shared.OnCreateNewCharacter(this.classType);
         }
 
-        /// <summary> Request Server : Duplicate ID </summary>
+        private void OnNicknameChanged(string newNickname)
+        {
+            if (checkedNickname != newNickname)
+            {
+                isNicknameChecked = false;
+                checkedNickname = string.Empty;
+            }
+        }
+
+        /// <summary> 닉네임 중복 체크 요청 </summary>
         private void ReqNickNameDuplicate()
         {
             var nickName = nickNameField.text;
@@ -82,14 +98,61 @@ namespace Hunt
             }
             GameSession.Shared?.LoginService.ReqNicknameDuplicate(nickName);
         }
+        // CreateCharProfile.cs 수정
         private void ReqCreateChar()
         {
             var nickName = nickNameField.text;
-            GameSession.Shared?.LoginService.ReqCreateChar(nickName);
 
-            OnClickCreateCharacter();
+            if (!IsValid(nickName, createcharVaildText))
+            {
+                return;
+            }
+
+            if (!isNicknameChecked || checkedNickname != nickName)
+            {
+                ShowNotificationText(
+                    createcharVaildText,
+                    NotiConst.GetAuthNotiMsg(AUTH_NOTI_TYPE.DUP_REQ),
+                    NotiConst.COLOR_WARNNING);
+                return;
+            }
+
+            uint worldId = GetCurrentWorldId();
+            uint classType = (uint)BindKeyConst.GetJobIdByClassType(this.classType);
+            
+            $"[CreateCharProfile] 캐릭터 생성 요청 - Nickname: {nickName}, WorldId: {worldId}, ClassType: {classType}".DLog();
+
+            if (worldId == 0)
+            {
+                ShowNotificationText(
+                    createcharVaildText,
+                    "월드를 먼저 선택해주세요!",
+                    NotiConst.COLOR_WARNNING);
+                return;
+            }
+
+            GameSession.Shared?.LoginService.ReqCreateChar(nickName, worldId, classType);
         }
+        private uint GetCurrentWorldId()
+        {
+            if (GameSession.Shared == null)
+            {
+                this.DError("❌ GameSession.Shared가 null입니다!");
+                return 1; // 임시: 그라시아
+            }
+            
+            uint worldId = GameSession.Shared.CurrentSelectedWorldId;
+            
+            $"[CreateCharProfile] 현재 worldId: {worldId}".DLog();
 
+            if (worldId == 0)
+            {
+                this.DError("⚠️ 선택된 월드가 없습니다! 먼저 월드를 클릭해주세요.");
+                return 1; // 임시: 그라시아
+            }
+
+            return worldId;
+        }
         private bool IsValid(string nickName, TextMeshProUGUI vaildText)
         {
             char[] invalidChars = { '-', '#', ' ' };
@@ -111,24 +174,62 @@ namespace Hunt
             return isValid;
         }
 
-        private void HandleNotiCreateCharResponse(ErrorType t)
+        private void HandleNotiConfirmNameResponse(ErrorType t, bool isDup)
         {
-            switch (t)
+            if (t != Common.ErrorType.ErrNon)
             {
-                case Common.ErrorType.ErrNon:
-                    ShowNotificationText(
+                ShowNotificationText(
                     createcharVaildText,
-                    NotiConst.GetAuthNotiMsg(AUTH_NOTI_TYPE.SUCCESS_DUP_NICK),
-                    NotiConst.COLOR_SUCCESS);
-                    break;
-                case Common.ErrorType.ErrDupNickName:
-                    ShowNotificationText(
+                    "서버 오류가 발생했습니다.",
+                    NotiConst.COLOR_WARNNING);
+                isNicknameChecked = false;
+                checkedNickname = string.Empty;
+                return;
+            }
+
+            if (isDup)
+            {
+                ShowNotificationText(
                     createcharVaildText,
                     NotiConst.GetAuthNotiMsg(AUTH_NOTI_TYPE.DUP_NICK),
                     NotiConst.COLOR_WARNNING);
-                    break;
+                isNicknameChecked = false;
+                checkedNickname = string.Empty;
             }
+            else
+            {
+                ShowNotificationText(
+                    createcharVaildText,
+                    NotiConst.GetAuthNotiMsg(AUTH_NOTI_TYPE.SUCCESS_DUP_NICK),
+                    NotiConst.COLOR_SUCCESS);
+                isNicknameChecked = true;
+                checkedNickname = nickNameField.text;
+            }
+        }
 
+        private void HandleNotiCreateCharResponse(ErrorType t, Hunt.Login.SimpleCharacterInfo charInfo)
+        {
+            if (t == Common.ErrorType.ErrNon)
+            {
+                if (charInfo != null)
+                {
+                    GameSession.Shared?.AddCharacterInfo(charInfo);
+                    var charModel = CharModel.FromCharacterInfo(charInfo);
+                    CharacterSetupController.Shared?.OnRecvNewCharacter(charModel);
+                }
+                
+                isNicknameChecked = false;
+                checkedNickname = string.Empty;
+                nickNameField.text = string.Empty;
+            }
+            else
+            {
+                ShowNotificationText(
+                    createcharVaildText,
+                    "캐릭터 생성에 실패했습니다.",
+                    NotiConst.COLOR_WARNNING);
+                $"캐릭터 생성 실패: {t}".DError();
+            }
         }
         #region Effect
         private Coroutine currentFadeCoroutine;
