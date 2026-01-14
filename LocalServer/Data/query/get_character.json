@@ -1,0 +1,12 @@
+[
+	{
+		"QueryId":"QID_SELECT_SIMPLE_CHAR_BY_WORLD",
+		"Query":"SELECT `world_id`,`character_cnt` FROM `summary_characters` WHERE (`a_id`=?);",
+		"Comment":"월드에 가진 캐릭터 갯수"
+	},
+	{
+		"QueryId":"QID_SELECT_SIMPLE_CHAR_INFOS",
+		"Query":"SELECT `c_id`,`class_type`,`name`,`level`,`map_id` FROM `user_characters` WHERE (`a_id`=? AND `world_id`=?);",
+		"Comment":"월드에 대한 캐릭터 정보들 SELECT"
+	}
+]

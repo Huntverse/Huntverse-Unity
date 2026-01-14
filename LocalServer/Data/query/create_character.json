@@ -1,0 +1,22 @@
+[
+	{
+		"QueryId":"QID_PRE_CREATE_CHAR",
+		"Query":"CALL create_character(?);",
+		"Comment":"1차 적으로 Global DB에서 캐릭터 uuid생성 + 닉네임 인서트"
+	},
+	{
+		"QueryId":"QID_POST_CREATE_CHAR",
+		"Query":"INSERT INTO user_characters (`a_id`,`c_id`,`world_id`,`class_type`,`name`) VALUES(?,?,?,?,?);",
+		"Comment":"User DB에 실제 캐릭터 INSERT 작업"
+	},
+	{
+		"QueryId":"QID_DEL_NICK_NAME",
+		"Query":"UPDATE characters_name SET `status`=?,`delete_time`=? WHERE (`c_id`=? AND `name`=? AND `status`=1);",
+		"Comment":"캐릭터 생성에서 PRE성공하고 POST실패하는 경우, 닉네임을 다시 수행할 수 있게 해야함, 1->3으로 변경"
+	},
+	{
+		"QueryId":"QID_ACTIVE_NICK_NAME",
+		"Query":"UPDATE characters_name SET `status`=? WHERE (`c_id`=? AND `name`=? AND `status`=1);",
+		"Comment":"캐릭터 생성 성공하면, pending -> active로 변경해야 함, 1->2로 변경"
+	}
+]
