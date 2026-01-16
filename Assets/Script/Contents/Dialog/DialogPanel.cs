@@ -70,6 +70,14 @@ namespace Hunt
                 npcIcon.gameObject.SetActive(sprite != null);
             }
         }
+        public void SetPlayerIcon(Sprite sprite)
+        {
+            if(playerIcon != null)
+            {
+                playerIcon.sprite = sprite;
+                playerIcon.gameObject.SetActive(sprite != null);
+            }
+        }
 
         public void ShowChoices(List<DialogChoice> choices, Action<int> onChoiceClick)
         {

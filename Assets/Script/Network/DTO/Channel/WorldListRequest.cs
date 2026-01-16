@@ -6,6 +6,6 @@ namespace Hunt
     [Serializable]
     public class WorldListRequest
     {
-        public List<WorldModel> channels;
+        public List<WorldModel> worlds;
     }
 }

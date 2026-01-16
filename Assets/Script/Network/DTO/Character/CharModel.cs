@@ -21,6 +21,9 @@ namespace Hunt
 
         public static CharModel FromCharacterInfo(SimpleCharacterInfo inp)
         {
+            var statList = inp.StatInfos != null && inp.StatInfos.Count > 0
+            ? new List<StatInfo>(inp.StatInfos)
+            : CreateDefaultStats();
             return new CharModel
             {
                 worldId = inp.WorldId,
@@ -29,12 +32,22 @@ namespace Hunt
                 classtype = BindKeyConst.GetClassTypeByJobId(inp.ClassType),
                 level = inp.Level,
                 mapId = inp.MapId,
-                stats = new List<StatInfo>(inp.StatInfos)
+                stats = statList
 
             };
 
 
         }
-
+        private static List<StatInfo> CreateDefaultStats()
+        {
+            return new List<StatInfo>
+            {
+                new StatInfo { Type = (uint)CharStatType.HP, Point = 30 },
+                new StatInfo { Type = (uint)CharStatType.MP, Point = 20 },
+                new StatInfo { Type = (uint)CharStatType.STR, Point = 50 },
+                new StatInfo { Type = (uint)CharStatType.INT, Point = 50 },
+                new StatInfo { Type = (uint)CharStatType.DEF, Point = 50 }
+            };
+        }
     }
 }

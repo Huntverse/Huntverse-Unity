@@ -12,6 +12,8 @@ namespace Hunt
 
         private bool isSetupComplete = false;
         public bool IsSetupComplete => isSetupComplete;
+        
+        public ulong CharId { get; private set; }
         private void Start()
         {
             characterAction = GetComponent<UserCharLoco>();
@@ -21,7 +23,10 @@ namespace Hunt
             }
 
             var myChar = GameSession.Shared?.SelectedCharacter;
-
+            if (myChar != null)
+            {
+                SetUserId(myChar.CharId);
+            }
             string modelKey;
             Vector3 spawnpos = Vector3.zero;
 
@@ -46,7 +51,23 @@ namespace Hunt
             }
 
             SetUp(modelKey,spawnpos).Forget();
+            if (IsLocalPlayer())
+            {
+                GameSession.Shared?.NotifyLocalPlayerSpawned(this);
+            }
+        }
 
+        public void SetUserId(ulong charId)
+        {
+            CharId = charId;
+        }
+        public bool IsLocalPlayer()
+        {
+
+            //var myChar = GameSession.Shared?.SelectedCharacter;
+            //return myChar != null /*&& CharId == myChar.CharId*/;
+
+            return true;
         }
         private async UniTask SetUp(string modelKey, Vector3 spawnPos)
         {

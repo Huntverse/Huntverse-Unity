@@ -65,6 +65,10 @@ namespace Hades.Tool
             {
                 SceneHelper.OpenScene("Village");
             }
+            if (GUILayout.Button(new GUIContent("FieldDungeon", "open FieldDungeon scene"), commandButtonStyle))
+            {
+                SceneHelper.OpenScene("FieldDungeon");
+            }
             GUILayout.FlexibleSpace();
         }
     }

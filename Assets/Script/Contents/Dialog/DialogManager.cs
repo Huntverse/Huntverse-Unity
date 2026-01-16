@@ -83,7 +83,7 @@ namespace Hunt
 
             this.onChoiceSelected = onChoiceSelected;
             this.onDialogEnd = onComplete;
-
+            LoadPlayerIcon();
             LoadSpeakerIcon(data.speakerIconkey);
             dialogPanel?.Show();
 
@@ -294,6 +294,23 @@ namespace Hunt
 
             var sprite = await AbLoader.Shared.LoadAssetAsync<Sprite>(iconKey);
             dialogPanel.SetSpeakerIcon(sprite);
+        }
+
+        private async UniTask LoadPlayerIcon()
+        {
+            var localChar = GameSession.Shared?.SelectedCharacter;
+
+            if(localChar == null)
+            {
+                dialogPanel.SetPlayerIcon(null);
+                return;
+            }
+
+            var classType = BindKeyConst.GetClassTypeByJobId(localChar.ClassType);
+            var iconKey = BindKeyConst.GetIllustKeyByProfession(classType,true);                     
+
+            var sprite = await AbLoader.Shared.LoadAssetAsync<Sprite>(iconKey);
+            dialogPanel.SetPlayerIcon(sprite);
         }
     }
 }

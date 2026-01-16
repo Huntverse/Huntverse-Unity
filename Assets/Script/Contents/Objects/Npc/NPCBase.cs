@@ -31,7 +31,9 @@ namespace Hunt
         protected virtual void Awake()
         {
             InitializeTrigger();
+            GameSession.Shared.OnLocalPlayerSpawned += OnLocalPlayerSpawned;
         }
+        
         protected virtual void Start()
         {
             InitializeNPC();
@@ -39,6 +41,10 @@ namespace Hunt
 
         protected virtual void OnDestroy()
         {
+            if (GameSession.Shared != null)
+            {
+                GameSession.Shared.OnLocalPlayerSpawned -= OnLocalPlayerSpawned;
+            }
             localPlayer = null;
         }
 
@@ -101,16 +107,35 @@ namespace Hunt
 
         private void FindLocalPlayer()
         {
+            if (localPlayer != null) return;
             // 서버에서 할당 받은 Local ID로 바꿔야함
-            var userChar = FindAnyObjectByType<UserCharacter>();
+            var userChar = GameSession.Shared?.LocalPlayer;
             if (userChar != null)
             {
                 localPlayer = userChar.transform;
                 $"[NPC] 로컬 플레이어 발견: {localPlayer.name}".DLog();
             }
+            else
+            {
+                // 못 찾으면 재시도 예약
+                $"[NPC] {npcData?.npcName} - 플레이어 아직 없음, 재시도 예약".DLog();
+                Invoke("FindLocalPlayer", 0.5f);
+            }
         }
 
-
+        private void OnLocalPlayerSpawned(UserCharacter player)
+        {
+            if (player != null)
+            {
+                localPlayer = player.transform;
+                this.DLog($"{npcData?.npcName} - 로컬 플레이어 등록 : {localPlayer.name}");
+            }
+            else
+            {
+                this.DError($"{npcData?.npcName} - 로컬 플레이어 등록 실패 : {localPlayer.name}");
+                return;
+            }
+        }
 
         private void OnTriggerEnter2D(Collider2D other)
         {

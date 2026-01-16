@@ -11,7 +11,7 @@ namespace Hunt
         [SerializeField] private TextMeshProUGUI myCharCountText;
         [SerializeField] private Button channelButton;
 
-        private WorldModel channelModel;
+        private WorldModel worldModel;
 
         private void Awake()
         {
@@ -42,7 +42,7 @@ namespace Hunt
                 return;
             }
             
-            channelModel = model;
+            worldModel = model;
             channelNameText.text = model.worldName;
             congestionText.text = model.GetCongestionString();
             myCharCountText.text = model.myCharCount.ToString();
@@ -53,18 +53,18 @@ namespace Hunt
         {
             $"[GameWorldField] 🖱️ OnChannelClicked 호출됨! (GameObject: {this.gameObject.name})".DLog();
             
-            if (channelModel == null)
+            if (worldModel == null)
             {
                 $"[GameWorldField] ❌ channelModel이 null입니다! (GameObject: {this.gameObject.name})".DError();
                 $"[GameWorldField] Bind()가 호출되지 않았거나, null로 초기화되었습니다.".DError();
                 return;
             }
 
-            uint worldId = BindKeyConst.GetWorldIdByWorldName(channelModel.worldName);
+            uint worldId = BindKeyConst.GetWorldIdByWorldName(worldModel.worldName);
             GameSession.Shared?.SetSelectedWorld(worldId);
-            $"[GameWorldField] ✅ 월드 선택: {channelModel.worldName} (ID: {worldId})".DLog();
+            $"[GameWorldField] ✅ 월드 선택: {worldModel.worldName} (ID: {worldId})".DLog();
 
-            CharacterSetupController.Shared?.UpdateCharacterSlots(channelModel.worldName, channelModel.myCharCount);
+            CharacterSetupController.Shared?.UpdateCharacterSlots(worldModel.worldName, worldModel.myCharCount);
         }
     }
 }

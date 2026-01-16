@@ -2,6 +2,8 @@ using Cysharp.Threading.Tasks;
 using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
+using UnityEngine.U2D;
 using UnityEngine.UI;
 
 namespace Hunt
@@ -20,7 +22,7 @@ namespace Hunt
 
         private void OnEnable()
         {
-            SetCharacter().Forget();
+            UpdateSettingPanel().Forget();
         }
 
         private void OnDisable()
@@ -33,15 +35,20 @@ namespace Hunt
             Release();
         }
 
-        private async UniTask SetCharacter()
+        private async UniTask UpdateSettingPanel()
         {
-            var selectedChar = GameSession.Shared?.SelectedCharacter;
-            var selectedModel = GameSession.Shared?.SelectedCharacterModel;
-            var classType = BindKeyConst.GetClassTypeByJobId(selectedChar.ClassType);
-            if (selectedChar != null)
+            var myChar = GameSession.Shared?.SelectedCharacter;
+            var myCharModel = GameSession.Shared?.SelectedCharacterModel;
+            
+            if (myChar != null)
             {
-                
-                await UpdateCharInfo(selectedChar.Name, selectedChar.Level, classType);
+                var classType = BindKeyConst.GetClassTypeByJobId(myChar.ClassType);
+                await UpdateCharInfo(myChar.Name, myChar.Level, classType);
+            }
+            else if (myCharModel != null)
+            {
+                var classType = myCharModel.classtype;
+                await UpdateCharInfo(myCharModel.name, 1, classType);
             }
             else
             {
@@ -106,10 +113,7 @@ namespace Hunt
             {
                 this.DError($"RT 레이어를 찾을 수 없습니다");
             }
-            else
-            {
-                SetLayerRecursive(portraitModel.transform, rtLayer);
-            }
+            SetupPortraitLayerAndCamera(portraitModel.transform, rtLayer);
 
             var animator = portraitModel.GetComponent<Animator>();
             if (animator != null)
@@ -119,15 +123,26 @@ namespace Hunt
 
         }
 
-        private void SetLayerRecursive(Transform parent, int layer)
+        private void SetupPortraitLayerAndCamera(Transform parent, int layer)
         {
             parent.gameObject.layer = layer;
             foreach (Transform child in parent)
             {
-                SetLayerRecursive(child, layer);
+                SetupPortraitLayerAndCamera(child, layer);
+            }
+
+            if (parent == portraitModel.transform && portraitCam != null)
+            {
+                var cam = portraitCam.GetComponent<Camera>();
+                if (cam != null)
+                {
+                    cam.clearFlags = CameraClearFlags.SolidColor;
+                    cam.backgroundColor = new Color(0, 0, 0, 0);
+
+                    this.DLog($"Portrait Camera 설정 완료");
+                }
             }
         }
-
         private void Release()
         {
             if(portraitModel != null)
