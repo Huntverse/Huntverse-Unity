@@ -37,14 +37,15 @@ namespace Hunt
         {
             var selectedChar = GameSession.Shared?.SelectedCharacter;
             var selectedModel = GameSession.Shared?.SelectedCharacterModel;
-
+            var classType = BindKeyConst.GetClassTypeByJobId(selectedChar.ClassType);
             if (selectedChar != null)
             {
-                await UpdateCharInfo(selectedChar.Name, selectedChar.Level, (ClassType)selectedChar.ClassType);
+                
+                await UpdateCharInfo(selectedChar.Name, selectedChar.Level, classType);
             }
             else
             {
-                this.DError("Ä³¸¯ÅÍ Á¤º¸¸¦ Ã£À» ¼ö ¾ø½À´Ï´Ù.");
+                this.DError("ìºë¦­í„° ì •ë³´ë¥¼ ì°¾ì„ ìˆ˜ ì—†ìŠµë‹ˆë‹¤.");
                 await UpdateCharInfo("Hunt", 13, ClassType.Archer);
             }
         }
@@ -56,7 +57,7 @@ namespace Hunt
             if (playerLevelText != null) 
                 playerLevelText.text = $"Lv. {level}";
 
-            playerClassType = (ClassType)classType;
+            playerClassType = classType;
 
             var key = BindKeyConst.GetIconKeyByProfession(playerClassType);
             if (playerClassIconImage != null || !string.IsNullOrEmpty(key))
@@ -79,7 +80,7 @@ namespace Hunt
             var camKey = ResourceKeyConst.Kp_Portrait_Cam;
             if (string.IsNullOrEmpty(modelKey) || string.IsNullOrEmpty(camKey))
             {
-                this.DError($"Æ÷Æ®·¹ÀÌÆ® Å°¸¦ Ã£À» ¼ö ¾ø½À´Ï´Ù: Model={modelKey}, Cam={camKey}");
+                this.DError($"í¬íŠ¸ë ˆì´íŠ¸ í‚¤ë¥¼ ì°¾ì„ ìˆ˜ ì—†ìŠµë‹ˆë‹¤: Model={modelKey}, Cam={camKey}");
                 return;
             }
             
@@ -90,7 +91,7 @@ namespace Hunt
 
             if (portraitCam == null || portraitModel == null)
             {
-                $"Æ÷Æ®·¹ÀÌÆ® ½ºÆù ½ÇÆĞ: Model={portraitModel != null}, Cam={portraitCam != null}".DError();
+                $"í¬íŠ¸ë ˆì´íŠ¸ ìŠ¤í° ì‹¤íŒ¨: Model={portraitModel != null}, Cam={portraitCam != null}".DError();
                 return;
             }
 
@@ -103,7 +104,7 @@ namespace Hunt
             int rtLayer = LayerMask.NameToLayer("RT");
             if (rtLayer == -1)
             {
-                this.DError($"RT ·¹ÀÌ¾î¸¦ Ã£À» ¼ö ¾ø½À´Ï´Ù");
+                this.DError($"RT ë ˆì´ì–´ë¥¼ ì°¾ì„ ìˆ˜ ì—†ìŠµë‹ˆë‹¤");
             }
             else
             {

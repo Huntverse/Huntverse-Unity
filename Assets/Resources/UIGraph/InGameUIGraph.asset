@@ -15,9 +15,37 @@ MonoBehaviour:
   nodes:
   - rid: 8005846811012497512
   - rid: 8005846811012497515
+  - rid: 8005846846772609128
+  - rid: 8005846846772609130
+  - rid: 8005846846772609131
+  - rid: 8005846846772609132
+  - rid: 8005846846772609133
+  - rid: 8005846846772609134
+  - rid: 8005846846772609135
+  - rid: 8005846846772609136
   connections:
   - fromNodeGuid: f0eeffaa-5bc4-40c2-975e-95faa17d97f6
     toNodeGuid: 27447ef6-3fd7-499b-84c6-ea695b562097
+    fromPortIndex: 0
+    toPortIndex: 0
+  - fromNodeGuid: f7e84e92-70cb-4d24-a4f5-5128f523a875
+    toNodeGuid: ddb7f04c-1a95-4cd0-a181-281378e32f20
+    fromPortIndex: 0
+    toPortIndex: 0
+  - fromNodeGuid: 79261b42-c2be-4f80-a224-0136dcf26b80
+    toNodeGuid: ddb7f04c-1a95-4cd0-a181-281378e32f20
+    fromPortIndex: 0
+    toPortIndex: 0
+  - fromNodeGuid: 0089e361-ec2b-4514-bf66-1b7e6d65f8aa
+    toNodeGuid: 2aa44a7a-b631-4a52-8892-1f3a4c5fb05a
+    fromPortIndex: 0
+    toPortIndex: 0
+  - fromNodeGuid: 7ade8485-a518-44da-8327-5e944e6767e6
+    toNodeGuid: 2aa44a7a-b631-4a52-8892-1f3a4c5fb05a
+    fromPortIndex: 0
+    toPortIndex: 0
+  - fromNodeGuid: 5a774398-67eb-4a57-ac84-8f25b14357bf
+    toNodeGuid: e139eaa9-8412-4654-975c-ec2cfe009ae6
     fromPortIndex: 0
     toPortIndex: 0
   bakedData:
@@ -51,6 +79,120 @@ MonoBehaviour:
       layerParams: []
       gameObjectIds:
       - 47272711-7838-44f1-9a79-e1c2b82cd408
+    - nodeType: 0
+      nodeGuid: f7e84e92-70cb-4d24-a4f5-5128f523a875
+      stringParams:
+        keys: []
+        values: []
+      intParams:
+        keys: []
+        values: 
+      floatParams:
+        keys: []
+        values: []
+      layerParams: []
+      gameObjectIds:
+      - c4404fa5-b08f-4a8e-a0d3-fe25252cf3e0
+    - nodeType: 7
+      nodeGuid: ddb7f04c-1a95-4cd0-a181-281378e32f20
+      stringParams:
+        keys: []
+        values: []
+      intParams:
+        keys: []
+        values: 
+      floatParams:
+        keys: []
+        values: []
+      layerParams: []
+      gameObjectIds:
+      - e954d6bb-7524-4957-ab86-be50c3ded3d5
+    - nodeType: 1
+      nodeGuid: 79261b42-c2be-4f80-a224-0136dcf26b80
+      stringParams:
+        keys: []
+        values: []
+      intParams:
+        keys:
+        - keyCode
+        values: 70000000
+      floatParams:
+        keys: []
+        values: []
+      layerParams: []
+      gameObjectIds:
+      - c4404fa5-b08f-4a8e-a0d3-fe25252cf3e0
+    - nodeType: 1
+      nodeGuid: 0089e361-ec2b-4514-bf66-1b7e6d65f8aa
+      stringParams:
+        keys: []
+        values: []
+      intParams:
+        keys:
+        - keyCode
+        values: 69000000
+      floatParams:
+        keys: []
+        values: []
+      layerParams: []
+      gameObjectIds:
+      - a3951e22-769d-430b-853c-8ac0ab571ea3
+    - nodeType: 7
+      nodeGuid: 2aa44a7a-b631-4a52-8892-1f3a4c5fb05a
+      stringParams:
+        keys: []
+        values: []
+      intParams:
+        keys: []
+        values: 
+      floatParams:
+        keys: []
+        values: []
+      layerParams: []
+      gameObjectIds:
+      - 2ca78d81-a9e3-4e8d-93f5-b737f45b3416
+    - nodeType: 0
+      nodeGuid: 7ade8485-a518-44da-8327-5e944e6767e6
+      stringParams:
+        keys: []
+        values: []
+      intParams:
+        keys: []
+        values: 
+      floatParams:
+        keys: []
+        values: []
+      layerParams: []
+      gameObjectIds:
+      - a3951e22-769d-430b-853c-8ac0ab571ea3
+    - nodeType: 0
+      nodeGuid: 5a774398-67eb-4a57-ac84-8f25b14357bf
+      stringParams:
+        keys: []
+        values: []
+      intParams:
+        keys: []
+        values: 
+      floatParams:
+        keys: []
+        values: []
+      layerParams: []
+      gameObjectIds:
+      - d33d93dc-abad-4ee3-a84f-d82aecf12859
+    - nodeType: 5
+      nodeGuid: e139eaa9-8412-4654-975c-ec2cfe009ae6
+      stringParams:
+        keys: []
+        values: []
+      intParams:
+        keys: []
+        values: 
+      floatParams:
+        keys: []
+        values: []
+      layerParams: []
+      gameObjectIds:
+      - 2ca78d81-a9e3-4e8d-93f5-b737f45b3416
   references:
     version: 2
     RefIds:
@@ -68,5 +210,66 @@ MonoBehaviour:
         guid: 27447ef6-3fd7-499b-84c6-ea695b562097
         position: {x: 76, y: 334}
         nodeName: Toggle GameObject
+        targetGameObjects:
+        - {fileID: 0}
+    - rid: 8005846846772609128
+      type: {class: ButtonClickNode, ns: Hunt, asm: Assembly-CSharp}
+      data:
+        guid: f7e84e92-70cb-4d24-a4f5-5128f523a875
+        position: {x: 360, y: 149}
+        nodeName: Button Click
+        targetButton: {fileID: 0}
+    - rid: 8005846846772609130
+      type: {class: KeyboardInputNode, ns: Hunt, asm: Assembly-CSharp}
+      data:
+        guid: 79261b42-c2be-4f80-a224-0136dcf26b80
+        position: {x: 640, y: 156}
+        nodeName: Keyboard Input
+        targetGameObject: {fileID: 0}
+        targetKeyCode: 112
+    - rid: 8005846846772609131
+      type: {class: ToggleGameObjectNode, ns: Hunt, asm: Assembly-CSharp}
+      data:
+        guid: ddb7f04c-1a95-4cd0-a181-281378e32f20
+        position: {x: 371, y: 345}
+        nodeName: Toggle GameObject
+        targetGameObjects:
+        - {fileID: 0}
+    - rid: 8005846846772609132
+      type: {class: KeyboardInputNode, ns: Hunt, asm: Assembly-CSharp}
+      data:
+        guid: 0089e361-ec2b-4514-bf66-1b7e6d65f8aa
+        position: {x: 1238, y: 153}
+        nodeName: Keyboard Input
+        targetGameObject: {fileID: 0}
+        targetKeyCode: 105
+    - rid: 8005846846772609133
+      type: {class: ToggleGameObjectNode, ns: Hunt, asm: Assembly-CSharp}
+      data:
+        guid: 2aa44a7a-b631-4a52-8892-1f3a4c5fb05a
+        position: {x: 946, y: 346}
+        nodeName: Toggle GameObject
+        targetGameObjects:
+        - {fileID: 0}
+    - rid: 8005846846772609134
+      type: {class: ButtonClickNode, ns: Hunt, asm: Assembly-CSharp}
+      data:
+        guid: 7ade8485-a518-44da-8327-5e944e6767e6
+        position: {x: 961, y: 153}
+        nodeName: Button Click
+        targetButton: {fileID: 0}
+    - rid: 8005846846772609135
+      type: {class: ButtonClickNode, ns: Hunt, asm: Assembly-CSharp}
+      data:
+        guid: 5a774398-67eb-4a57-ac84-8f25b14357bf
+        position: {x: 1250, y: 347}
+        nodeName: Button Click
+        targetButton: {fileID: 0}
+    - rid: 8005846846772609136
+      type: {class: HideGameObjectNode, ns: Hunt, asm: Assembly-CSharp}
+      data:
+        guid: e139eaa9-8412-4654-975c-ec2cfe009ae6
+        position: {x: 1248, y: 508}
+        nodeName: Hide GameObject
         targetGameObjects:
         - {fileID: 0}

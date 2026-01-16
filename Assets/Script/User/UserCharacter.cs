@@ -27,7 +27,8 @@ namespace Hunt
 
             if (myChar != null)
             {
-                modelKey = BindKeyConst.GetModelKeyByProfession((ClassType)myChar.ClassType);
+                var classType = BindKeyConst.GetClassTypeByJobId(myChar.ClassType);
+                modelKey = BindKeyConst.GetModelKeyByProfession(classType);
                 $"[UserCharacter] 캐릭터 스폰 {myChar}: {myChar.Name} (Lv.{myChar.Level}, ClassType:{myChar.ClassType}".DLog();
 
             }
@@ -51,15 +52,25 @@ namespace Hunt
         {
             try
             {
-                if(AbLoader.Shared==null)
+                if(string.IsNullOrEmpty(modelKey))
+                {
+                    $"ModelKey is empty".DError();
+                    return;
+                }
+
+                if(AbLoader.Shared == null)
                 {
                     $"Abloader not set".DError();
+                    return;
                 }
+
                 var go = await AbLoader.Shared.LoadAssetAsync<GameObject>(modelKey);
                 if (go == null)
                 {
                     $"Abloader Error : {modelKey}".DError();
+                    return;
                 }
+
                 model = Instantiate<GameObject>(go);
                 model.transform.SetParent(transform);
                 model.transform.position = Vector3.zero;
@@ -74,14 +85,11 @@ namespace Hunt
                 }
 
                 isSetupComplete = true;
-
             }
             catch(Exception e) 
             {
                 $"User Character Setup Fail! {e.Message}".DError();
             }
-
-
         }
 
     }

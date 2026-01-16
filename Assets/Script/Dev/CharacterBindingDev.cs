@@ -10,8 +10,17 @@ namespace Hunt.dev
     /// </summary>
     public class CharacterBindingDev : MonoBehaviour
     {
+        [SerializeField] private bool forceUseDevData = false;
+        
         void Start()
         {
+            // 서버에 연결되어 있고 강제 사용이 아니면 Dev 데이터를 사용하지 않음
+            if (SystemBoot.Shared != null && SystemBoot.Shared.LoginServerConnected && !forceUseDevData)
+            {
+                $"[Dev] 서버 연결됨 - Dev 데이터 스킵".DLog();
+                return;
+            }
+            
             // 채널 "그라시아"의 캐릭터 리스트
             var graciaCharacters = new List<CharModel>
             {

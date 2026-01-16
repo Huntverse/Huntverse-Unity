@@ -26,7 +26,7 @@ namespace Hunt
                 worldId = inp.WorldId,
                 charId = inp.CharId,
                 name = inp.Name,
-                classtype = (ClassType)inp.ClassType,
+                classtype = BindKeyConst.GetClassTypeByJobId(inp.ClassType),
                 level = inp.Level,
                 mapId = inp.MapId,
                 stats = new List<StatInfo>(inp.StatInfos)

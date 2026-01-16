@@ -18,6 +18,11 @@ namespace Hunt
             if (channelButton != null)
             {
                 channelButton.onClick.AddListener(OnChannelClicked);
+                $"[GameWorldField] Button 리스너 등록 완료".DLog();
+            }
+            else
+            {
+                $"[GameWorldField] ❌ channelButton이 null입니다! Inspector에서 할당하세요.".DError();
             }
         }
 
@@ -31,18 +36,34 @@ namespace Hunt
 
         public void Bind(WorldModel model)
         {
+            if (model == null)
+            {
+                $"[GameWorldField] ❌ Bind에 전달된 model이 null입니다!".DError();
+                return;
+            }
+            
             channelModel = model;
             channelNameText.text = model.worldName;
             congestionText.text = model.GetCongestionString();
             myCharCountText.text = model.myCharCount.ToString();
+            $"[GameWorldField] ✅ Bind 완료: {model.worldName} (this: {this.gameObject.name})".DLog();
         }
 
         private void OnChannelClicked()
         {
-            if (channelModel == null) return;
+            $"[GameWorldField] 🖱️ OnChannelClicked 호출됨! (GameObject: {this.gameObject.name})".DLog();
             
-            // 채널 클릭 시 해당 채널의 캐릭터 리스트를 요청하는 로직이 여기 들어가야 함
-            // 현재는 캐시된 데이터를 사용하여 UI 업데이트
+            if (channelModel == null)
+            {
+                $"[GameWorldField] ❌ channelModel이 null입니다! (GameObject: {this.gameObject.name})".DError();
+                $"[GameWorldField] Bind()가 호출되지 않았거나, null로 초기화되었습니다.".DError();
+                return;
+            }
+
+            uint worldId = BindKeyConst.GetWorldIdByWorldName(channelModel.worldName);
+            GameSession.Shared?.SetSelectedWorld(worldId);
+            $"[GameWorldField] ✅ 월드 선택: {channelModel.worldName} (ID: {worldId})".DLog();
+
             CharacterSetupController.Shared?.UpdateCharacterSlots(channelModel.worldName, channelModel.myCharCount);
         }
     }

@@ -1,51 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
-	<!-- LogLevel
-		TRACE 0
-		DEBUG 1
-		INFO 2
-		WARN 3
-		ERROR 4
-		CRITICAL 5
-		OFF 6
-	-->
-	<!-- LogMode
-	  	CONSOLE = 1,
-  		FILE = 2,
-  		CONSOLE_FILE = 3
-	-->
-	<!--
-	ST_VILIAGE = 1;
-	ST_RAID = 2;
-	ST_CHAT = 3;
-	ST_LOGIN = 4;
-	sT_LOCAL = 5;//로컬 서버
-	-->
+   <!-- LogLevel
+      TRACE 0
+      DEBUG 1
+      INFO 2
+      WARN 3
+      ERROR 4
+      CRITICAL 5
+      OFF 6
+   -->
+   <!-- LogMode
+        CONSOLE = 1,
+        FILE = 2,
+        CONSOLE_FILE = 3
+   -->
+   <!--
+   ST_VILIAGE = 1;
+   ST_RAID = 2;
+   ST_CHAT = 3;
+   ST_LOGIN = 4;
+   sT_LOCAL = 5;//로컬 서버
+   -->
 <Properties>
-	<Server Name="LocalServer" UseMetric="1" ServerType="5"/>
-	<Logger Name="Huntverse" FileName="Log/LocalServer" LogLevel="1" LogMode="3"/>
-	<Session ShardNo="2" PoolSize="1000"/>
-	<DB DBThreadNo = "1" PreparedGC="30"/>
-	<GameInstance ShardNo="1" ThreadNo="1" GC="5" LobbyNo="2" />
+   <Server Name="LocalServer" UseMetric="1" ServerType="5"/>
+   <Logger Name="Huntverse" FileName="Log/LocalServer" LogLevel="1" LogMode="3"/>
+   <Session ShardNo="2" PoolSize="1000"/>
+   <DB DBThreadNo = "1" PreparedGC="30"/>
+   <GameInstance ShardNo="1" ThreadNo="1" GC="5" LobbyNo="2" />
 
 </Properties>
 
 <ServerConfigBase>
-	<Socket Nodelay="1"/>
-	<Address ip="0.0.0.0" port="9000"/>
-	<Accept AcceptorNo="2" DirectRegist="0"/>
-	<IO IothreadNo="1" ThworkPool="1500" SendBufferPool="1500" IoMetric="1"/>
+   <Socket Nodelay="1"/>
+   <Address ip="0.0.0.0" port="9000"/>
+   <Accept AcceptorNo="2" DirectRegist="0"/>
+   <IO IothreadNo="1" ThworkPool="1500" SendBufferPool="1500" IoMetric="1"/>
 </ServerConfigBase>
 
 <DB>
-
+   <!-- Global: 계정당 정보-->
+   <database>
+        <addr>hunt.cbwok0k4knb0.ap-northeast-2.rds.amazonaws.com:3306</addr>
+        <dbname>hunt_global</dbname>
+      <type>Global</type>
+        <id>hunt</id>
+        <pw>huntverse123!!</pw>
+      <shard>0</shard> <!-- Global은 샤드xx -->
+    </database>
+   <!-- User: 실제 가진 캐릭터 정보, 인벤토리 등등...-->
+   <database>
+        <addr>hunt.cbwok0k4knb0.ap-northeast-2.rds.amazonaws.com:3306</addr>
+        <dbname>hunt_user1</dbname>
+      <type>User</type>
+        <id>hunt</id>
+        <pw>huntverse123!!</pw>
+      <shard>1</shard>
+    </database>
+   <database >
+        <addr>hunt.cbwok0k4knb0.ap-northeast-2.rds.amazonaws.com:3306</addr>
+        <dbname>hunt_user2</dbname>
+      <type>User</type>
+        <id>hunt</id>
+        <pw>huntverse123!!</pw>
+      <shard>2</shard>
+    </database>
 </DB>
 
 <Redis>
-
+   <info>
+      <host>127.0.0.1</host>
+      <port>6379</port>
+      <user>default</user>
+      <pw></pw>
+      <db>0</db>
+      <type>1</type>
+   </info>
 </Redis>
 
 <Pool>
-	<!--
-	user session pool 이라던지
-	-->
+   <!--
+   user session pool 이라던지
+   -->
 </Pool>
+

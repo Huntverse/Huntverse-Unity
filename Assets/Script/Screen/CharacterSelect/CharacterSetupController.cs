@@ -1,6 +1,7 @@
 using Cysharp.Threading.Tasks;
 using Hunt.Game;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -29,6 +30,36 @@ namespace Hunt
         protected override void Awake()
         {
             base.Awake();            
+        }
+
+        private void Start()
+        {
+            // GameSession에서 캐싱된 캐릭터 데이터 복원
+            if (GameSession.Shared?.CachedCharactersByWorld != null)
+            {
+                foreach (var kvp in GameSession.Shared.CachedCharactersByWorld)
+                {
+                    channelCharacterCache[kvp.Key] = new List<CharModel>(kvp.Value);
+                    $"[CharacterSetupController] ✅ GameSession에서 캐릭터 복원: {kvp.Key} - {kvp.Value.Count}개".DLog();
+                }
+            }
+            
+            // GameSession에 캐싱된 월드 리스트로 빈 캐시 초기화 (이미 데이터가 있으면 덮어쓰지 않음)
+            if (GameSession.Shared?.CachedWorldList?.channels != null)
+            {
+                foreach (var worldModel in GameSession.Shared.CachedWorldList.channels)
+                {
+                    if (!channelCharacterCache.ContainsKey(worldModel.worldName))
+                    {
+                        channelCharacterCache[worldModel.worldName] = new List<CharModel>();
+                        $"[CharacterSetupController] 빈 캐시 초기화: {worldModel.worldName}".DLog();
+                    }
+                    else
+                    {
+                        $"[CharacterSetupController] 기존 캐시 유지: {worldModel.worldName} - {channelCharacterCache[worldModel.worldName].Count}개".DLog();
+                    }
+                }
+            }
         }
 
         private async void OnEnable()
@@ -87,8 +118,23 @@ namespace Hunt
                 return;
             }
 
-            channelCharacterCache[worldName] = models;
-            this.DLog($"Cached characters - Channel: {worldName}, Count: {models.Count}");
+            // 같은 월드에 대한 여러 응답을 병합 (덮어쓰지 않음)
+            if (!channelCharacterCache.ContainsKey(worldName))
+            {
+                channelCharacterCache[worldName] = new List<CharModel>();
+            }
+
+            // 중복 방지: CharId가 이미 있으면 추가하지 않음
+            foreach (var model in models)
+            {
+                bool isDuplicate = channelCharacterCache[worldName].Any(c => c.charId == model.charId);
+                if (!isDuplicate)
+                {
+                    channelCharacterCache[worldName].Add(model);
+                }
+            }
+
+            this.DLog($"✅ Cached characters - Channel: {worldName}, Total Count: {channelCharacterCache[worldName].Count} (Added: {models.Count})");
         }
 
         /// <summary>
@@ -137,7 +183,45 @@ namespace Hunt
         }
 
         /// <summary>
-        /// 새로운 캐릭터를 생성합니다.
+        /// 서버로부터 받은 새 캐릭터 정보를 UI에 추가합니다.
+        /// </summary>
+        public void OnRecvNewCharacter(CharModel newModel)
+        {
+            if (newModel == null)
+            {
+                this.DError("❌ 새 캐릭터 모델이 null입니다");
+                return;
+            }
+
+            int emptySlotIndex = FindEmptyCharSlot();
+            if (emptySlotIndex == -1)
+            {
+                this.DError("❌ 사용 가능한 슬롯이 없습니다");
+                return;
+            }
+
+            $"[Create-Character] 빈 슬롯 찾음: {emptySlotIndex}".DLog();
+
+            if (string.IsNullOrEmpty(currentWorldName) && newModel.worldId > 0)
+            {
+                currentWorldName = BindKeyConst.GetWorldNameByWorldId(newModel.worldId);
+                $"[Create-Character] WorldId {newModel.worldId}로부터 WorldName 설정: {currentWorldName}".DLog();
+            }
+
+            charInfoFields[emptySlotIndex].Bind(newModel);
+            UpdateCharacterCache(newModel);
+            
+            // 월드의 myCharCount 증가 및 UI 업데이트
+            currentMyCharCount++;
+            UpdateWorldCharacterCount(currentWorldName, currentMyCharCount);
+            
+            OnSelectCharacterField(charInfoFields[emptySlotIndex]);
+
+            this.DLog($"✅ 캐릭터 생성 완료: {newModel.name}, 현재 {currentWorldName} 캐릭터 수: {currentMyCharCount}");
+        }
+
+        /// <summary>
+        /// 새로운 캐릭터를 생성합니다. (개발용 - 서버 응답 없이 로컬에서만 생성)
         /// </summary>
         /// <param name="profession">생성할 캐릭터의 직업</param>
         public void OnCreateNewCharacter(ClassType profession)
@@ -151,24 +235,8 @@ namespace Hunt
                 return;
             }
 
-            int emptySlotIndex = FindEmptyCharSlot();
-            if (emptySlotIndex == -1)
-            {
-                this.DError("❌ 사용 가능한 슬롯이 없습니다");
-                return;
-            }
-
-            $"[Create-Character] 빈 슬롯 찾음: {emptySlotIndex}".DLog();
-
-            // TODO: 서버 통신으로 교체
-            // var response = await NetworkManager.Shared.CreateCharacterAsync(...)
-
             CharModel newModel = CreateCharacterModel(generationField);
-            charInfoFields[emptySlotIndex].Bind(newModel);
-            UpdateCharacterCache(newModel);
-            OnSelectCharacterField(charInfoFields[emptySlotIndex]);
-
-            this.DLog($"캐릭터 생성 완료: {newModel.name}");
+            OnRecvNewCharacter(newModel);
         }
 
 
@@ -235,10 +303,8 @@ namespace Hunt
                 }
                 else if (i < bindCount)
                 {
-                    if (!field.HasCharacterData)
-                    {
-                        field.InitField(true);
-                    }
+                    field.Bind(null);
+                    field.InitField(true);
                 }
                 else
                 {
@@ -249,10 +315,8 @@ namespace Hunt
 
         private void ResetEmptySlot(CharInfoField field)
         {
+            field.Bind(null);
             field.InitField(false);
-            field.SetLevelFieldValue(0);
-            field.SetNameFieldValue(string.Empty);
-            field.SetSavePointFieldValie(string.Empty);
             userCharProfilePanel.gameObject.SetActive(false);
         }
         #endregion
@@ -452,6 +516,33 @@ namespace Hunt
             cachedChars.Add(newModel);
 
             this.DLog($"캐시 업데이트 완료 - Channel: {currentWorldName}, Total: {channelCharacterCache[currentWorldName].Count}");
+        }
+
+        private void UpdateWorldCharacterCount(string worldName, int newCount)
+        {
+            if (string.IsNullOrEmpty(worldName))
+            {
+                this.DError("worldName이 비어있습니다");
+                return;
+            }
+
+            // GameSession의 CachedWorldList 업데이트
+            if (GameSession.Shared?.CachedWorldList?.channels != null)
+            {
+                var world = GameSession.Shared.CachedWorldList.channels.Find(w => w.worldName == worldName);
+                if (world != null)
+                {
+                    world.myCharCount = newCount;
+                    $"[CharacterSetupController] GameSession 월드 카운트 업데이트: {worldName} = {newCount}".DLog();
+                }
+            }
+
+            // GameWorldController에 UI 업데이트 요청
+            if (GameWorldController.Shared != null && GameSession.Shared?.CachedWorldList != null)
+            {
+                GameWorldController.Shared.OnRecvWorldViewUpdate(GameSession.Shared.CachedWorldList);
+                $"[CharacterSetupController] GameWorldController UI 업데이트 요청".DLog();
+            }
         }
 
         private void ResetSelectionState()

@@ -3,8 +3,7 @@ using System;
 using UnityEngine;
 using Hunt.Common;
 using Hunt.Login;
-using Hunt;
-
+using System.Linq;
 namespace Hunt.Net
 {
     //: MonoBehaviourSingleton<MsgDispatcherBase>
@@ -92,10 +91,68 @@ namespace Hunt.Net
         {
             $"[MsgDispatcher] OnLoginAns 핸들러 호출됨".DLog();
             var loginAns = LoginAns.Parser.ParseFrom(payload, offset, len);
-            
+
             if (loginAns.ErrType == ErrorType.ErrNon)
             {
                 $"[MsgDispatcher] 로그인 성공: {loginAns.ErrType}".DLog();
+                $"[MsgDispatcher] CharInfos 개수: {loginAns.CharInfos?.Count ?? 0}".DLog();
+
+                var worldModels = new Dictionary<uint, WorldModel>();
+
+                // 서버에서 받은 CharInfos로 월드 생성
+                if (loginAns.CharInfos != null && loginAns.CharInfos.Count > 0)
+                {
+                    foreach (var charByWorld in loginAns.CharInfos)
+                    {
+                        string worldName = BindKeyConst.GetWorldNameByWorldId(charByWorld.WorldId);
+                        worldModels[charByWorld.WorldId] = new WorldModel
+                        {
+                            worldName = worldName,
+                            congestion = 1, // 기본값
+                            myCharCount = (int)charByWorld.CharCnt
+                        };
+                        $"[MsgDispatcher] 월드 생성: ID={charByWorld.WorldId}, Name={worldName}, CharCnt={charByWorld.CharCnt}".DLog();
+                    }
+                }
+                else
+                {
+                    // ⚠️ 서버가 CharInfos를 안 보낸 경우 - Fallback으로 기본 월드 생성
+                    $"[MsgDispatcher] ⚠️ CharInfos 없음 - Fallback: 기본 월드 생성".DWarnning();
+                    worldModels[1] = new WorldModel { worldName = "그라시아", congestion = 1, myCharCount = 0 };
+                    worldModels[2] = new WorldModel { worldName = "라비올래", congestion = 2, myCharCount = 0 };
+                    worldModels[3] = new WorldModel { worldName = "카탄", congestion = 1, myCharCount = 0 };
+                }
+
+                $"[MsgDispatcher] 월드 생성 완료: {worldModels.Count}개".DLog();
+
+                var worldListReq = new WorldListRequest
+                {
+                    channels = new List<WorldModel>(worldModels.Values)
+                };
+                
+                $"[MsgDispatcher] WorldListRequest 생성: {worldListReq.channels?.Count ?? 0}개".DLog();
+
+                // GameSession에 월드 리스트 저장 (MainMenu 씬 로드 전이므로)
+                GameSession.Shared?.SetWorldList(worldListReq);
+                
+                // GameWorldController가 있으면 바로 전달 (Dev 모드 등)
+                if (GameWorldController.Shared != null)
+                {
+                    $"[MsgDispatcher] ✅ GameWorldController로 월드 리스트 즉시 전달: {worldListReq.channels.Count}개".DLog();
+                    GameWorldController.Shared.OnRecvWorldViewUpdate(worldListReq);
+                }
+                else
+                {
+                    $"[MsgDispatcher] GameWorldController 아직 없음 - GameSession에 캐싱됨".DLog();
+                }
+                
+                // ✅ 모든 월드의 캐릭터 정보 자동 요청
+                foreach (var worldId in worldModels.Keys)
+                {
+                    var selectWorldReq = new SelectWorldReq { WorldId = worldId };
+                    Hunt.Net.NetworkManager.Shared?.SendToLogin(Hunt.Common.MsgId.SelectWorldReq, selectWorldReq);
+                    $"[MsgDispatcher] 월드 캐릭터 정보 요청: WorldId={worldId}".DLog();
+                }
             }
             else
             {
@@ -108,27 +165,103 @@ namespace Hunt.Net
                     $"[MsgDispatcher] 로그인 실패 - DB 에러: {loginAns.ErrType}".DError();
                 }
             }
-            
+
             Hunt.LoginService.NotifyLoginResponse(loginAns.ErrType);
         }
 
         static void OnSelectWorldAns(byte[] payload, int offset, int len)
         {
             var selectWorldAns = SelectWorldAns.Parser.ParseFrom(payload, offset, len);
-            Debug.Log($"OnSelectWorldAns Recv: {selectWorldAns.ErrType}");
-            Debug.Log($"OnSelectWorldAns SimpleCharInfosLen: {selectWorldAns.SimpleCharInfos.Count}");
-            foreach (var simpleChar in selectWorldAns.SimpleCharInfos)
+            $"[MsgDispatcher] OnSelectWorldAns Recv: ErrType={selectWorldAns.ErrType}".DLog();
+            $"[MsgDispatcher] OnSelectWorldAns SimpleCharInfosLen: {selectWorldAns.SimpleCharInfos?.Count ?? 0}".DLog();
+
+            if (selectWorldAns.ErrType != ErrorType.ErrNon)
             {
-                //simpleChar.ClassType;
-                //simpleChar.Level;
-                //simpleChar.MapId;
+                $"[MsgDispatcher] ❌ SelectWorld 실패: {selectWorldAns.ErrType}".DError();
+                return;
+            }
+
+            if (selectWorldAns.SimpleCharInfos == null || selectWorldAns.SimpleCharInfos.Count == 0)
+            {
+                $"[MsgDispatcher] ℹ️ 캐릭터 없음 (빈 캐시는 이미 초기화됨)".DLog();
+                return;
+            }
+
+            // 캐릭터 정보를 GameSession에 저장
+            var charList = new List<SimpleCharacterInfo>(selectWorldAns.SimpleCharInfos);
+            GameSession.Shared?.SetCharacterList(charList);
+
+            // 월드별로 캐릭터 분류 및 캐싱
+            var charsByWorld = new Dictionary<string, List<CharModel>>();
+
+            foreach(var charInfo in selectWorldAns.SimpleCharInfos)
+            {
+                uint worldId = charInfo.WorldId;
+                
+                // ⚠️ 서버가 WorldId=0을 보내는 경우 기본 월드(그라시아=1)로 고정
+                if (worldId == 0)
+                {
+                    worldId = 1; // 그라시아
+                    $"[MsgDispatcher] ⚠️ WorldId=0 감지! 그라시아(WorldId=1)로 설정".DWarnning();
+                }
+                
+                string worldName = BindKeyConst.GetWorldNameByWorldId(worldId);
+                $"[MsgDispatcher] 캐릭터 정보: Name={charInfo.Name}, OriginalWorldId={charInfo.WorldId}, FixedWorldId={worldId}, WorldName={worldName}, ClassType={charInfo.ClassType}, CharId={charInfo.CharId}".DLog();
+                
+                if (!charsByWorld.ContainsKey(worldName))
+                {
+                    charsByWorld[worldName] = new List<CharModel>();
+                }
+                
+                // CharModel 생성 시 수정된 worldId 사용
+                var charModel = CharModel.FromCharacterInfo(charInfo);
+                charModel.worldId = worldId;
+                charsByWorld[worldName].Add(charModel);
+            }
+
+            foreach(var kvp in charsByWorld)
+            {
+                // CharacterSetupController에 캐릭터 리스트 전달
+                CharacterSetupController.Shared?.OnRecvCharacterList(kvp.Key, kvp.Value);
+                
+                // GameSession에도 저장 (씬 전환 후에도 유지)
+                if (GameSession.Shared != null)
+                {
+                    if (!GameSession.Shared.CachedCharactersByWorld.ContainsKey(kvp.Key))
+                    {
+                        GameSession.Shared.CachedCharactersByWorld[kvp.Key] = new List<CharModel>();
+                    }
+                    
+                    foreach (var charModel in kvp.Value)
+                    {
+                        bool exists = GameSession.Shared.CachedCharactersByWorld[kvp.Key].Any(c => c.charId == charModel.charId);
+                        if (!exists)
+                        {
+                            GameSession.Shared.CachedCharactersByWorld[kvp.Key].Add(charModel);
+                        }
+                    }
+                    
+                    // 월드의 myCharCount 업데이트
+                    int totalCount = GameSession.Shared.CachedCharactersByWorld[kvp.Key].Count;
+                    if (GameSession.Shared.CachedWorldList?.channels != null)
+                    {
+                        var world = GameSession.Shared.CachedWorldList.channels.Find(w => w.worldName == kvp.Key);
+                        if (world != null)
+                        {
+                            world.myCharCount = totalCount;
+                            $"[MsgDispatcher] 🔄 월드 카운트 업데이트: {kvp.Key} → {totalCount}개".DLog();
+                        }
+                    }
+                }
+                
+                $"[MsgDispatcher] ✅ 캐릭터 캐싱 업데이트: {kvp.Key} - {kvp.Value.Count}개".DLog();
             }
         }
         static void OnCreateAccountAns(byte[] payload, int offset, int len)
         {
             $"[MsgDispatcher] OnCreateAccountAns 핸들러 호출됨".DLog();
             var createAccountAns = CreateAccountAns.Parser.ParseFrom(payload, offset, len);
-            
+
             if (createAccountAns.ErrType == ErrorType.ErrNon)
             {
                 $"[MsgDispatcher] 계정 생성 성공: {createAccountAns.ErrType}".DLog();
@@ -168,14 +301,14 @@ namespace Hunt.Net
                 }
             }
 
-            Hunt.LoginService.NotifyCreateCharResponse(createCharAns.ErrType);
+            Hunt.LoginService.NotifyCreateCharResponse(createCharAns.ErrType, createCharAns.CharInfo);
         }
 
         static void OnConfirmIdAns(byte[] payload, int offset, int len)
         {
             $"[MsgDispatcher] OnConfirmIdAns 핸들러 호출됨".DLog();
             var ans = ConfirmIdAns.Parser.ParseFrom(payload, offset, len);
-            
+
             if (ans.ErrType == ErrorType.ErrNon)
             {
                 $"[MsgDispatcher] 아이디 중복확인 응답: ErrType={ans.ErrType}, IsDup={ans.IsDup}".DLog();
@@ -187,7 +320,7 @@ namespace Hunt.Net
                     $"[MsgDispatcher] 아이디 중복확인 실패 - DB 에러: {ans.ErrType}".DError();
                 }
             }
-            
+
             Hunt.LoginService.NotifyConfirmIdResponse(ans.ErrType, ans.IsDup);
         }
 
@@ -205,7 +338,7 @@ namespace Hunt.Net
                     Debug.Log($"OnConfirmNameAns Recv: [Error:{ans.ErrType}], DB 에러");
                 }
             }
-            Hunt.LoginService.NotifyCreateCharResponse(ans.ErrType);
+            Hunt.LoginService.NotifyConfirmNameResponse(ans.ErrType, ans.IsDup);
         }
     }
 
