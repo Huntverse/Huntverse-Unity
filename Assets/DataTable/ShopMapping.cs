@@ -24,15 +24,15 @@ namespace Hunt.Table {
     static ShopMappingReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "ChFTaG9wTWFwcGluZy5wcm90bxIKSHVudC5UYWJsZSI8CgtTaG9wTWFwcGlu",
-            "ZxIOCgZzaG9wSWQYASABKAcSDgoGaXRlbUlkGAIgASgHEg0KBXByaWNlGAMg",
-            "ASgHIjoKEFNob3BNYXBwaW5nVGFibGUSJgoFaW5mb3MYASADKAsyFy5IdW50",
-            "LlRhYmxlLlNob3BNYXBwaW5nQhxaGmdpdGh1Yi5jb20vSHVudC9UYWJsZTtI",
-            "dW50YgZwcm90bzM="));
+            "ChFTaG9wTWFwcGluZy5wcm90bxIKSHVudC5UYWJsZSI0CgtTaG9wTWFwcGlu",
+            "ZxIOCgZzaG9wSWQYASABKAcSFQoNcHJvZHVjdExpc3RJZBgCIAMoByI6ChBT",
+            "aG9wTWFwcGluZ1RhYmxlEiYKBWluZm9zGAEgAygLMhcuSHVudC5UYWJsZS5T",
+            "aG9wTWFwcGluZ0IcWhpnaXRodWIuY29tL0h1bnQvVGFibGU7SHVudGIGcHJv",
+            "dG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Hunt.Table.ShopMapping), global::Hunt.Table.ShopMapping.Parser, new[]{ "ShopId", "ItemId", "Price" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Hunt.Table.ShopMapping), global::Hunt.Table.ShopMapping.Parser, new[]{ "ShopId", "ProductListId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Hunt.Table.ShopMappingTable), global::Hunt.Table.ShopMappingTable.Parser, new[]{ "Infos" }, null, null, null, null)
           }));
     }
@@ -76,8 +76,7 @@ namespace Hunt.Table {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public ShopMapping(ShopMapping other) : this() {
       shopId_ = other.shopId_;
-      itemId_ = other.itemId_;
-      price_ = other.price_;
+      productListId_ = other.productListId_.Clone();
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -99,28 +98,15 @@ namespace Hunt.Table {
       }
     }
 
-    /// <summary>Field number for the "itemId" field.</summary>
-    public const int ItemIdFieldNumber = 2;
-    private uint itemId_;
+    /// <summary>Field number for the "productListId" field.</summary>
+    public const int ProductListIdFieldNumber = 2;
+    private static readonly pb::FieldCodec<uint> _repeated_productListId_codec
+        = pb::FieldCodec.ForFixed32(18);
+    private readonly pbc::RepeatedField<uint> productListId_ = new pbc::RepeatedField<uint>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public uint ItemId {
-      get { return itemId_; }
-      set {
-        itemId_ = value;
-      }
-    }
-
-    /// <summary>Field number for the "price" field.</summary>
-    public const int PriceFieldNumber = 3;
-    private uint price_;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public uint Price {
-      get { return price_; }
-      set {
-        price_ = value;
-      }
+    public pbc::RepeatedField<uint> ProductListId {
+      get { return productListId_; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -139,8 +125,7 @@ namespace Hunt.Table {
         return true;
       }
       if (ShopId != other.ShopId) return false;
-      if (ItemId != other.ItemId) return false;
-      if (Price != other.Price) return false;
+      if(!productListId_.Equals(other.productListId_)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -149,8 +134,7 @@ namespace Hunt.Table {
     public override int GetHashCode() {
       int hash = 1;
       if (ShopId != 0) hash ^= ShopId.GetHashCode();
-      if (ItemId != 0) hash ^= ItemId.GetHashCode();
-      if (Price != 0) hash ^= Price.GetHashCode();
+      hash ^= productListId_.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -173,14 +157,7 @@ namespace Hunt.Table {
         output.WriteRawTag(13);
         output.WriteFixed32(ShopId);
       }
-      if (ItemId != 0) {
-        output.WriteRawTag(21);
-        output.WriteFixed32(ItemId);
-      }
-      if (Price != 0) {
-        output.WriteRawTag(29);
-        output.WriteFixed32(Price);
-      }
+      productListId_.WriteTo(output, _repeated_productListId_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -195,14 +172,7 @@ namespace Hunt.Table {
         output.WriteRawTag(13);
         output.WriteFixed32(ShopId);
       }
-      if (ItemId != 0) {
-        output.WriteRawTag(21);
-        output.WriteFixed32(ItemId);
-      }
-      if (Price != 0) {
-        output.WriteRawTag(29);
-        output.WriteFixed32(Price);
-      }
+      productListId_.WriteTo(ref output, _repeated_productListId_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -216,12 +186,7 @@ namespace Hunt.Table {
       if (ShopId != 0) {
         size += 1 + 4;
       }
-      if (ItemId != 0) {
-        size += 1 + 4;
-      }
-      if (Price != 0) {
-        size += 1 + 4;
-      }
+      size += productListId_.CalculateSize(_repeated_productListId_codec);
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -237,12 +202,7 @@ namespace Hunt.Table {
       if (other.ShopId != 0) {
         ShopId = other.ShopId;
       }
-      if (other.ItemId != 0) {
-        ItemId = other.ItemId;
-      }
-      if (other.Price != 0) {
-        Price = other.Price;
-      }
+      productListId_.Add(other.productListId_);
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
 
@@ -266,12 +226,9 @@ namespace Hunt.Table {
             ShopId = input.ReadFixed32();
             break;
           }
+          case 18:
           case 21: {
-            ItemId = input.ReadFixed32();
-            break;
-          }
-          case 29: {
-            Price = input.ReadFixed32();
+            productListId_.AddEntriesFrom(input, _repeated_productListId_codec);
             break;
           }
         }
@@ -297,12 +254,9 @@ namespace Hunt.Table {
             ShopId = input.ReadFixed32();
             break;
           }
+          case 18:
           case 21: {
-            ItemId = input.ReadFixed32();
-            break;
-          }
-          case 29: {
-            Price = input.ReadFixed32();
+            productListId_.AddEntriesFrom(ref input, _repeated_productListId_codec);
             break;
           }
         }

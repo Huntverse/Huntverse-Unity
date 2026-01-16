@@ -24,14 +24,14 @@ namespace Hunt.Table {
     static MapReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "CglNYXAucHJvdG8SCkh1bnQuVGFibGUiIQoDTWFwEgwKBHR5cGUYASABKAcS",
-            "DAoEbmFtZRgCIAEoCSIqCghNYXBUYWJsZRIeCgVpbmZvcxgBIAMoCzIPLkh1",
-            "bnQuVGFibGUuTWFwQhxaGmdpdGh1Yi5jb20vSHVudC9UYWJsZTtIdW50YgZw",
-            "cm90bzM="));
+            "CglNYXAucHJvdG8SCkh1bnQuVGFibGUiMgoDTWFwEgwKBHR5cGUYASABKAcS",
+            "DAoEbmFtZRgCIAEoCRIPCgdpbnN0YW50GAMgASgIIioKCE1hcFRhYmxlEh4K",
+            "BWluZm9zGAEgAygLMg8uSHVudC5UYWJsZS5NYXBCHFoaZ2l0aHViLmNvbS9I",
+            "dW50L1RhYmxlO0h1bnRiBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Hunt.Table.Map), global::Hunt.Table.Map.Parser, new[]{ "Type", "Name" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Hunt.Table.Map), global::Hunt.Table.Map.Parser, new[]{ "Type", "Name", "Instant" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Hunt.Table.MapTable), global::Hunt.Table.MapTable.Parser, new[]{ "Infos" }, null, null, null, null)
           }));
     }
@@ -76,6 +76,7 @@ namespace Hunt.Table {
     public Map(Map other) : this() {
       type_ = other.type_;
       name_ = other.name_;
+      instant_ = other.instant_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -109,6 +110,18 @@ namespace Hunt.Table {
       }
     }
 
+    /// <summary>Field number for the "instant" field.</summary>
+    public const int InstantFieldNumber = 3;
+    private bool instant_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool Instant {
+      get { return instant_; }
+      set {
+        instant_ = value;
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -126,6 +139,7 @@ namespace Hunt.Table {
       }
       if (Type != other.Type) return false;
       if (Name != other.Name) return false;
+      if (Instant != other.Instant) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -135,6 +149,7 @@ namespace Hunt.Table {
       int hash = 1;
       if (Type != 0) hash ^= Type.GetHashCode();
       if (Name.Length != 0) hash ^= Name.GetHashCode();
+      if (Instant != false) hash ^= Instant.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -161,6 +176,10 @@ namespace Hunt.Table {
         output.WriteRawTag(18);
         output.WriteString(Name);
       }
+      if (Instant != false) {
+        output.WriteRawTag(24);
+        output.WriteBool(Instant);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -179,6 +198,10 @@ namespace Hunt.Table {
         output.WriteRawTag(18);
         output.WriteString(Name);
       }
+      if (Instant != false) {
+        output.WriteRawTag(24);
+        output.WriteBool(Instant);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -194,6 +217,9 @@ namespace Hunt.Table {
       }
       if (Name.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(Name);
+      }
+      if (Instant != false) {
+        size += 1 + 1;
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -212,6 +238,9 @@ namespace Hunt.Table {
       }
       if (other.Name.Length != 0) {
         Name = other.Name;
+      }
+      if (other.Instant != false) {
+        Instant = other.Instant;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -240,6 +269,10 @@ namespace Hunt.Table {
             Name = input.ReadString();
             break;
           }
+          case 24: {
+            Instant = input.ReadBool();
+            break;
+          }
         }
       }
     #endif
@@ -265,6 +298,10 @@ namespace Hunt.Table {
           }
           case 18: {
             Name = input.ReadString();
+            break;
+          }
+          case 24: {
+            Instant = input.ReadBool();
             break;
           }
         }

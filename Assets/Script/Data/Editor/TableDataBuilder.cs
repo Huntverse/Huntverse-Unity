@@ -260,7 +260,8 @@ namespace Hunt.Ed
                 { "StatApplyType", (m) => ValidateTable<StatApplyTypeTable>("StatApplyType", m) },
                 { "SpecialStat", (m) => ValidateTable<SpecialStatTable>("SpecialStat", m) },
                 { "BufGroup", (m) => ValidateTable<BufGroupTable>("BufGroup", m) },
-                { "Trigger", (m) => ValidateTable<TriggerTable>("Trigger", m) },
+                { "ScriptTrigger", (m) => ValidateTable<BufGroupTable>("ScriptTrigger", m) },
+                { "ProductItem", (m) => ValidateTable<BufGroupTable>("ProductItem", m) },
                 { "Function", (m) => ValidateTable<FunctionTable>("Function", m) }
             };
 

@@ -24,80 +24,44 @@ namespace Hunt.Enum {
     static EnumReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "Cg9FbnVtL0VudW0ucHJvdG8SCUh1bnQuRW51bSpKCghBcHBseV9JRBIUChBB",
-            "cHBseV9JRF9JTlZBTElEEAASEgoOQVBQTFlfQ09OU1RBTlQQCxIUChBBUFBM",
-            "WV9QRVJDRU5UQUdFEAwqjwEKClRyaWdnZXJfSUQSFgoSVHJpZ2dlcl9JRF9J",
-            "TlZBTElEEAASGAoUVFJJR0dFUl9ERUZBVUxUX1RBTEsQNBIYChRUUklHR0VS",
-            "X1FVRVNUX0FDQ0VQVBA1EhQKEFRSSUdHRVJfQlVZX0lURU0QNhIfChtUUklH",
-            "R0VSX0NIQU5HRV9ERUZBVUxUX1RBTEsQNyrAAgoHU3RhdF9JZBITCg9TdGF0",
-            "X0lkX0lOVkFMSUQQABINCghTVEFUX0FUSxDoBxINCghTVEFUX0RFRhDpBxIM",
-            "CgdTVEFUX0hQEOoHEgwKB1NUQVRfTVAQ6wcSEAoLU1RBVF9FTkVSR1kQ7AcS",
-            "FgoRU1RBVF9GSUdIVF9TUElSSVQQ7QcSDQoIU1RBVF9BQ0MQ7gcSDQoIU1RB",
-            "VF9FVkEQ7wcSDQoIU1RBVF9TUEQQ8AcSDgoJU1RBVF9KVU1QEPEHEhMKDlNU",
-            "QVRfQ1JUQ0hBTkNFEPIHEhMKDlNUQVRfQ1JUREFNQUdFEPMHEhgKE1NUQVRf",
-            "SU1fSFBfUkVDT1ZFUlkQ9AcSDQoIU1RBVF9BR0kQ9QcSDQoIU1RBVF9MVUsQ",
-            "9gcSDQoIU1RBVF9TVFIQ9wcSDgoJU1RBVF9BU1BEEPgHKkkKCEdyb3VwX0lE",
-            "EhQKEEdyb3VwX0lEX0lOVkFMSUQQABITCg1JVEVNX1JFQ09WRVJZEODUAxIS",
-            "CgxJVEVNX0VORk9SQ0UQ8KIEKn4KC0NhdGVnb3J5X0lEEhcKE0NhdGVnb3J5",
-            "X0lEX0lOVkFMSUQQABITCg5DQVRFR09SWV9HUk9VUBCQThIUCg5DQVRFR09S",
-            "WV9VU0lORxCgnAESFwoRQ0FURUdPUllfUFJFQ0lPVVMQsOoBEhIKDENBVEVH",
-            "T1JZX0VUQxDAuAIqZwoHUm9sZV9JRBITCg9Sb2xlX0lEX0lOVkFMSUQQABIX",
-            "ChJST0xFX1FVRVNUX1BBWU1FTlQQmEMSGAoTUk9MRV9RVUVTVF9DT01QTEVU",
-            "RRCZQxIUCg9ST0xFX1FVRVNUX0JPVEgQmkMqeAoIRXF1aXBfSUQSFAoQRXF1",
-            "aXBfSURfSU5WQUxJRBAAEg4KCUVRVUlQX0hBVBCQAxIPCgpFUVVJUF9CT0RZ",
-            "EJEDEhAKC0VRVUlQX0dMT1ZFEJIDEhAKC0VRVUlQX1NIT0VTEJMDEhEKDEVR",
-            "VUlQX1dFQVBPThCUAypZCgZKb2JfSUQSEgoOSm9iX0lEX0lOVkFMSUQQABIL",
-            "CgdKT0JfQUxMEGQSDwoLSk9CX1dBUlJJT1IQZRIOCgpKT0JfQVJDSEVSEGYS",
-            "DQoJSk9CX0JPWEVSEGdCHFoaZ2l0aHViLmNvbS9IdW50L1RhYmxlO0h1bnRi",
-            "BnByb3RvMw=="));
+            "Cg9FbnVtL0VudW0ucHJvdG8SCUh1bnQuRW51bSrAAgoHU3RhdF9JRBITCg9T",
+            "dGF0X0lEX0lOVkFMSUQQABINCghTVEFUX0FUSxDoBxINCghTVEFUX0RFRhDp",
+            "BxIMCgdTVEFUX0hQEOoHEgwKB1NUQVRfTVAQ6wcSEAoLU1RBVF9FTkVSR1kQ",
+            "7AcSFgoRU1RBVF9GSUdIVF9TUElSSVQQ7QcSDQoIU1RBVF9BQ0MQ7gcSDQoI",
+            "U1RBVF9FVkEQ7wcSDQoIU1RBVF9TUEQQ8AcSDgoJU1RBVF9KVU1QEPEHEhMK",
+            "DlNUQVRfQ1JUQ0hBTkNFEPIHEhMKDlNUQVRfQ1JUREFNQUdFEPMHEhgKE1NU",
+            "QVRfSU1fSFBfUkVDT1ZFUlkQ9AcSDQoIU1RBVF9BR0kQ9QcSDQoIU1RBVF9M",
+            "VUsQ9gcSDQoIU1RBVF9TVFIQ9wcSDgoJU1RBVF9BU1BEEPgHKlkKBkpvYl9J",
+            "RBISCg5Kb2JfSURfSU5WQUxJRBAAEgsKB0pPQl9BTEwQZBIPCgtKT0JfV0FS",
+            "UklPUhBlEg4KCkpPQl9BUkNIRVIQZhINCglKT0JfQk9YRVIQZypnCgdSb2xl",
+            "X0lEEhMKD1JvbGVfSURfSU5WQUxJRBAAEhcKElJPTEVfUVVFU1RfUEFZTUVO",
+            "VBCYQxIYChNST0xFX1FVRVNUX0NPTVBMRVRFEJlDEhQKD1JPTEVfUVVFU1Rf",
+            "Qk9USBCaQypJCghHcm91cF9JRBIUChBHcm91cF9JRF9JTlZBTElEEAASEwoN",
+            "SVRFTV9SRUNPVkVSWRDg1AMSEgoMSVRFTV9FTkZPUkNFEPCiBCp4CghFcXVp",
+            "cF9JRBIUChBFcXVpcF9JRF9JTlZBTElEEAASDgoJRVFVSVBfSEFUEJADEg8K",
+            "CkVRVUlQX0JPRFkQkQMSEAoLRVFVSVBfR0xPVkUQkgMSEAoLRVFVSVBfU0hP",
+            "RVMQkwMSEQoMRVFVSVBfV0VBUE9OEJQDKp8BChBTY3JpcHRUcmlnZ2VyX0lE",
+            "EhwKGFNjcmlwdFRyaWdnZXJfSURfSU5WQUxJRBAAEhkKFVNDUl9UUklHX0RF",
+            "RkFVTFRfVEFMSxA0EhkKFVNDUl9UUklHX1FVRVNUX0FDQ0VQVBA1EhUKEVND",
+            "Ul9UUklHX0JVWV9JVEVNEDYSIAocU0NSX1RSSUdfQ0hBTkdFX0RFRkFVTFRf",
+            "VEFMSxA3KkoKCEFwcGx5X0lEEhQKEEFwcGx5X0lEX0lOVkFMSUQQABISCg5B",
+            "UFBMWV9DT05TVEFOVBALEhQKEEFQUExZX1BFUkNFTlRBR0UQDCqTAQoLQ2F0",
+            "ZWdvcnlfSUQSFwoTQ2F0ZWdvcnlfSURfSU5WQUxJRBAAEhMKDkNBVEVHT1JZ",
+            "X0dST1VQEJBOEhMKDkNBVEVHT1JZX1VTSU5HEJFOEhYKEUNBVEVHT1JZX1BS",
+            "RUNJT1VTEJJOEhYKEUNBVEVHT1JZX1BST1BFUlRZEJNOEhEKDENBVEVHT1JZ",
+            "X0VUQxCUTkIcWhpnaXRodWIuY29tL0h1bnQvVGFibGU7SHVudGIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
-          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Hunt.Enum.Apply_ID), typeof(global::Hunt.Enum.Trigger_ID), typeof(global::Hunt.Enum.Stat_Id), typeof(global::Hunt.Enum.Group_ID), typeof(global::Hunt.Enum.Category_ID), typeof(global::Hunt.Enum.Role_ID), typeof(global::Hunt.Enum.Equip_ID), typeof(global::Hunt.Enum.Job_ID), }, null, null));
+          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Hunt.Enum.Stat_ID), typeof(global::Hunt.Enum.Job_ID), typeof(global::Hunt.Enum.Role_ID), typeof(global::Hunt.Enum.Group_ID), typeof(global::Hunt.Enum.Equip_ID), typeof(global::Hunt.Enum.ScriptTrigger_ID), typeof(global::Hunt.Enum.Apply_ID), typeof(global::Hunt.Enum.Category_ID), }, null, null));
     }
     #endregion
 
   }
   #region Enums
-  public enum Apply_ID {
+  public enum Stat_ID {
     /// <summary>
     /// </summary>
-    [pbr::OriginalName("Apply_ID_INVALID")] Invalid = 0,
-    /// <summary>
-    ///상수
-    /// </summary>
-    [pbr::OriginalName("APPLY_CONSTANT")] ApplyConstant = 11,
-    /// <summary>
-    ///백분율
-    /// </summary>
-    [pbr::OriginalName("APPLY_PERCENTAGE")] ApplyPercentage = 12,
-  }
-
-  public enum Trigger_ID {
-    /// <summary>
-    /// </summary>
-    [pbr::OriginalName("Trigger_ID_INVALID")] Invalid = 0,
-    /// <summary>
-    ///기본 대사
-    /// </summary>
-    [pbr::OriginalName("TRIGGER_DEFAULT_TALK")] TriggerDefaultTalk = 52,
-    /// <summary>
-    ///퀘스트 수락 전 대사
-    /// </summary>
-    [pbr::OriginalName("TRIGGER_QUEST_ACCEPT")] TriggerQuestAccept = 53,
-    /// <summary>
-    ///아이템 구매 시 대사
-    /// </summary>
-    [pbr::OriginalName("TRIGGER_BUY_ITEM")] TriggerBuyItem = 54,
-    /// <summary>
-    ///NPC 변화 후 기본 대사
-    /// </summary>
-    [pbr::OriginalName("TRIGGER_CHANGE_DEFAULT_TALK")] TriggerChangeDefaultTalk = 55,
-  }
-
-  public enum Stat_Id {
-    /// <summary>
-    /// </summary>
-    [pbr::OriginalName("Stat_Id_INVALID")] Invalid = 0,
+    [pbr::OriginalName("Stat_ID_INVALID")] Invalid = 0,
     /// <summary>
     ///공격력
     /// </summary>
@@ -168,40 +132,26 @@ namespace Hunt.Enum {
     [pbr::OriginalName("STAT_ASPD")] StatAspd = 1016,
   }
 
-  public enum Group_ID {
+  public enum Job_ID {
     /// <summary>
     /// </summary>
-    [pbr::OriginalName("Group_ID_INVALID")] Invalid = 0,
+    [pbr::OriginalName("Job_ID_INVALID")] Invalid = 0,
     /// <summary>
-    ///회복류
+    ///공용
     /// </summary>
-    [pbr::OriginalName("ITEM_RECOVERY")] ItemRecovery = 60000,
+    [pbr::OriginalName("JOB_ALL")] JobAll = 100,
     /// <summary>
-    ///버프류
+    ///전사
     /// </summary>
-    [pbr::OriginalName("ITEM_ENFORCE")] ItemEnforce = 70000,
-  }
-
-  public enum Category_ID {
+    [pbr::OriginalName("JOB_WARRIOR")] JobWarrior = 101,
     /// <summary>
+    ///궁사
     /// </summary>
-    [pbr::OriginalName("Category_ID_INVALID")] Invalid = 0,
+    [pbr::OriginalName("JOB_ARCHER")] JobArcher = 102,
     /// <summary>
-    ///장비류
+    ///무투가
     /// </summary>
-    [pbr::OriginalName("CATEGORY_GROUP")] CategoryGroup = 10000,
-    /// <summary>
-    ///소비류
-    /// </summary>
-    [pbr::OriginalName("CATEGORY_USING")] CategoryUsing = 20000,
-    /// <summary>
-    ///귀중품류
-    /// </summary>
-    [pbr::OriginalName("CATEGORY_PRECIOUS")] CategoryPrecious = 30000,
-    /// <summary>
-    ///기타
-    /// </summary>
-    [pbr::OriginalName("CATEGORY_ETC")] CategoryEtc = 40000,
+    [pbr::OriginalName("JOB_BOXER")] JobBoxer = 103,
   }
 
   public enum Role_ID {
@@ -220,6 +170,20 @@ namespace Hunt.Enum {
     ///지급 및 완료
     /// </summary>
     [pbr::OriginalName("ROLE_QUEST_BOTH")] RoleQuestBoth = 8602,
+  }
+
+  public enum Group_ID {
+    /// <summary>
+    /// </summary>
+    [pbr::OriginalName("Group_ID_INVALID")] Invalid = 0,
+    /// <summary>
+    ///회복류
+    /// </summary>
+    [pbr::OriginalName("ITEM_RECOVERY")] ItemRecovery = 60000,
+    /// <summary>
+    ///버프류
+    /// </summary>
+    [pbr::OriginalName("ITEM_ENFORCE")] ItemEnforce = 70000,
   }
 
   public enum Equip_ID {
@@ -248,26 +212,66 @@ namespace Hunt.Enum {
     [pbr::OriginalName("EQUIP_WEAPON")] EquipWeapon = 404,
   }
 
-  public enum Job_ID {
+  public enum ScriptTrigger_ID {
     /// <summary>
     /// </summary>
-    [pbr::OriginalName("Job_ID_INVALID")] Invalid = 0,
+    [pbr::OriginalName("ScriptTrigger_ID_INVALID")] Invalid = 0,
     /// <summary>
-    ///공용
+    ///기본 대사
     /// </summary>
-    [pbr::OriginalName("JOB_ALL")] JobAll = 100,
+    [pbr::OriginalName("SCR_TRIG_DEFAULT_TALK")] ScrTrigDefaultTalk = 52,
     /// <summary>
-    ///전사
+    ///퀘스트 수락 전 대사
     /// </summary>
-    [pbr::OriginalName("JOB_WARRIOR")] JobWarrior = 101,
+    [pbr::OriginalName("SCR_TRIG_QUEST_ACCEPT")] ScrTrigQuestAccept = 53,
     /// <summary>
-    ///궁사
+    ///아이템 구매 시 대사
     /// </summary>
-    [pbr::OriginalName("JOB_ARCHER")] JobArcher = 102,
+    [pbr::OriginalName("SCR_TRIG_BUY_ITEM")] ScrTrigBuyItem = 54,
     /// <summary>
-    ///무투가
+    ///NPC 변화 후 기본 대사
     /// </summary>
-    [pbr::OriginalName("JOB_BOXER")] JobBoxer = 103,
+    [pbr::OriginalName("SCR_TRIG_CHANGE_DEFAULT_TALK")] ScrTrigChangeDefaultTalk = 55,
+  }
+
+  public enum Apply_ID {
+    /// <summary>
+    /// </summary>
+    [pbr::OriginalName("Apply_ID_INVALID")] Invalid = 0,
+    /// <summary>
+    ///상수
+    /// </summary>
+    [pbr::OriginalName("APPLY_CONSTANT")] ApplyConstant = 11,
+    /// <summary>
+    ///백분율
+    /// </summary>
+    [pbr::OriginalName("APPLY_PERCENTAGE")] ApplyPercentage = 12,
+  }
+
+  public enum Category_ID {
+    /// <summary>
+    /// </summary>
+    [pbr::OriginalName("Category_ID_INVALID")] Invalid = 0,
+    /// <summary>
+    ///장비류
+    /// </summary>
+    [pbr::OriginalName("CATEGORY_GROUP")] CategoryGroup = 10000,
+    /// <summary>
+    ///소비류
+    /// </summary>
+    [pbr::OriginalName("CATEGORY_USING")] CategoryUsing = 10001,
+    /// <summary>
+    ///귀중품류
+    /// </summary>
+    [pbr::OriginalName("CATEGORY_PRECIOUS")] CategoryPrecious = 10002,
+    /// <summary>
+    ///재화
+    /// </summary>
+    [pbr::OriginalName("CATEGORY_PROPERTY")] CategoryProperty = 10003,
+    /// <summary>
+    ///기타
+    /// </summary>
+    [pbr::OriginalName("CATEGORY_ETC")] CategoryEtc = 10004,
   }
 
   #endregion

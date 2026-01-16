@@ -38,7 +38,7 @@ namespace Hunt.Data
                     return null;
                 }
 
-    
+
                 var tableType = typeof(TTable);
                 var parserProperty = tableType.GetProperty("Parser", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
 
@@ -125,8 +125,10 @@ namespace Hunt.Data
             LoadAndCacheTable<StatApplyTypeTable>("StatApplyType");
             LoadAndCacheTable<SpecialStatTable>("SpecialStat");
             LoadAndCacheTable<BufGroupTable>("BufGroup");
-            LoadAndCacheTable<TriggerTable>("Trigger");
             LoadAndCacheTable<FunctionTable>("Function");
+            LoadAndCacheTable<ScriptTrigger>("ScriptTrigger");
+            LoadAndCacheTable<ProductItemTable>("ProductItem");
+            
 
             $"Loaded {tableCache.Count} tables".DLog();
         }
