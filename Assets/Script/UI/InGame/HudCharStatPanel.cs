@@ -9,22 +9,21 @@ namespace Hunt
     public enum CharStatType
     {
         
-        HP,MP,      // ü��,����
-        STR,        // ��
-        INT,        // ����
-        PATK,MATK,  // ���� �� ���� ���ݷ�
-        CRIT,       // ũ��Ƽ��
-        ASPD,MSPD,  // ���� �ӵ�, �̵� �ӵ�
-        LUK,        // ��
-        DEF,        // ����
-        EVA,        // ȸ��
+        HP,MP,      
+        STR,        
+        INT,        
+        PATK,MATK,  
+        CRIT,       
+        ASPD,MSPD,  
+        LUK,        
+        DEF,        
+        EVA,        
     }
 
     public class HudCharStatPanel : MonoBehaviour
     {
         [SerializeField] public CharStatType charStatType;
         [SerializeField] private TextMeshProUGUI charNameText;
-        [SerializeField] private RawImage charIconImg;
         private GameObject portraitModel;
         private GameObject portraitCam;
         private ClassType playerClassType;
@@ -69,7 +68,7 @@ namespace Hunt
             var camKey = ResourceKeyConst.Kp_Portrait_Cam;
             if (string.IsNullOrEmpty(modelKey) || string.IsNullOrEmpty(camKey))
             {
-                this.DError($"��Ʈ����Ʈ Ű�� ã�� �� �����ϴ�: Model={modelKey}, Cam={camKey}");
+                this.DError($"Model={modelKey}, Cam={camKey}");
                 return;
             }
 
@@ -80,7 +79,7 @@ namespace Hunt
 
             if (portraitCam == null || portraitModel == null)
             {
-                $"��Ʈ����Ʈ ���� ����: Model={portraitModel != null}, Cam={portraitCam != null}".DError();
+                $"Model={portraitModel != null}, Cam={portraitCam != null}".DError();
                 return;
             }
 
@@ -93,7 +92,7 @@ namespace Hunt
             int rtLayer = LayerMask.NameToLayer("RT");
             if (rtLayer == -1)
             {
-                this.DError($"RT ���̾ ã�� �� �����ϴ�");
+                this.DError($"RT 레이어가 존재하지 않습니다.");
             }
             SetupPortraitLayerAndCamera(portraitModel.transform, rtLayer);
 
@@ -121,7 +120,7 @@ namespace Hunt
                     cam.clearFlags = CameraClearFlags.SolidColor;
                     cam.backgroundColor = new Color(0, 0, 0, 0);
 
-                    this.DLog($"Portrait Camera ���� �Ϸ�");
+                    this.DLog($"Portrait Camera 가 존재하지 않습니다.");
                 }
             }
         }

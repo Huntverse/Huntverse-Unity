@@ -180,6 +180,10 @@ namespace Hunt
             {
                 userCharLoco.UnregisterInteractable(this);
             }
+            if (isInteracting)
+            {
+                DialogManager.Shared?.EndDialog();
+            }
         }
         public override bool CanInteract()
         {
