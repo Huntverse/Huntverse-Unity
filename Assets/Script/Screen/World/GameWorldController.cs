@@ -5,7 +5,7 @@ namespace Hunt
     public class GameWorldController : MonoBehaviourSingleton<GameWorldController>
     {
         [Header("Channel Field")]
-        [SerializeField] private List<GameWorldField> gameChannelFields;
+        [SerializeField] private List<GameWorldField> gameWorldFields;
 
         protected override bool DontDestroy => false;
         
@@ -13,13 +13,13 @@ namespace Hunt
         {
             base.Awake();
             
-            if (gameChannelFields == null || gameChannelFields.Count == 0)
+            if (gameWorldFields == null || gameWorldFields.Count == 0)
             {
                 $"[GameWorldController] ❌ gameChannelFields가 null이거나 비어있습니다! Inspector에서 할당하세요.".DError();
             }
             else
             {
-                $"[GameWorldController] ✅ Awake - gameChannelFields 개수: {gameChannelFields.Count}".DLog();
+                $"[GameWorldController] ✅ Awake - gameChannelFields 개수: {gameWorldFields.Count}".DLog();
             }
         }
         
@@ -39,7 +39,7 @@ namespace Hunt
                 return;
             }
             
-            $"[GameWorldController] ✅ GameSession에서 캐싱된 월드 리스트 로드: {GameSession.Shared.CachedWorldList.channels?.Count ?? 0}개".DLog();
+            $"[GameWorldController] ✅ GameSession에서 캐싱된 월드 리스트 로드: {GameSession.Shared.CachedWorldList.worlds?.Count ?? 0}개".DLog();
             OnRecvWorldViewUpdate(GameSession.Shared.CachedWorldList);
         }
 
@@ -47,31 +47,31 @@ namespace Hunt
         {
             $"[GameWorldController] 🌍 OnRecvWorldViewUpdate 호출됨".DLog();
             
-            if (res?.channels == null)
+            if (res?.worlds == null)
             {
-                $"[GameWorldController] ❌ res.channels가 null입니다!".DError();
+                $"[GameWorldController] ❌ res.worlds가 null입니다!".DError();
                 return;
             }
             
-            if (gameChannelFields == null)
+            if (gameWorldFields == null)
             {
-                $"[GameWorldController] ❌ gameChannelFields가 null입니다!".DError();
+                $"[GameWorldController] ❌ gameWorldFields가 null입니다!".DError();
                 return;
             }
             
-            $"[GameWorldController] 월드 개수: {res.channels.Count}, 필드 개수: {gameChannelFields.Count}".DLog();
+            $"[GameWorldController] 월드 개수: {res.worlds.Count}, 필드 개수: {gameWorldFields.Count}".DLog();
             
-            for (int i = 0; i < res.channels.Count && i < gameChannelFields.Count; i++)
+            for (int i = 0; i < res.worlds.Count && i < gameWorldFields.Count; i++)
             {
-                if (gameChannelFields[i] == null)
+                if (gameWorldFields[i] == null)
                 {
-                    $"[GameWorldController] ❌ gameChannelFields[{i}]가 null입니다!".DError();
+                    $"[GameWorldController] ❌ gameWorldsFields[{i}]가 null입니다!".DError();
                     continue;
                 }
                 
-                var model = res.channels[i];
+                var model = res.worlds[i];
                 $"[GameWorldController] [{i}] Bind 시작: {model.worldName}, Count: {model.myCharCount}".DLog();
-                gameChannelFields[i].Bind(model);
+                gameWorldFields[i].Bind(model);
             }
         }
 

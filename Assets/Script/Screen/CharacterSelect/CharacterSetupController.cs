@@ -45,9 +45,9 @@ namespace Hunt
             }
             
             // GameSession에 캐싱된 월드 리스트로 빈 캐시 초기화 (이미 데이터가 있으면 덮어쓰지 않음)
-            if (GameSession.Shared?.CachedWorldList?.channels != null)
+            if (GameSession.Shared?.CachedWorldList?.worlds != null)
             {
-                foreach (var worldModel in GameSession.Shared.CachedWorldList.channels)
+                foreach (var worldModel in GameSession.Shared.CachedWorldList.worlds)
                 {
                     if (!channelCharacterCache.ContainsKey(worldModel.worldName))
                     {
@@ -350,7 +350,7 @@ namespace Hunt
                 characterProfession: model.classtype
             );
 
-            this.DLog($"Updated panel: {model.name} (Level: {model.level})");
+            this.DLog($"Updated panel: {model.name} (Stat : {model.stats.Count}) (Level: {model.level})");
         }
 
         private void SaveCharacterToGameSession(CharModel model)
@@ -527,9 +527,9 @@ namespace Hunt
             }
 
             // GameSession의 CachedWorldList 업데이트
-            if (GameSession.Shared?.CachedWorldList?.channels != null)
+            if (GameSession.Shared?.CachedWorldList?.worlds != null)
             {
-                var world = GameSession.Shared.CachedWorldList.channels.Find(w => w.worldName == worldName);
+                var world = GameSession.Shared.CachedWorldList.worlds.Find(w => w.worldName == worldName);
                 if (world != null)
                 {
                     world.myCharCount = newCount;

@@ -161,7 +161,6 @@ namespace Hunt
 
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
             coyoteTimeCounter = 0f;
-            animator?.SetBool(AniKeyConst.k_bGround, true);
         }
         /// <summary>
         /// NPC가 "나랑 대화 가능해!" 알림
@@ -307,6 +306,9 @@ namespace Hunt
                 );
 
             isGrounded = hit.collider != null;
+            
+
+            animator?.SetBool(AniKeyConst.k_bGround, !isGrounded);
 
             if (isGrounded)
             {
@@ -321,7 +323,8 @@ namespace Hunt
 
         private void OnLanded()
         {
-            animator?.SetBool(AniKeyConst.k_bGround, false);
+            // 착지 시 추가 효과 (사운드, 파티클 등)
+            // 애니메이터는 UpdateGroundCheck에서 처리됨
         }
 
 

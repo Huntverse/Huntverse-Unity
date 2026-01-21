@@ -18,7 +18,7 @@ namespace Hunt.dev
             
             var dummy = new WorldListRequest
             {
-                channels = new List<WorldModel>
+                worlds = new List<WorldModel>
                 {
                     new WorldModel { worldName = "그라시아", congestion = 1, myCharCount = 0 },
                     new WorldModel { worldName = "라비올래", congestion = 3, myCharCount = 1 },
@@ -26,7 +26,7 @@ namespace Hunt.dev
                 }
             };
             
-            $"[Dev] 채널 리스트 생성: {dummy.channels.Count}개 (Dev 모드)".DLog();
+            $"[Dev] 채널 리스트 생성: {dummy.worlds.Count}개 (Dev 모드)".DLog();
             
             if (GameWorldController.Shared != null)
             {

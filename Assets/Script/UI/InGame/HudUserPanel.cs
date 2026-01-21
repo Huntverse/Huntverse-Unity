@@ -13,7 +13,6 @@ namespace Hunt
         public UserQuickSlot UserQuickSlot;
         [Header("USER INFO UI")]
         [SerializeField] private TextMeshProUGUI userLevelText;
-        [SerializeField] private TextMeshProUGUI userNameText;
         [SerializeField] private Slider userHpSlider;
         [SerializeField] private Slider userMpSlider;
         [SerializeField] private Slider userExpSlider;
@@ -21,8 +20,7 @@ namespace Hunt
 
         private async UniTask UpdatePanelUI()
         {
-            //UserPanelInfo.SetUserPanelValue();
-            userNameText.text = UserPanelInfo.Name;
+          
             userLevelText.text = UserPanelInfo.Level.ToString();
             userHpSlider.value = UserPanelInfo.Hp;
             userMpSlider.value = UserPanelInfo.Mp;

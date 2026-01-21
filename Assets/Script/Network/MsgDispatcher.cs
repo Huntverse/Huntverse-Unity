@@ -127,10 +127,10 @@ namespace Hunt.Net
 
                 var worldListReq = new WorldListRequest
                 {
-                    channels = new List<WorldModel>(worldModels.Values)
+                    worlds = new List<WorldModel>(worldModels.Values)
                 };
                 
-                $"[MsgDispatcher] WorldListRequest 생성: {worldListReq.channels?.Count ?? 0}개".DLog();
+                $"[MsgDispatcher] WorldListRequest 생성: {worldListReq.worlds?.Count ?? 0}개".DLog();
 
                 // GameSession에 월드 리스트 저장 (MainMenu 씬 로드 전이므로)
                 GameSession.Shared?.SetWorldList(worldListReq);
@@ -138,7 +138,7 @@ namespace Hunt.Net
                 // GameWorldController가 있으면 바로 전달 (Dev 모드 등)
                 if (GameWorldController.Shared != null)
                 {
-                    $"[MsgDispatcher] ✅ GameWorldController로 월드 리스트 즉시 전달: {worldListReq.channels.Count}개".DLog();
+                    $"[MsgDispatcher] ✅ GameWorldController로 월드 리스트 즉시 전달: {worldListReq.worlds.Count}개".DLog();
                     GameWorldController.Shared.OnRecvWorldViewUpdate(worldListReq);
                 }
                 else
@@ -243,9 +243,9 @@ namespace Hunt.Net
                     
                     // 월드의 myCharCount 업데이트
                     int totalCount = GameSession.Shared.CachedCharactersByWorld[kvp.Key].Count;
-                    if (GameSession.Shared.CachedWorldList?.channels != null)
+                    if (GameSession.Shared.CachedWorldList?.worlds != null)
                     {
-                        var world = GameSession.Shared.CachedWorldList.channels.Find(w => w.worldName == kvp.Key);
+                        var world = GameSession.Shared.CachedWorldList.worlds.Find(w => w.worldName == kvp.Key);
                         if (world != null)
                         {
                             world.myCharCount = totalCount;

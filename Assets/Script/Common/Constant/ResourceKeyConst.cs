@@ -21,6 +21,7 @@ namespace Hunt
     {
         public static readonly string Ks_Mainmenu = "mainmenu@scene";
         public static readonly string Ks_Village = "village@scene";
+        public static readonly string Ks_FieldDungeon = "fielddungeon@scene";
 
         public static readonly string Ka_isActive = "IsActive";
 
@@ -29,14 +30,18 @@ namespace Hunt
         public static readonly string Ks_Profession_Magician = "archer_pf@sprite";
         public static readonly string Ks_Profession_Tanker = "tanker_pf@sprite";
 
-        public static readonly string Ks_Illust_Astera = "astera@sprite";
+        public static readonly string Ks_Illust_Astra = "astra@sprite";
         public static readonly string Ks_Illust_Brunt = "brunt@sprite";
-        public static readonly string Ks_Illust_Sable = "sable@sprite";
+        public static readonly string Ks_Illust_Seible = "seible@sprite";
 
+        public static readonly string Ks_Illust_Port_Astra = "astra_port@sprite";
+        public static readonly string Ks_Illust_Port_Seible = "seible_port@sprite";
+        public static readonly string Ks_Illust_Port_Brunt = "brunt_port@sprite";
         // Player
         public static readonly string Kp_Model_Seible = "seible@model";
-        public static readonly string Kp_Model_Astera = "astera@model";
+        public static readonly string Kp_Model_Astra = "astra@model";
         public static readonly string Kp_Model_Brunt = "brunt@model";
+        public static readonly string Kp_UserCahr = "userchar@prefab";
 
         // Prefab
         public static readonly string Kp_Portrait_Cam = "port_cam@prefab";
@@ -58,16 +63,17 @@ namespace Hunt
         SFX_CHANNEL_SELECT,
         BGM_MAIN,
         BGM_VILLAGE,
+        BGM_FIELD,
     }
 
     public static class AudioKeyConst
     {
         private static readonly Dictionary<AudioType, string> sfxKeys = new Dictionary<AudioType, string>
         {
-            //{ AudioType.SFX_HOVER, "hover@audio" },
             { AudioType.SFX_CHANNEL_SELECT, "channel_sfx@audio" },
             { AudioType.BGM_MAIN, "main_bgm@audio" },
-            { AudioType.BGM_VILLAGE, "village_bgm@audio" }
+            { AudioType.BGM_VILLAGE, "village_bgm@audio" },
+            { AudioType.BGM_FIELD, "field_bgm_1@audio" },
         };
 
         public static string GetSfxKey(AudioType sfxType)
@@ -126,13 +132,13 @@ namespace Hunt
             };
         }
 
-        public static string GetIllustKeyByProfession(ClassType profession)
+        public static string GetIllustKeyByProfession(ClassType profession,bool isPort=false)
         {
             return profession switch
             {
-                ClassType.Sword => ResourceKeyConst.Ks_Illust_Astera,
-                ClassType.Archer => ResourceKeyConst.Ks_Illust_Sable,
-                ClassType.Fighter => ResourceKeyConst.Ks_Illust_Brunt,
+                ClassType.Sword => isPort?ResourceKeyConst.Ks_Illust_Port_Astra:ResourceKeyConst.Ks_Illust_Astra,
+                ClassType.Archer => isPort ? ResourceKeyConst.Ks_Illust_Port_Seible : ResourceKeyConst.Ks_Illust_Seible,
+                ClassType.Fighter => isPort ? ResourceKeyConst.Ks_Illust_Port_Seible : ResourceKeyConst.Ks_Illust_Brunt,
                 _ => string.Empty
             };
         }
@@ -141,7 +147,7 @@ namespace Hunt
         {
             return profession switch
             {
-                ClassType.Sword => ResourceKeyConst.Kp_Model_Astera,
+                ClassType.Sword => ResourceKeyConst.Kp_Model_Astra,
                 ClassType.Archer => ResourceKeyConst.Kp_Model_Seible,
                 ClassType.Fighter => ResourceKeyConst.Kp_Model_Brunt,
 
@@ -180,7 +186,7 @@ namespace Hunt
                 _ => string.Empty
             };
         }
-
+ 
         public static string GetStatStringByType(CharStatType t)
         {
             return t switch
