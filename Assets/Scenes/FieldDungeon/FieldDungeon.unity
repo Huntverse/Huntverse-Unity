@@ -130,7 +130,7 @@ GameObject:
   - component: {fileID: 28244721}
   - component: {fileID: 28244723}
   - component: {fileID: 28244722}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -290,7 +290,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 826500882454378918, guid: 61ce0186aa3cbeb46aa7a188c6f8c7d7, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6736264618080496908, guid: 61ce0186aa3cbeb46aa7a188c6f8c7d7, type: 3}
       propertyPath: m_LocalPosition.x
@@ -385,7 +385,7 @@ GameObject:
   - component: {fileID: 1155150548}
   - component: {fileID: 1155150550}
   - component: {fileID: 1155150549}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -523,7 +523,7 @@ GameObject:
   - component: {fileID: 1605626919}
   - component: {fileID: 1605626922}
   - component: {fileID: 1605626923}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: forest_slime_0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -751,7 +751,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1986896695}
   - component: {fileID: 1986896694}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: enemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -778,8 +778,11 @@ MonoBehaviour:
     m_Bits: 256
   jumpForce: 7
   jumpInterval: 2
-  edgeLookAhead: 3
+  edgeLookAhead: 1.5
   jumpTriggerName: Jump
+  maxHp: 100
+  hitStunDuration: 0.3
+  flashInterval: 0.1
 --- !u!4 &1986896695
 Transform:
   m_ObjectHideFlags: 0
@@ -809,7 +812,7 @@ GameObject:
   - component: {fileID: 2087588440}
   - component: {fileID: 2087588439}
   - component: {fileID: 2087588438}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: name
   m_TagString: Untagged
   m_Icon: {fileID: 0}

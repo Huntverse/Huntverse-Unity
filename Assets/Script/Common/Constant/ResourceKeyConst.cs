@@ -48,6 +48,7 @@ namespace Hunt
         // Prefab
         public static readonly string Kp_Portrait_Cam = "port_cam@prefab";
         public static readonly string Kp_MapNameInfoUI = "map_name@prefab";
+        public static readonly string Kp_DamageText_Vfx = "damage_text@prefab";
     }
     public static class AniKeyConst
     {

@@ -1,9 +1,10 @@
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace Hunt
 {
 
-    public class Enemy : MonoBehaviour
+    public class Enemy : MonoBehaviour, IDamageable
     {
         private Collider2D collider;
         [SerializeField] private GameObject enemyNameField;
@@ -17,6 +18,15 @@ namespace Hunt
         private Animator animator;
         [SerializeField] private string jumpTriggerName = "Jump";
 
+        [Header("COMBAT")]
+        [SerializeField] private float maxHp = 100f;
+        [SerializeField] private float hitStunDuration = 0.3f;
+        [SerializeField] private float flashInterval = 0.1f;
+        private float currentHp;
+        private bool isHitStunned;
+        private SpriteRenderer spriteRenderer;
+        private Color originalColor;
+
         private int moveDir = -1;
         private float jumpTimer;
         private Rigidbody2D rb;
@@ -28,6 +38,12 @@ namespace Hunt
 
             collider = model.GetComponent<Collider2D>();
             animator = model.GetComponent<Animator>();
+            spriteRenderer = model.GetComponent<SpriteRenderer>();
+            if (spriteRenderer != null)
+            {
+                originalColor = spriteRenderer.color;
+            }
+
             enemyNameField.transform.SetParent(model.transform);
             var position = new Vector3(
                 0,
@@ -36,11 +52,13 @@ namespace Hunt
             );
             enemyNameField.transform.localPosition = position;
 
+            currentHp = maxHp;
         }
 
         private void Update()
         {
             if (model == null || collider == null) return;
+            if (isHitStunned) return;
 
             transform.Translate(Vector2.right * moveDir * moveSpeed * Time.deltaTime);
 
@@ -131,6 +149,50 @@ namespace Hunt
                     sr.flipX = !sr.flipX;
                 }
             }
+        }
+
+        public void TakeDamage(float damage, Vector3 hitPosition)
+        {
+            currentHp -= damage;
+            if (currentHp <= 0f)
+            {
+                currentHp = 0f;
+                OnDeath();
+                return;
+            }
+
+            OnHit().Forget();
+        }
+
+        private async UniTaskVoid OnHit()
+        {
+            isHitStunned = true;
+            int flashCount = Mathf.RoundToInt(hitStunDuration / flashInterval);
+
+            for (int i = 0; i < flashCount; i++)
+            {
+                if (spriteRenderer != null)
+                {
+                    spriteRenderer.color = i % 2 == 0 ? Color.white : Color.black;
+                }
+                await UniTask.Delay(System.TimeSpan.FromSeconds(flashInterval));
+            }
+
+            if (spriteRenderer != null)
+            {
+                spriteRenderer.color = originalColor;
+            }
+            isHitStunned = false;
+        }
+
+        public Transform GetTransform()
+        {
+            return transform;
+        }
+
+        private void OnDeath()
+        {
+            Destroy(gameObject);
         }
 
     }

@@ -42,6 +42,7 @@ namespace Hunt
         private IsNotiPoint notiPoint;
         private HashSet<IInteractable> nearbyInteractables = new HashSet<IInteractable>();
         private IInteractable currentInteractable;
+        private UserCombat combat;
 
         #endregion
         private void Awake()
@@ -59,6 +60,11 @@ namespace Hunt
             hitpointer = GetComponentInChildren<IsAttackPointer>();
             hitpointer.SetT(new Vector3(2.0f, 0.5f, 0f), new Vector2(1,1.25f)); // Custom
             notiPoint = GetComponentInChildren<IsNotiPoint>();
+            combat = GetComponent<UserCombat>();
+            if (combat == null)
+            {
+                combat = gameObject.AddComponent<UserCombat>();
+            }
         }
         private void OnEnable()
         {
@@ -236,38 +242,27 @@ namespace Hunt
         }
         private async void SpawnAttackVfx()
         {
-            $"⚔️ [PlayerAction] SpawnAttackVfx 시작".DLog();
-           
             if (hitpointer == null)
             {
                 $"⚔️ [PlayerAction] IsAttackPointer를 찾을 수 없음!".DError();
                 return;
             }
                         
-            if (VfxManager.Shared == null)
+            if (combat == null)
             {
-                $"⚔️ [PlayerAction] VfxHelper.Shared가 null!".DError();
+                $"⚔️ [PlayerAction] UserCombat이 null!".DError();
                 return;
             }
             
-            var playerScale = transform.localScale;
-            var vfxScale = new Vector3(playerScale.x, 1f, 1f);
-            
-            var vfxHandle = await VfxManager.Shared.PlayOneShot(
+            var vfxHandle = await combat.SpawnAttackVfx(
                 VfxKetConst.Kp_plain_hit_astera,
                 hitpointer.GetT().position,
-                hitpointer.GetT().rotation,
-                this.transform,
-                vfxScale
+                hitpointer.GetT().rotation
             );
             
             if (vfxHandle == null)
             {
                 $"⚔️ [PlayerAction] VfxHandle이 null!".DError();
-            }
-            else
-            {
-                $"⚔️ [PlayerAction] VfxHandle 생성 성공!".DLog();
             }
         }
 
