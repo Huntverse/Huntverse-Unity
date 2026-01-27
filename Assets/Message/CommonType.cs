@@ -26,9 +26,9 @@ namespace Hunt.Common {
           string.Concat(
             "ChFjb21tb25fdHlwZS5wcm90bxILSHVudC5Db21tb24qPgoOQ29uZ2VzdGlv",
             "blR5cGUSDQoJQ09OX0xJR0hUEAASDgoKQ09OX05PUk1BTBABEg0KCUNPTl9I",
-            "RUFWWRACKl8KClNlcnZlclR5cGUSCwoHU1RfTk9ORRAAEg4KClNUX1ZJTElB",
-            "R0UQARILCgdTVF9SQUlEEAISCwoHU1RfQ0hBVBADEgwKCFNUX0xPR0lOEAQS",
-            "DAoIc1RfTE9DQUwQBWIGcHJvdG8z"));
+            "RUFWWRACKk8KClNlcnZlclR5cGUSCwoHU1RfTk9ORRAAEgsKB1NUX0dBTUUQ",
+            "ARILCgdTVF9DSEFUEAISDAoIU1RfTE9HSU4QAxIMCghTVF9MT0NBTBAEYgZw",
+            "cm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Hunt.Common.CongestionType), typeof(global::Hunt.Common.ServerType), }, null, null));
@@ -45,14 +45,13 @@ namespace Hunt.Common {
 
   public enum ServerType {
     [pbr::OriginalName("ST_NONE")] StNone = 0,
-    [pbr::OriginalName("ST_VILIAGE")] StViliage = 1,
-    [pbr::OriginalName("ST_RAID")] StRaid = 2,
-    [pbr::OriginalName("ST_CHAT")] StChat = 3,
-    [pbr::OriginalName("ST_LOGIN")] StLogin = 4,
+    [pbr::OriginalName("ST_GAME")] StGame = 1,
+    [pbr::OriginalName("ST_CHAT")] StChat = 2,
+    [pbr::OriginalName("ST_LOGIN")] StLogin = 3,
     /// <summary>
     ///로컬 서버
     /// </summary>
-    [pbr::OriginalName("sT_LOCAL")] STLocal = 5,
+    [pbr::OriginalName("ST_LOCAL")] StLocal = 4,
   }
 
   #endregion
