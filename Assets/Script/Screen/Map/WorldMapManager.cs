@@ -1,4 +1,5 @@
 using Cysharp.Threading.Tasks;
+using TMPro;
 using UnityEngine;
 
 namespace Hunt
@@ -7,6 +8,7 @@ namespace Hunt
     public class WorldMapManager : MonoBehaviourSingleton<WorldMapManager>
     {
         private FieldTransitionInfo? currentTransition;
+
         
         protected override bool DontDestroy => true;
 
@@ -39,6 +41,18 @@ namespace Hunt
             }
 
             $"[WorldMapManager] 맵 Env 로드 완료: {mapId}".DLog();
+            try
+            {
+                var common = await AbLoader.Shared.LoadInstantiateAsync(ResourceKeyConst.Kp_MapNameInfoUI);
+                common.transform.SetParent(envRoot);
+                common.GetComponentInChildren<TextMeshProUGUI>().text = BindKeyConst.GetMapNameByMapId(mapId);
+                InGameHud.Shared.StagePanel.UpdateStagePanel(mapId);
+
+            }
+            catch
+            {
+                this.DError($"MapName Instance Error");
+            }
             
             return envPrefab;
         }

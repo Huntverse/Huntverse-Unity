@@ -1,0 +1,492 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b645a890832155c49900947c97fda7de, type: 3}
+  m_Name: HandPositionData
+  m_EditorClassIdentifier: 
+  animationDataList:
+  - animationName: astera_idle
+    framePositions:
+    - spriteName: astera_idle_0
+      normalizedPosition: {x: 0.6261261, y: 0.5}
+      normalizedSize: {x: 0.1, y: 0.1}
+      pixelPosition: {x: 123.34685, y: 899.80676}
+      pixelSize: {x: 19.7, y: 25.9}
+      rotation: -34
+      sortingOrder: 10
+    - spriteName: astera_idle_1
+      normalizedPosition: {x: 0.6261261, y: 0.49}
+      normalizedSize: {x: 0.1, y: 0.1}
+      pixelPosition: {x: 320.34683, y: 899.80676}
+      pixelSize: {x: 19.7, y: 25.9}
+      rotation: -34
+      sortingOrder: 10
+    - spriteName: astera_idle_2
+      normalizedPosition: {x: 0.6261261, y: 0.49}
+      normalizedSize: {x: 0.1, y: 0.1}
+      pixelPosition: {x: 517.34686, y: 899.80676}
+      pixelSize: {x: 19.7, y: 25.9}
+      rotation: -34
+      sortingOrder: 10
+    - spriteName: astera_idle_3
+      normalizedPosition: {x: 0.6261261, y: 0.48}
+      normalizedSize: {x: 0.1, y: 0.1}
+      pixelPosition: {x: 714.34686, y: 899.80676}
+      pixelSize: {x: 19.7, y: 25.9}
+      rotation: -34
+      sortingOrder: 10
+    - spriteName: astera_idle_4
+      normalizedPosition: {x: 0.6261261, y: 0.48}
+      normalizedSize: {x: 0.1, y: 0.1}
+      pixelPosition: {x: 123.34685, y: 640.80676}
+      pixelSize: {x: 19.7, y: 25.9}
+      rotation: -34
+      sortingOrder: 10
+    - spriteName: astera_idle_5
+      normalizedPosition: {x: 0.6261261, y: 0.49}
+      normalizedSize: {x: 0.1, y: 0.1}
+      pixelPosition: {x: 320.34683, y: 640.80676}
+      pixelSize: {x: 19.7, y: 25.9}
+      rotation: -34
+      sortingOrder: 10
+    - spriteName: astera_idle_6
+      normalizedPosition: {x: 0.6261261, y: 0.5}
+      normalizedSize: {x: 0.1, y: 0.1}
+      pixelPosition: {x: 517.34686, y: 640.80676}
+      pixelSize: {x: 19.7, y: 25.9}
+      rotation: -34
+      sortingOrder: 10
+    - spriteName: astera_idle_7
+      normalizedPosition: {x: 0.6261261, y: 0.49}
+      normalizedSize: {x: 0.1, y: 0.1}
+      pixelPosition: {x: 714.34686, y: 640.80676}
+      pixelSize: {x: 19.7, y: 25.9}
+      rotation: -34
+      sortingOrder: 100
+    - spriteName: astera_idle_8
+      normalizedPosition: {x: 0.6261261, y: 0.48}
+      normalizedSize: {x: 0.1, y: 0.1}
+      pixelPosition: {x: 123.34685, y: 381.80673}
+      pixelSize: {x: 19.7, y: 25.9}
+      rotation: -34
+      sortingOrder: 10
+    - spriteName: astera_idle_9
+      normalizedPosition: {x: 0.6261261, y: 0.48}
+      normalizedSize: {x: 0.1, y: 0.1}
+      pixelPosition: {x: 320.34683, y: 381.80673}
+      pixelSize: {x: 19.7, y: 25.9}
+      rotation: -34
+      sortingOrder: 10
+    - spriteName: astera_idle_10
+      normalizedPosition: {x: 0.6261261, y: 0.48}
+      normalizedSize: {x: 0.1, y: 0.1}
+      pixelPosition: {x: 517.34686, y: 381.80673}
+      pixelSize: {x: 19.7, y: 25.9}
+      rotation: -34
+      sortingOrder: 10
+    - spriteName: astera_idle_11
+      normalizedPosition: {x: 0.6261261, y: 0.49}
+      normalizedSize: {x: 0.1, y: 0.1}
+      pixelPosition: {x: 714.34686, y: 381.80673}
+      pixelSize: {x: 19.7, y: 25.9}
+      rotation: -34
+      sortingOrder: 10
+    - spriteName: astera_idle_12
+      normalizedPosition: {x: 0.6261261, y: 0.5}
+      normalizedSize: {x: 0.1, y: 0.1}
+      pixelPosition: {x: 123.34685, y: 122.80674}
+      pixelSize: {x: 19.7, y: 25.9}
+      rotation: -34
+      sortingOrder: 10
+    - spriteName: astera_idle_13
+      normalizedPosition: {x: 0.6261261, y: 0.49}
+      normalizedSize: {x: 0.1, y: 0.1}
+      pixelPosition: {x: 320.34683, y: 122.80674}
+      pixelSize: {x: 19.7, y: 25.9}
+      rotation: -34
+      sortingOrder: 10
+    - spriteName: astera_idle_14
+      normalizedPosition: {x: 0.6261261, y: 0.48}
+      normalizedSize: {x: 0.1, y: 0.1}
+      pixelPosition: {x: 517.34686, y: 122.80674}
+      pixelSize: {x: 19.7, y: 25.9}
+      rotation: -34
+      sortingOrder: 10
+    - spriteName: astera_idle_15
+      normalizedPosition: {x: 0.6261261, y: 0.4741573}
+      normalizedSize: {x: 0.1, y: 0.1}
+      pixelPosition: {x: 714.34686, y: 122.80674}
+      pixelSize: {x: 19.7, y: 25.9}
+      rotation: -34
+      sortingOrder: 1
+  - animationName: astera_base_attack
+    framePositions:
+    - spriteName: base_attack_2_0
+      normalizedPosition: {x: 0.5539568, y: 0.52380955}
+      normalizedSize: {x: 0.1, y: 0.1}
+      pixelPosition: {x: 195.54675, y: 922.7143}
+      pixelSize: {x: 35.3, y: 26.1}
+      rotation: 318.61
+      sortingOrder: 1
+    - spriteName: base_attack_2_1
+      normalizedPosition: {x: 0.5611511, y: 0.49494952}
+      normalizedSize: {x: 0.1, y: 0.1}
+      pixelPosition: {x: 551.0863, y: 915.1818}
+      pixelSize: {x: 35.3, y: 26.1}
+      rotation: 316.9
+      sortingOrder: 1
+    - spriteName: base_attack_2_2
+      normalizedPosition: {x: 0.5179856, y: 0.53}
+      normalizedSize: {x: 0.1, y: 0.1}
+      pixelPosition: {x: 888.84894, y: 924.33}
+      pixelSize: {x: 35.3, y: 26.1}
+      rotation: 310.5
+      sortingOrder: 1
+    - spriteName: base_attack_2_3
+      normalizedPosition: {x: 0.5179856, y: 0.5310246}
+      normalizedSize: {x: 0.1, y: 0.1}
+      pixelPosition: {x: 1241.8489, y: 924.5974}
+      pixelSize: {x: 35.3, y: 26.1}
+      rotation: 311.7
+      sortingOrder: 1
+    - spriteName: base_attack_2_4
+      normalizedPosition: {x: 0.7266187, y: 0.6176046}
+      normalizedSize: {x: 0.1, y: 0.1}
+      pixelPosition: {x: 256.4964, y: 686.1948}
+      pixelSize: {x: 35.3, y: 26.1}
+      rotation: 38.4
+      sortingOrder: 1
+    - spriteName: base_attack_2_5
+      normalizedPosition: {x: 0.7266187, y: 0.6176046}
+      normalizedSize: {x: 0.1, y: 0.1}
+      pixelPosition: {x: 609.4964, y: 686.1948}
+      pixelSize: {x: 35.3, y: 26.1}
+      rotation: 26.5
+      sortingOrder: 1
+    - spriteName: base_attack_2_6
+      normalizedPosition: {x: 0.6978417, y: 0.5526696}
+      normalizedSize: {x: 0.1, y: 0.1}
+      pixelPosition: {x: 952.33813, y: 669.24677}
+      pixelSize: {x: 35.3, y: 26.1}
+      rotation: 345.5
+      sortingOrder: 1
+    - spriteName: base_attack_2_7
+      normalizedPosition: {x: 0.68345326, y: 0.52380955}
+      normalizedSize: {x: 0.1, y: 0.1}
+      pixelPosition: {x: 1300.259, y: 661.7143}
+      pixelSize: {x: 35.3, y: 26.1}
+      rotation: 340.4
+      sortingOrder: 1
+    - spriteName: base_attack_2_8
+      normalizedPosition: {x: 0.38848922, y: 0.52380955}
+      normalizedSize: {x: 0.1, y: 0.1}
+      pixelPosition: {x: 137.13669, y: 400.7143}
+      pixelSize: {x: 35.3, y: 26.1}
+      rotation: 181.5
+      sortingOrder: 100
+    - spriteName: base_attack_2_9
+      normalizedPosition: {x: 0.22302158, y: 0.61038965}
+      normalizedSize: {x: 0.1, y: 0.1}
+      pixelPosition: {x: 431.72662, y: 423.3117}
+      pixelSize: {x: 35.3, y: 26.1}
+      rotation: 123.4
+      sortingOrder: 1
+    - spriteName: base_attack_2_10
+      normalizedPosition: {x: 0.22302158, y: 0.61038965}
+      normalizedSize: {x: 0.1, y: 0.1}
+      pixelPosition: {x: 784.7266, y: 423.3117}
+      pixelSize: {x: 35.3, y: 26.1}
+      rotation: 124.3
+      sortingOrder: 1
+    - spriteName: base_attack_2_11
+      normalizedPosition: {x: 0.255, y: 0.579}
+      normalizedSize: {x: 0.1, y: 0.1}
+      pixelPosition: {x: 1149.015, y: 415.119}
+      pixelSize: {x: 35.3, y: 26.1}
+      rotation: 140.5
+      sortingOrder: 1
+    - spriteName: base_attack_2_12
+      normalizedPosition: {x: 0.68345326, y: 0.5526696}
+      normalizedSize: {x: 0.1, y: 0.1}
+      pixelPosition: {x: 241.259, y: 147.24677}
+      pixelSize: {x: 35.3, y: 26.1}
+      rotation: 29.9
+      sortingOrder: 1
+    - spriteName: base_attack_2_13
+      normalizedPosition: {x: 0.705036, y: 0.5959596}
+      normalizedSize: {x: 0.1, y: 0.1}
+      pixelPosition: {x: 601.8777, y: 158.54546}
+      pixelSize: {x: 35.3, y: 26.1}
+      rotation: 39.3
+      sortingOrder: 1
+    - spriteName: base_attack_2_14
+      normalizedPosition: {x: 0.6978417, y: 0.6176046}
+      normalizedSize: {x: 0.1, y: 0.1}
+      pixelPosition: {x: 952.33813, y: 164.19481}
+      pixelSize: {x: 35.3, y: 26.1}
+      rotation: 35.9
+      sortingOrder: 1
+    - spriteName: base_attack_2_15
+      normalizedPosition: {x: 0.4676259, y: 0.52380955}
+      normalizedSize: {x: 0.1, y: 0.1}
+      pixelPosition: {x: 1224.0719, y: 139.7143}
+      pixelSize: {x: 35.3, y: 26.1}
+      rotation: 204.1
+      sortingOrder: 100
+  - animationName: astera
+    framePositions:
+    - spriteName: astera_walk_0
+      normalizedPosition: {x: 0.590625, y: 0.54105526}
+      normalizedSize: {x: 0.1, y: 0.1}
+      pixelPosition: {x: 137.025, y: 1501.626}
+      pixelSize: {x: 23.2, y: 27.1}
+      rotation: 325.8
+      sortingOrder: 1
+    - spriteName: astera_walk_1
+      normalizedPosition: {x: 0.6333333, y: 0.50124687}
+      normalizedSize: {x: 0.1, y: 0.1}
+      pixelPosition: {x: 378.93332, y: 1490.8379}
+      pixelSize: {x: 23.2, y: 27.1}
+      rotation: 325.8
+      sortingOrder: 1
+    - spriteName: astera_walk_2
+      normalizedPosition: {x: 0.54347825, y: 0.4934877}
+      normalizedSize: {x: 0.1, y: 0.1}
+      pixelPosition: {x: 590.087, y: 1488.7351}
+      pixelSize: {x: 23.2, y: 27.1}
+      rotation: 353.4
+      sortingOrder: 1
+    - spriteName: astera_walk_3
+      normalizedPosition: {x: 0.5694444, y: 0.49825785}
+      normalizedSize: {x: 0.1, y: 0.1}
+      pixelPosition: {x: 828.1111, y: 1490.0278}
+      pixelSize: {x: 23.2, y: 27.1}
+      rotation: 350.8
+      sortingOrder: 1
+    - spriteName: astera_walk_4
+      normalizedPosition: {x: 0.5625, y: 0.5400697}
+      normalizedSize: {x: 0.1, y: 0.1}
+      pixelPosition: {x: 1058.5, y: 1501.3589}
+      pixelSize: {x: 23.2, y: 27.1}
+      rotation: 23.7
+      sortingOrder: 1
+    - spriteName: astera_walk_5
+      normalizedPosition: {x: 0.5347222, y: 0.5749129}
+      normalizedSize: {x: 0.1, y: 0.1}
+      pixelPosition: {x: 1284.0555, y: 1510.8014}
+      pixelSize: {x: 23.2, y: 27.1}
+      rotation: 31.6
+      sortingOrder: 1
+    - spriteName: astera_walk_6
+      normalizedPosition: {x: 0.564, y: 0.5943}
+      normalizedSize: {x: 0.1, y: 0.1}
+      pixelPosition: {x: 130.848, y: 1245.0553}
+      pixelSize: {x: 23.2, y: 27.1}
+      rotation: 30.8
+      sortingOrder: 1
+    - spriteName: astera_walk_7
+      normalizedPosition: {x: 0.5416667, y: 0.5818815}
+      normalizedSize: {x: 0.1, y: 0.1}
+      pixelPosition: {x: 357.66666, y: 1241.69}
+      pixelSize: {x: 23.2, y: 27.1}
+      rotation: 26.7
+      sortingOrder: 1
+    - spriteName: astera_walk_8
+      normalizedPosition: {x: 0.5833333, y: 0.5749129}
+      normalizedSize: {x: 0.1, y: 0.1}
+      pixelPosition: {x: 599.3333, y: 1239.8014}
+      pixelSize: {x: 23.2, y: 27.1}
+      rotation: 22.9
+      sortingOrder: 1
+    - spriteName: astera_walk_9
+      normalizedPosition: {x: 0.6261261, y: 0.505}
+      normalizedSize: {x: 0.1, y: 0.1}
+      pixelPosition: {x: 841.2612, y: 1220.855}
+      pixelSize: {x: 23.2, y: 27.1}
+      rotation: 15
+      sortingOrder: 1
+    - spriteName: astera_walk_10
+      normalizedPosition: {x: 0.5704698, y: 0.47580647}
+      normalizedSize: {x: 0.1, y: 0.1}
+      pixelPosition: {x: 1060.349, y: 1212.9436}
+      pixelSize: {x: 23.2, y: 27.1}
+      rotation: 325.8
+      sortingOrder: 1
+    - spriteName: astera_walk_11
+      normalizedPosition: {x: 0.59731543, y: 0.4825269}
+      normalizedSize: {x: 0.1, y: 0.1}
+      pixelPosition: {x: 1298.5771, y: 1214.7648}
+      pixelSize: {x: 23.2, y: 27.1}
+      rotation: 325.8
+      sortingOrder: 1
+    - spriteName: astera_walk_12
+      normalizedPosition: {x: 0.5637584, y: 0.48924732}
+      normalizedSize: {x: 0.1, y: 0.1}
+      pixelPosition: {x: 130.79195, y: 945.586}
+      pixelSize: {x: 23.2, y: 27.1}
+      rotation: 319.4
+      sortingOrder: 1
+    - spriteName: astera_walk_13
+      normalizedPosition: {x: 0.6375839, y: 0.5063}
+      normalizedSize: {x: 0.1, y: 0.1}
+      pixelPosition: {x: 379.91946, y: 950.2073}
+      pixelSize: {x: 23.2, y: 27.1}
+      rotation: 325.8
+      sortingOrder: 1
+    - spriteName: astera_walk_14
+      normalizedPosition: {x: 0.5503356, y: 0.4825269}
+      normalizedSize: {x: 0.1, y: 0.1}
+      pixelPosition: {x: 591.67786, y: 943.7648}
+      pixelSize: {x: 23.2, y: 27.1}
+      rotation: 336.1
+      sortingOrder: 1
+    - spriteName: astera_walk_15
+      normalizedPosition: {x: 0.5100671, y: 0.4623656}
+      normalizedSize: {x: 0.1, y: 0.1}
+      pixelPosition: {x: 814.3356, y: 938.3011}
+      pixelSize: {x: 23.2, y: 27.1}
+      rotation: 323
+      sortingOrder: 1
+    - spriteName: astera_walk_16
+      normalizedPosition: {x: 0.54362416, y: 0.44220433}
+      normalizedSize: {x: 0.1, y: 0.1}
+      pixelPosition: {x: 1054.1208, y: 932.8374}
+      pixelSize: {x: 23.2, y: 27.1}
+      rotation: 341
+      sortingOrder: 1
+    - spriteName: astera_walk_17
+      normalizedPosition: {x: 0.557047, y: 0.4825269}
+      normalizedSize: {x: 0.1, y: 0.1}
+      pixelPosition: {x: 1289.2349, y: 943.7648}
+      pixelSize: {x: 23.2, y: 27.1}
+      rotation: 326.2
+      sortingOrder: 1
+    - spriteName: astera_walk_18
+      normalizedPosition: {x: 0.54362416, y: 0.44892475}
+      normalizedSize: {x: 0.1, y: 0.1}
+      pixelPosition: {x: 126.120804, y: 663.6586}
+      pixelSize: {x: 23.2, y: 27.1}
+      rotation: 343.8
+      sortingOrder: 1
+    - spriteName: astera_walk_20
+      normalizedPosition: {x: 0.5069444, y: 0.4703833}
+      normalizedSize: {x: 0.1, y: 0.1}
+      pixelPosition: {x: 581.6111, y: 669.4739}
+      pixelSize: {x: 23.2, y: 27.1}
+      rotation: 350.4
+      sortingOrder: 1
+    - spriteName: astera_walk_21
+      normalizedPosition: {x: 0.5416667, y: 0.48432055}
+      normalizedSize: {x: 0.1, y: 0.1}
+      pixelPosition: {x: 821.6667, y: 673.25085}
+      pixelSize: {x: 23.2, y: 27.1}
+      rotation: 343.3
+      sortingOrder: 1
+    - spriteName: astera_walk_22
+      normalizedPosition: {x: 0.5208333, y: 0.4703833}
+      normalizedSize: {x: 0.1, y: 0.1}
+      pixelPosition: {x: 1048.8334, y: 669.4739}
+      pixelSize: {x: 23.2, y: 27.1}
+      rotation: 333.3
+      sortingOrder: 1
+    - spriteName: astera_walk_23
+      normalizedPosition: {x: 0.5138889, y: 0.42857143}
+      normalizedSize: {x: 0.1, y: 0.1}
+      pixelPosition: {x: 1279.2222, y: 658.1429}
+      pixelSize: {x: 23.2, y: 27.1}
+      rotation: 349.1
+      sortingOrder: 1
+    - spriteName: astera_walk_24
+      normalizedPosition: {x: 0.5138889, y: 0.43554008}
+      normalizedSize: {x: 0.1, y: 0.1}
+      pixelPosition: {x: 119.22222, y: 389.03137}
+      pixelSize: {x: 23.2, y: 27.1}
+      rotation: 348.9
+      sortingOrder: 1
+    - spriteName: astera_walk_25
+      normalizedPosition: {x: 0.5138889, y: 0.46341464}
+      normalizedSize: {x: 0.1, y: 0.1}
+      pixelPosition: {x: 351.22223, y: 396.58536}
+      pixelSize: {x: 23.2, y: 27.1}
+      rotation: 346.3
+      sortingOrder: 1
+    - spriteName: astera_walk_26
+      normalizedPosition: {x: 0.5069444, y: 0.43554008}
+      normalizedSize: {x: 0.1, y: 0.1}
+      pixelPosition: {x: 581.6111, y: 389.03137}
+      pixelSize: {x: 23.2, y: 27.1}
+      rotation: 344.2
+      sortingOrder: 1
+    - spriteName: astera_walk_27
+      normalizedPosition: {x: 0.5416667, y: 0.46341464}
+      normalizedSize: {x: 0.1, y: 0.1}
+      pixelPosition: {x: 821.6667, y: 396.58536}
+      pixelSize: {x: 23.2, y: 27.1}
+      rotation: 328.6
+      sortingOrder: 1
+    - spriteName: astera_walk_28
+      normalizedPosition: {x: 0.5347222, y: 0.46341464}
+      normalizedSize: {x: 0.1, y: 0.1}
+      pixelPosition: {x: 1052.0555, y: 396.58536}
+      pixelSize: {x: 23.2, y: 27.1}
+      rotation: 343.1
+      sortingOrder: 1
+    - spriteName: astera_walk_29
+      normalizedPosition: {x: 0.5833333, y: 0.49825785}
+      normalizedSize: {x: 0.1, y: 0.1}
+      pixelPosition: {x: 1295.3334, y: 406.02786}
+      pixelSize: {x: 23.2, y: 27.1}
+      rotation: 339.3
+      sortingOrder: 1
+    - spriteName: astera_walk_30
+      normalizedPosition: {x: 0.5763889, y: 0.5888502}
+      normalizedSize: {x: 0.1, y: 0.1}
+      pixelPosition: {x: 133.72223, y: 159.5784}
+      pixelSize: {x: 23.2, y: 27.1}
+      rotation: 336.1
+      sortingOrder: 1
+    - spriteName: astera_walk_31
+      normalizedPosition: {x: 0.5416667, y: 0.5818815}
+      normalizedSize: {x: 0.1, y: 0.1}
+      pixelPosition: {x: 357.66666, y: 157.6899}
+      pixelSize: {x: 23.2, y: 27.1}
+      rotation: 2.8
+      sortingOrder: 1
+    - spriteName: astera_walk_32
+      normalizedPosition: {x: 0.5486111, y: 0.554007}
+      normalizedSize: {x: 0.1, y: 0.1}
+      pixelPosition: {x: 591.2778, y: 150.1359}
+      pixelSize: {x: 23.2, y: 27.1}
+      rotation: 24.4
+      sortingOrder: 1
+    - spriteName: astera_walk_33
+      normalizedPosition: {x: 0.5555556, y: 0.5470383}
+      normalizedSize: {x: 0.1, y: 0.1}
+      pixelPosition: {x: 824.8889, y: 148.24739}
+      pixelSize: {x: 23.2, y: 27.1}
+      rotation: 24.2
+      sortingOrder: 1
+    - spriteName: astera_walk_34
+      normalizedPosition: {x: 0.6041667, y: 0.5818815}
+      normalizedSize: {x: 0.1, y: 0.1}
+      pixelPosition: {x: 1068.1666, y: 157.6899}
+      pixelSize: {x: 23.2, y: 27.1}
+      rotation: 0
+      sortingOrder: 1
+    - spriteName: astera_walk_35
+      normalizedPosition: {x: 0.5486111, y: 0.5679442}
+      normalizedSize: {x: 0.1, y: 0.1}
+      pixelPosition: {x: 1287.2778, y: 153.91289}
+      pixelSize: {x: 23.2, y: 27.1}
+      rotation: 0
+      sortingOrder: 1
+  sourceTextureName: 
+  handPositions: []

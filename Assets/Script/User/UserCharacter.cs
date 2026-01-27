@@ -61,6 +61,17 @@ namespace Hunt
         {
             CharId = charId;
         }
+        
+        private void InitializeWeaponController()
+        {
+            if (model == null) return;
+            
+            WeaponSpriteController weaponController = model.GetComponent<WeaponSpriteController>();
+            if (weaponController == null)
+            {
+                weaponController = model.AddComponent<WeaponSpriteController>();
+            }
+        }
         public bool IsLocalPlayer()
         {
 
@@ -104,6 +115,8 @@ namespace Hunt
                     characterAction.enabled = true;
                     characterAction.Initialize(model);
                 }
+
+                InitializeWeaponController();
 
                 isSetupComplete = true;
             }

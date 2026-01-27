@@ -23,6 +23,12 @@ MonoBehaviour:
   - rid: 8005846846772609134
   - rid: 8005846846772609135
   - rid: 8005846846772609136
+  - rid: 8005847010561228925
+  - rid: 8005847010561228926
+  - rid: 8005847010561228927
+  - rid: 8005847010561228928
+  - rid: 8005847010561228929
+  - rid: 8005847010561228930
   connections:
   - fromNodeGuid: f0eeffaa-5bc4-40c2-975e-95faa17d97f6
     toNodeGuid: 27447ef6-3fd7-499b-84c6-ea695b562097
@@ -48,6 +54,30 @@ MonoBehaviour:
     toNodeGuid: e139eaa9-8412-4654-975c-ec2cfe009ae6
     fromPortIndex: 0
     toPortIndex: 0
+  - fromNodeGuid: 0c23ff7c-681a-4cd4-9e1d-78d0bd57f7d9
+    toNodeGuid: 11743961-396f-4c2d-992d-96c70896145a
+    fromPortIndex: 0
+    toPortIndex: 0
+  - fromNodeGuid: cda62afc-1f27-4179-8f99-1d97a8215b50
+    toNodeGuid: 158a5d84-7712-4c06-a459-3d4b4ba0b87d
+    fromPortIndex: 0
+    toPortIndex: 0
+  - fromNodeGuid: 11743961-396f-4c2d-992d-96c70896145a
+    toNodeGuid: 0ea8e900-87b3-43e5-b9d0-6a2701451737
+    fromPortIndex: 0
+    toPortIndex: 0
+  - fromNodeGuid: 158a5d84-7712-4c06-a459-3d4b4ba0b87d
+    toNodeGuid: 5638b7b9-eb71-4e35-989b-9809b4356ad7
+    fromPortIndex: 0
+    toPortIndex: 0
+  - fromNodeGuid: 0c23ff7c-681a-4cd4-9e1d-78d0bd57f7d9
+    toNodeGuid: 0ea8e900-87b3-43e5-b9d0-6a2701451737
+    fromPortIndex: 0
+    toPortIndex: 0
+  - fromNodeGuid: cda62afc-1f27-4179-8f99-1d97a8215b50
+    toNodeGuid: 5638b7b9-eb71-4e35-989b-9809b4356ad7
+    fromPortIndex: 0
+    toPortIndex: 0
   bakedData:
     executionSteps:
     - nodeType: 1
@@ -63,8 +93,7 @@ MonoBehaviour:
         keys: []
         values: []
       layerParams: []
-      gameObjectIds:
-      - 2eb9648f-ac27-4908-9248-859937b5caf3
+      gameObjectIds: []
     - nodeType: 7
       nodeGuid: 27447ef6-3fd7-499b-84c6-ea695b562097
       stringParams:
@@ -120,8 +149,7 @@ MonoBehaviour:
         keys: []
         values: []
       layerParams: []
-      gameObjectIds:
-      - c4404fa5-b08f-4a8e-a0d3-fe25252cf3e0
+      gameObjectIds: []
     - nodeType: 1
       nodeGuid: 0089e361-ec2b-4514-bf66-1b7e6d65f8aa
       stringParams:
@@ -135,8 +163,7 @@ MonoBehaviour:
         keys: []
         values: []
       layerParams: []
-      gameObjectIds:
-      - a3951e22-769d-430b-853c-8ac0ab571ea3
+      gameObjectIds: []
     - nodeType: 7
       nodeGuid: 2aa44a7a-b631-4a52-8892-1f3a4c5fb05a
       stringParams:
@@ -193,6 +220,90 @@ MonoBehaviour:
       layerParams: []
       gameObjectIds:
       - 2ca78d81-a9e3-4e8d-93f5-b737f45b3416
+    - nodeType: 0
+      nodeGuid: 0c23ff7c-681a-4cd4-9e1d-78d0bd57f7d9
+      stringParams:
+        keys: []
+        values: []
+      intParams:
+        keys: []
+        values: 
+      floatParams:
+        keys: []
+        values: []
+      layerParams: []
+      gameObjectIds:
+      - 29c9713f-6dff-42c7-bcc0-b003b02a3f4c
+    - nodeType: 5
+      nodeGuid: 11743961-396f-4c2d-992d-96c70896145a
+      stringParams:
+        keys: []
+        values: []
+      intParams:
+        keys: []
+        values: 
+      floatParams:
+        keys: []
+        values: []
+      layerParams: []
+      gameObjectIds:
+      - e1032c60-0356-4c60-87ce-64d721be4f11
+    - nodeType: 6
+      nodeGuid: 0ea8e900-87b3-43e5-b9d0-6a2701451737
+      stringParams:
+        keys: []
+        values: []
+      intParams:
+        keys: []
+        values: 
+      floatParams:
+        keys: []
+        values: []
+      layerParams: []
+      gameObjectIds:
+      - ac499086-25fd-4b9f-979d-c12e7c17c047
+    - nodeType: 0
+      nodeGuid: cda62afc-1f27-4179-8f99-1d97a8215b50
+      stringParams:
+        keys: []
+        values: []
+      intParams:
+        keys: []
+        values: 
+      floatParams:
+        keys: []
+        values: []
+      layerParams: []
+      gameObjectIds:
+      - ac499086-25fd-4b9f-979d-c12e7c17c047
+    - nodeType: 5
+      nodeGuid: 158a5d84-7712-4c06-a459-3d4b4ba0b87d
+      stringParams:
+        keys: []
+        values: []
+      intParams:
+        keys: []
+        values: 
+      floatParams:
+        keys: []
+        values: []
+      layerParams: []
+      gameObjectIds:
+      - ac499086-25fd-4b9f-979d-c12e7c17c047
+    - nodeType: 6
+      nodeGuid: 5638b7b9-eb71-4e35-989b-9809b4356ad7
+      stringParams:
+        keys: []
+        values: []
+      intParams:
+        keys: []
+        values: 
+      floatParams:
+        keys: []
+        values: []
+      layerParams: []
+      gameObjectIds:
+      - e1032c60-0356-4c60-87ce-64d721be4f11
   references:
     version: 2
     RefIds:
@@ -271,5 +382,51 @@ MonoBehaviour:
         guid: e139eaa9-8412-4654-975c-ec2cfe009ae6
         position: {x: 1248, y: 508}
         nodeName: Hide GameObject
+        targetGameObjects:
+        - {fileID: 0}
+    - rid: 8005847010561228925
+      type: {class: ButtonClickNode, ns: Hunt, asm: Assembly-CSharp}
+      data:
+        guid: 0c23ff7c-681a-4cd4-9e1d-78d0bd57f7d9
+        position: {x: 1521, y: 346}
+        nodeName: Button Click
+        targetButton: {fileID: 0}
+    - rid: 8005847010561228926
+      type: {class: HideGameObjectNode, ns: Hunt, asm: Assembly-CSharp}
+      data:
+        guid: 11743961-396f-4c2d-992d-96c70896145a
+        position: {x: 1526, y: 507}
+        nodeName: Hide GameObject
+        targetGameObjects:
+        - {fileID: 0}
+    - rid: 8005847010561228927
+      type: {class: ButtonClickNode, ns: Hunt, asm: Assembly-CSharp}
+      data:
+        guid: cda62afc-1f27-4179-8f99-1d97a8215b50
+        position: {x: 1787, y: 345}
+        nodeName: Button Click
+        targetButton: {fileID: 0}
+    - rid: 8005847010561228928
+      type: {class: HideGameObjectNode, ns: Hunt, asm: Assembly-CSharp}
+      data:
+        guid: 158a5d84-7712-4c06-a459-3d4b4ba0b87d
+        position: {x: 1788, y: 508}
+        nodeName: Hide GameObject
+        targetGameObjects:
+        - {fileID: 0}
+    - rid: 8005847010561228929
+      type: {class: ShowGameObjectNode, ns: Hunt, asm: Assembly-CSharp}
+      data:
+        guid: 0ea8e900-87b3-43e5-b9d0-6a2701451737
+        position: {x: 1532, y: 674}
+        nodeName: Show GameObject
+        targetGameObjects:
+        - {fileID: 0}
+    - rid: 8005847010561228930
+      type: {class: ShowGameObjectNode, ns: Hunt, asm: Assembly-CSharp}
+      data:
+        guid: 5638b7b9-eb71-4e35-989b-9809b4356ad7
+        position: {x: 1789, y: 674}
+        nodeName: Show GameObject
         targetGameObjects:
         - {fileID: 0}

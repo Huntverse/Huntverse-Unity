@@ -1,4 +1,6 @@
 using Hunt.Enum;
+using Hunt.Data;
+using Hunt.Table;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System;
@@ -45,6 +47,8 @@ namespace Hunt
 
         // Prefab
         public static readonly string Kp_Portrait_Cam = "port_cam@prefab";
+        public static readonly string Kp_MapNameInfoUI = "map_name@prefab";
+        public static readonly string Kp_DamageText_Vfx = "damage_text@prefab";
     }
     public static class AniKeyConst
     {
@@ -178,13 +182,28 @@ namespace Hunt
         }
         public static string GetMapNameByMapId(ulong mapId)
         {
-            return mapId switch
+            var tableManager = TableDataManager.Shared;
+            if (tableManager == null)
             {
-                0 => "레미나의 잠경촌",
-                1 => "일루네스의 상념정",
-                2 => "서광잔영의 숲",
-                _ => string.Empty
-            };
+                return string.Empty;
+            }
+
+            var mapTable = tableManager.GetTable<MapTable>();
+            if (mapTable == null || mapTable.Infos == null)
+            {
+                return string.Empty;
+            }
+
+            var id = (uint)mapId;
+            foreach (var info in mapTable.Infos)
+            {
+                if (info.Type == id)
+                {
+                    return info.Name;
+                }
+            }
+
+            return string.Empty;
         }
  
         public static string GetStatStringByType(CharStatType t)

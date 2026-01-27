@@ -75,7 +75,8 @@ namespace Hunt
             {
                 if (!string.IsNullOrEmpty(text))
                 {
-                    AddMessage(text);
+
+                    AddMessage($"{GameSession.Shared?.SelectedCharacter.Name} : {text}");
                     inputField.text = "";
                     inputField.ActivateInputField();
                 }

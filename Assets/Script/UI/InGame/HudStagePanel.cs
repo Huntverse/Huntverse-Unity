@@ -10,10 +10,7 @@ namespace Hunt
     {
         [SerializeField] private TextMeshProUGUI stageNameText;
         private CinemachineCamera cinCam;
-        private void Start()
-        {
-            UpdateStagePanel(0);
-        }
+
         public void UpdateStagePanel(uint mapId)
         {
             stageNameText.text = BindKeyConst.GetMapNameByMapId(mapId);
