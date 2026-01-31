@@ -264,7 +264,7 @@ namespace Hunt
                     NotiConst.COLOR_SUCCESS);
                     $"[LogInScreen] HandleNotiLoginResponse 로그인 성공: {t}".DLog();
                     
-                    SceneLoadHelper.Shared?.LoadSceneSingleMode(ResourceKeyConst.Ks_Mainmenu, false);
+                    SceneLoadHelper.Shared?.LoadSceneSingleMode(ResourceKeyConst.Ks_Mainmenu, true);
 
                     break;
                 case Common.ErrorType.ErrAccountNotExist:
