@@ -24,12 +24,12 @@ namespace Hunt.Common {
     static ErrTypeReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "Cg5lcnJfdHlwZS5wcm90bxILSHVudC5Db21tb24qwQEKCUVycm9yVHlwZRIL",
+            "Cg5lcnJfdHlwZS5wcm90bxILSHVudC5Db21tb24q1wEKCUVycm9yVHlwZRIL",
             "CgdFUlJfTk9OEAASEwoPRVJSX0lOVkFMSURfUkVREAESGwoXRVJSX0lOVkFM",
             "SURfUEFDS0VUX1RZUEUQAhIKCgZFUlJfREIQAxIZChVFUlJfQUNDT1VOVF9O",
             "T1RfRVhJU1QQBBIRCg1FUlJfRFVQX0xPR0lOEAUSDgoKRVJSX0RVUF9JRBAG",
             "EhUKEUVSUl9EVVBfTklDS19OQU1FEAcSFAoQRVJSX0lOVkFMSURfQVVUSBAI",
-            "YgZwcm90bzM="));
+            "EhQKEEVSUl9VTkFVVEhPUklaRUQQCWIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Hunt.Common.ErrorType), }, null, null));
@@ -78,6 +78,10 @@ namespace Hunt.Common {
     /// LoginByKey에서 token이 맞지 않는 경우, 클라이언트 재 로그인 시도해야함
     /// </summary>
     [pbr::OriginalName("ERR_INVALID_AUTH")] ErrInvalidAuth = 8,
+    /// <summary>
+    ///로그인이 되지 않았는데, 로그인 이후에 유효한 핸들러를 호출하는 경우 => 아예 튕겨야 됨
+    /// </summary>
+    [pbr::OriginalName("ERR_UNAUTHORIZED")] ErrUnauthorized = 9,
   }
 
   #endregion
