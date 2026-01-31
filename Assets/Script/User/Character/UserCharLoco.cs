@@ -43,6 +43,9 @@ namespace Hunt
         private HashSet<IInteractable> nearbyInteractables = new HashSet<IInteractable>();
         private IInteractable currentInteractable;
         private UserCombat combat;
+        private float _facingScaleX = 1f;
+        /// <summary>방향 전환 시 scale 적용 대상(기본: model만). VFX 등에서 facing 참조용</summary>
+        public float FacingScaleX => _facingScaleX;
 
         #endregion
         private void Awake()
@@ -97,13 +100,16 @@ namespace Hunt
             moveInput = inputKey.Player.Move.ReadValue<Vector2>();
             if (moveInput.x > 0.1f)
             {
+                _facingScaleX = 1f;
                 transform.localScale = new Vector3(1, 1, 1);
             }
             else if (moveInput.x < -0.1f)
             {
+                _facingScaleX = -1f;
                 transform.localScale = new Vector3(-1, 1, 1);
-            }
 
+            }
+            GetComponent<UserDisplay>()?.OnFacingChanged(_facingScaleX);
         }
 
         public bool isJumpping = true;

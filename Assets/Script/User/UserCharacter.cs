@@ -8,6 +8,7 @@ namespace Hunt
     public class UserCharacter : MonoBehaviour
     {
         private UserCharLoco characterAction;
+        private UserDisplay charDisplay;
         private GameObject model;
 
         private bool isSetupComplete = false;
@@ -17,6 +18,7 @@ namespace Hunt
         private void Start()
         {
             characterAction = GetComponent<UserCharLoco>();
+            charDisplay = GetComponent<UserDisplay>();
             if (characterAction != null)
             {
                 characterAction.enabled = false;
@@ -26,6 +28,7 @@ namespace Hunt
             if (myChar != null)
             {
                 SetUserId(myChar.CharId);
+                charDisplay.SetCharName(myChar.Name);
             }
             string modelKey;
             Vector3 spawnpos = Vector3.zero;

@@ -20,8 +20,8 @@ namespace Hunt
                 return null;
             }
 
-            var playerScale = transform.localScale;
-            var vfxScale = scale ?? new Vector3(playerScale.x, 1f, 1f);
+            var facingX = GetComponent<UserCharLoco>()?.FacingScaleX ?? transform.localScale.x;
+            var vfxScale = scale ?? new Vector3(facingX, 1f, 1f);
 
             var vfxHandle = await VfxManager.Shared.PlayOneShot(
                 vfxKey,

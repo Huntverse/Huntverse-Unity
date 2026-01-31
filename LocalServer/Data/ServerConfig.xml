@@ -14,14 +14,13 @@
         CONSOLE_FILE = 3
    -->
    <!--
-   ST_VILIAGE = 1;
-   ST_RAID = 2;
-   ST_CHAT = 3;
-   ST_LOGIN = 4;
-   sT_LOCAL = 5;//로컬 서버
+ST_GAME = 1;
+	ST_CHAT = 2;
+	ST_LOGIN = 3;
+	sT_LOCAL = 4;//로컬 서버
    -->
 <Properties>
-   <Server Name="LocalServer" UseMetric="1" ServerType="5"/>
+   <Server Name="LocalServer" UseMetric="1" ServerType="4"/>
    <Logger Name="Huntverse" FileName="Log/LocalServer" LogLevel="1" LogMode="3"/>
    <Session ShardNo="2" PoolSize="1000"/>
    <DB DBThreadNo = "1" PreparedGC="30"/>

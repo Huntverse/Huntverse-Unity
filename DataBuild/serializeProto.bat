@@ -8,4 +8,4 @@ mkdir generated\bin
 call CSV_SerializeData.exe
 
 :: deploy bin files for server/client
-[Build End Protobuf]
+echo [Build End Protobuf]

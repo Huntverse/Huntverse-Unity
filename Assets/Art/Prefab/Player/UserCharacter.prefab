@@ -186,9 +186,9 @@ GameObject:
   - component: {fileID: 1359625169138974492}
   - component: {fileID: 5656638671077247083}
   - component: {fileID: 1972976879895525463}
+  - component: {fileID: 3808204374346771546}
   - component: {fileID: 1061231504897951527}
   - component: {fileID: 7212270052690455473}
-  - component: {fileID: 3808204374346771546}
   m_Layer: 6
   m_Name: UserCharacter
   m_TagString: Untagged
@@ -270,6 +270,19 @@ MonoBehaviour:
   enemyLayer:
     serializedVersion: 2
     m_Bits: 128
+--- !u!114 &3808204374346771546
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2203575790663535969}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9bcff6b4de2e3d429ab5f36439a65d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  userCharNameText: {fileID: 8203720355210318669}
 --- !u!70 &1061231504897951527
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -300,7 +313,7 @@ CapsuleCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
@@ -334,18 +347,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 4
---- !u!114 &3808204374346771546
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2203575790663535969}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c9bcff6b4de2e3d429ab5f36439a65d6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &2876693356401731264
 GameObject:
   m_ObjectHideFlags: 0
@@ -428,7 +429,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 2.27}
+  m_AnchoredPosition: {x: 0, y: 3.2}
   m_SizeDelta: {x: 10, y: 1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &8178848541947428807
@@ -549,6 +550,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2549608013706854478}
   - component: {fileID: 3379424270270989032}
+  - component: {fileID: 8745823362157100134}
   m_Layer: 6
   m_Name: Capsule
   m_TagString: Untagged
@@ -626,6 +628,43 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!70 &8745823362157100134
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4449219932246751203}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 192
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_Size: {x: 1, y: 2}
+  m_Direction: 0
 --- !u!1 &5668044796544375355
 GameObject:
   m_ObjectHideFlags: 0
