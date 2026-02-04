@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UI Node Graph · Bake ~ UIManager 처리 과정</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: 'Malgun Gothic', sans-serif; background: #1a1a2e; color: #eee; padding: 24px; margin: 0; }
+    h1 { text-align: center; margin-bottom: 6px; font-size: 1.2rem; font-weight: 600; }
+    .legend { display: flex; justify-content: center; gap: 20px; margin-bottom: 20px; font-size: 0.85rem; }
+    .legend span { display: inline-flex; align-items: center; gap: 6px; }
+    .legend .box { width: 12px; height: 12px; border-radius: 3px; }
+    .legend .editor .box { background: #8b7fc7; }
+    .legend .bake .box { background: #c77f8b; }
+    .legend .data .box { background: #5a7aa0; }
+    .legend .runtime .box { background: #50c878; }
+    .section { max-width: 560px; margin: 0 auto 20px; }
+    .section-title { font-size: 0.9rem; font-weight: 600; margin-bottom: 10px; color: #ccc; }
+    .flow { max-width: 560px; margin: 0 auto; }
+    .step { padding: 10px 12px; border-radius: 6px; margin: 4px 0; font-size: 0.88rem; text-align: center; }
+    .step.editor { background: #3d3558; border: 1px solid #8b7fc7; }
+    .step.bake { background: #583d48; border: 1px solid #c77f8b; }
+    .step.data { background: #2d3d58; border: 1px solid #5a7aa0; }
+    .step.runtime { background: #2d5a4a; border: 1px solid #50c878; }
+    .arrow { text-align: center; color: #666; font-size: 0.8rem; margin: 0; }
+    .foot { text-align: center; margin-top: 20px; font-size: 0.75rem; color: #666; max-width: 560px; margin-left: auto; margin-right: auto; }
+  </style>
+</head>
+<body>
+  <h1>UI Node Graph · Bake ~ UIManager 처리 과정</h1>
+  <div class="legend">
+    <span class="editor"><span class="box"></span>에디터</span>
+    <span class="bake"><span class="box"></span>Bake</span>
+    <span class="data"><span class="box"></span>데이터</span>
+    <span class="runtime"><span class="box"></span>런타임</span>
+  </div>
+
+  <div class="section">
+    <div class="section-title">1. 노드 설정 (에디터)</div>
+    <div class="flow">
+      <div class="step editor">UI Node Graph Editor에서 노드 추가·연결, Button/GameObject/레이어 참조 지정</div>
+      <div class="arrow">↓</div>
+      <div class="step data">UINodeGraph (ScriptableObject) 에셋에 nodes, connections 저장</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">2. Bake 실행</div>
+    <div class="flow">
+      <div class="step bake">노드가 참조하는 각 GameObject에 UIGraphTarget 부착 · GetOrCreateTargetId로 GUID(TargetId) 부여</div>
+      <div class="arrow">↓</div>
+      <div class="step bake">연결 기준 위상 정렬 → 실행 Step 리스트(bakedData.executionSteps) 생성 (레이어/오브젝트는 GUID로 저장)</div>
+      <div class="arrow">↓</div>
+      <div class="step bake">ButtonClickNode/KeyboardInputNode에 대해: 해당 버튼·오브젝트에 UIGraphBakedEvent/UIGraphBakedKeyboardEvent 부착 (graph, startNodeGuid 저장)</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">3. Bake 결과 (ScriptableObject · GUID)</div>
+    <div class="flow">
+      <div class="step data">UINodeGraph 에셋에 bakedData(executionSteps) 직렬화 저장</div>
+      <div class="step data">각 UI GameObject는 UIGraphTarget으로 고유 TargetId(GUID) 보유</div>
+      <div class="step data">버튼/키 오브젝트는 Baked 이벤트 컴포넌트로 “어느 그래프 · 어느 노드부터” 정보 보유</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">4. UIManager 처리 (런타임)</div>
+    <div class="flow">
+      <div class="step runtime">씬 로드 시 RegisterAllSystemsInScene</div>
+      <div class="arrow">↓</div>
+      <div class="step runtime">targetRegistry.RegisterAllGraphTargetsInScene() → 씬 내 UIGraphTarget 전부 ID로 등록 (ID → GameObject 조회 가능)</div>
+      <div class="arrow">↓</div>
+      <div class="step runtime">eventManager.RegisterAllBakedEventsInScene() → UIGraphBakedEvent는 Button.onClick에, UIGraphBakedKeyboardEvent는 키맵에 등록</div>
+      <div class="arrow">↓</div>
+      <div class="step runtime">버튼/키 입력 시 Baked 이벤트 → UIManager.ExecuteGraphFromNode(graph, startNodeGuid)</div>
+      <div class="arrow">↓</div>
+      <div class="step runtime">UIGraphExecutor: connections 기준 BFS로 실행할 Step 수집 → Step 순서대로 ExecuteStep (targetRegistry.FindGameObjectById 등으로 실행)</div>
+    </div>
+  </div>
+
+  <div class="foot">씬 언로드 시 해당 씬의 Baked 이벤트만 해제. GameObject 참조는 런타임에 GUID로만 조회하므로 씬 구조 변경에 비교적 안정적.</div>
+</body>
+</html>

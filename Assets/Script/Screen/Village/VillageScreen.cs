@@ -1,5 +1,4 @@
 using Cysharp.Threading.Tasks;
-using Hunt;
 using Hunt.Common;
 using Unity.Cinemachine;
 using UnityEngine;
@@ -8,8 +7,8 @@ namespace Hunt
 {
     public class VillageScreen : MonoBehaviour
     {
-        [SerializeField] private Transform envRoot;
         [SerializeField] private CinemachineCamera cinemaCam;
+
         private void Awake()
         {
             InGameService.OnMapChangeResponse += OnMapChangeResponse;
@@ -33,20 +32,16 @@ namespace Hunt
 
             Vector3 initialPos = Vector3.zero;
             var player = await GameSession.Shared.SpawnLocalPlayer(initialPos);
-            
-            if (player != null && cinemaCam != null)
+            if (player == null)
+            {
+                this.DError("플레이어 스폰 실패.");
+                return;
+            }
+            if (cinemaCam != null)
             {
                 cinemaCam.Target.TrackingTarget = player.transform;
             }
-            else
-            {
-                this.DError("플레이어 스폰 실패 또는 카메라 없음.");
-                return;
-            }
-            if (envRoot != null)
-            {
-                await WorldMapManager.Shared.LoadMapEnv(envRoot, currentMapId, SceneType.Village);
-            }
+            await WorldMapManager.Shared.LoadMapEnv(currentMapId, SceneType.Village);
 
             GameSession.Shared?.SetCurrentMap(currentMapId);
             
@@ -60,22 +55,16 @@ namespace Hunt
         {
             if (errorType != ErrorType.ErrNon)
             {
-                $"[VillageScreen] 맵 변경 실패: {errorType}".DError();
+                this.DError($"맵 변경 실패: {errorType}");
                 return;
             }
 
-            $"[VillageScreen] 맵 변경 승인: {newMapId}".DLog();
+            this.DLog($"맵 변경 승인: {newMapId}");
 
             var targetSceneType = GameSession.Shared.GetSceneTypeByMapId(newMapId);
 
-            if (targetSceneType == SceneType.Village && envRoot != null)
-            {
-                LoadNewEnv(newMapId).Forget();
-            }
-            else
-            {
-                LoadNewScene(newMapId).Forget();
-            }
+            LoadNewScene(newMapId).Forget();
+
         }
 
         /// <summary> HUD 강제 업데이트 </summary>
@@ -110,15 +99,6 @@ namespace Hunt
                 $"[VillageScreen] 포털 위치로 이동: {transitionInfo.Value.spawnDirection}".DLog();
                 GameSession.Shared?.MovePlayerToPortal(transitionInfo.Value.spawnDirection);
             }
-        }
-
-        /// <summary> 같은 씬 내에서 Env만 교체 </summary>
-        private async UniTaskVoid LoadNewEnv(uint mapId)
-        {
-            await WorldMapManager.Shared.LoadMapEnv(envRoot, mapId, SceneType.Village);
-            GameSession.Shared?.SetCurrentMap(mapId);
-            
-            PositionPlayerAtPortal();
         }
 
         /// <summary> 다른 씬으로 전환 (Field 등) </summary>

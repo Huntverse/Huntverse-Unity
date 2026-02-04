@@ -253,15 +253,16 @@ namespace Hunt
             return SceneType.FieldDungeon;
         }
 
-        /// <summary> 맵 ID로 씬 이름 가져오기 </summary>
+        /// <summary> mapId에 맞는 씬 키 (씬 교체 시 Single 로드용) </summary>
         public string GetSceneNameByMapId(uint mapId)
         {
             var sceneType = GetSceneTypeByMapId(mapId);
             return sceneType switch
             {
-                SceneType.Village => ResourceKeyConst.Ks_Village,
-                SceneType.FieldDungeon => ResourceKeyConst.Ks_FieldDungeon,
-                _ => ResourceKeyConst.Ks_Village
+                SceneType.Village => $"village_{mapId}@scene",
+                SceneType.FieldDungeon => $"fielddungeon_{mapId}@scene",
+                SceneType.Town => $"town_{mapId}@scene",
+                _ => $"map_{mapId}@scene"
             };
         }
 

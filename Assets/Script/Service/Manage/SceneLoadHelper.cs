@@ -15,6 +15,7 @@ namespace Hunt
         // async job stop/cancel
         private CancellationTokenSource cts;
         private SceneInstance curScene;
+        private bool deferFadeOut;
 
         [Header("Loading Indicator")]
         [SerializeField] private Canvas loadingCanvas;
@@ -63,11 +64,13 @@ namespace Hunt
             }
         }
 
-        public async UniTask LoadSceneSingleMode(string key, bool isfadeactive = true)
+        public async UniTask LoadSceneSingleMode(string key, bool isfadeactive = true, bool deferFadeOutUntilManually = false)
         {
             CancelCurrentOps();
 
             float loadStartTime = Time.realtimeSinceStartup;
+
+            deferFadeOut = deferFadeOutUntilManually;
 
             try
             {
@@ -103,11 +106,15 @@ namespace Hunt
                     await UniTask.Delay(TimeSpan.FromSeconds(minLoadingDuration - elapsedTime), cancellationToken: cts.Token);
                 }
 
-                if (isfadeactive)
+                if (isfadeactive && !deferFadeOut)
                 {
                     await UIEffect.FadeOut(loadingCanvasGroup,cts.Token,fadeDuration);
+                    ShowLoadingIndicator(false);
                 }
-                ShowLoadingIndicator(false);
+                else if (!isfadeactive)
+                {
+                    ShowLoadingIndicator(false);
+                }
             }
             catch (OperationCanceledException)
             {
@@ -228,6 +235,18 @@ namespace Hunt
                     $"[SceneLoadHelper] 폴백 로드 실패: {fallbackEx.Message}".DError();
                 }
             }
+        }
+
+        /// <summary> LoadSceneSingleMode에서 지연시킨 페이드아웃을 수동 완료 </summary>
+        public async UniTask CompleteDeferredFadeOut()
+        {
+            if (!deferFadeOut) return;
+            deferFadeOut = false;
+            if (loadingCanvasGroup != null && cts != null && !cts.IsCancellationRequested)
+            {
+                await UIEffect.FadeOut(loadingCanvasGroup, cts.Token, fadeDuration);
+            }
+            ShowLoadingIndicator(false);
         }
 
 

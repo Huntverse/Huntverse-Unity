@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>맵 로드 플로우 — 포트폴리오</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', 'Malgun Gothic', sans-serif;
+      background: #1a1d23;
+      color: #e4e6eb;
+      padding: 2rem;
+      margin: 0;
+    }
+    h1 { text-align: center; font-weight: 600; margin-bottom: 0.5rem; color: #58a6ff; }
+    .subtitle { text-align: center; color: #8b949e; font-size: 0.9rem; margin-bottom: 2rem; }
+    .flow { max-width: 720px; margin: 0 auto; }
+    .node {
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin: 8px 0;
+      position: relative;
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+    .node::before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: -10px;
+      width: 2px;
+      height: 10px;
+      background: #58a6ff;
+    }
+    .node:first-child::before { display: none; }
+    .node.start { background: #238636; color: #fff; }
+    .node.core { background: #1f6feb; color: #fff; }
+    .node.data { background: #2d333b; }
+    .node.scene { background: #0d419d; color: #fff; }
+    .node.end { background: #6e7681; }
+    .node.code { border-left: 4px solid #58a6ff; }
+    .arrow { text-align: center; color: #58a6ff; margin: -4px 0; font-size: 1.2rem; }
+    .label { font-size: 0.75rem; color: #8b949e; margin-top: 4px; display: block; }
+    .ref { font-size: 0.7rem; color: #6e7681; font-family: Consolas, monospace; }
+    .note { margin-top: 2rem; padding: 1rem; background: #21262d; border-radius: 8px; font-size: 0.9rem; border-left: 4px solid #58a6ff; }
+    .note ul { margin: 0.5rem 0 0 1rem; padding: 0; }
+    .pending { opacity: 0.85; border-left-color: #9e6a03; }
+    .section { font-weight: 600; color: #58a6ff; margin: 1.5rem 0 0.5rem; font-size: 0.95rem; }
+  </style>
+</head>
+<body>
+  <h1>맵 로드 플로우</h1>
+  <p class="subtitle">Core Single 고정 + 맵 ID별 Env Additive 로드·전환 (현재 코드 기준)</p>
+
+  <div class="flow">
+    <div class="section">■ 인게임 진입</div>
+    <div class="node start">메인 메뉴 · 마을 입장</div>
+    <div class="arrow">↓</div>
+    <div class="node core code">
+      Core 씬 Single 로드 (로딩 페이드 인, 페이드 아웃은 Env 로드 후로 지연)
+      <span class="label">공통 HUD·전역 시스템은 Core에만 둠. 맵 전환해도 Core는 유지.</span>
+      <span class="ref">MainMenuScreen.EnterVillage → SceneLoadHelper.LoadSceneSingleMode(Ks_Core, deferFadeOutUntilManually: true)</span>
+    </div>
+    <div class="arrow">↓</div>
+    <div class="node data code">
+      기존 curScene 있으면 Unload → Addressables.LoadSceneAsync(key, LoadSceneMode.Single) → curScene 갱신
+      <span class="ref">SceneLoadHelper.LoadSceneSingleMode</span>
+    </div>
+    <div class="arrow">↓</div>
+    <div class="node core code">
+      CoreScreen.Start — 진입 플로우
+      <span class="label">currentMapId = GameSession.CurrentMapId. 0이거나 Village(24000~25000)·FieldDungeon(27000~28000) 밖이면 24000 사용.</span>
+      <span class="ref">CoreScreen.Start</span>
+    </div>
+    <div class="arrow">↓</div>
+    <div class="node data code">
+      BGM 재생(씬 타입별) · 로컬 플레이어 스폰(Vector3.zero, DontDestroyOnLoad)
+      <span class="ref">PlayBgmBySceneType · GameSession.SpawnLocalPlayer</span>
+    </div>
+    <div class="arrow">↓</div>
+    <div class="node scene code">
+      WorldMapManager.LoadMapEnv(mapId, sceneType)
+      <span class="label">currentEnvScene 있으면 UnloadSceneAdditive → GetEnvKey(mapId, sceneType)로 envKey 생성 → LoadSceneAdditiveMode(envKey). 맵 이름 UI·StagePanel 갱신.</span>
+      <span class="ref">WorldMapManager.LoadMapEnv · GetEnvKey · SceneLoadHelper.UnloadSceneAdditive / LoadSceneAdditiveMode</span>
+    </div>
+    <div class="arrow">↓</div>
+    <div class="node data code">
+      CompleteDeferredFadeOut · SetCurrentMap · RefreshHUD · PositionPlayerAtPortal(전환 정보 있으면 MovePlayerToPortal)
+      <span class="ref">CoreScreen (Start 마무리)</span>
+    </div>
+    <div class="arrow">↓</div>
+    <div class="node end">플레이 중 — Core 유지, Env만 맵 ID별 Additive 씬</div>
+
+    <div class="section">■ 씬 타입·Env 키 (GetEnvKey)</div>
+    <div class="node data code">
+      Village → village_{mapId}@scene · FieldDungeon → fielddungeon_{mapId}@scene · Town → town_{mapId}@scene · 그 외 → map_{mapId}@scene
+      <span class="label">맵 ID 구간: Village 24000~25000, FieldDungeon 27000~28000 (GameSession.GetSceneTypeByMapId). BGM은 Village/Field 구분.</span>
+      <span class="ref">WorldMapManager.GetEnvKey · GameSession.GetSceneTypeByMapId</span>
+    </div>
+
+    <div class="section">■ 맵 전환 (Env만 교체)</div>
+    <div class="node data code">
+      포털/트리거 접촉 → ReqMapChange(targetMapId) · SetTransitionInfo(entryDirection, spawnDirection)
+      <span class="ref">FieldPortal.OnTriggerEnter2D · InGameService.ReqMapChange · WorldMapManager.SetTransitionInfo</span>
+    </div>
+    <div class="arrow">↓</div>
+    <div class="node data code">
+      맵 변경 응답 → CoreScreen.OnMapChangeResponse → LoadNewEnv(newMapId, targetSceneType)
+      <span class="ref">InGameService.OnMapChangeResponse · CoreScreen.OnMapChangeResponse</span>
+    </div>
+    <div class="arrow">↓</div>
+    <div class="node scene code">
+      LoadNewEnv: LoadMapEnv(기존 Env Unload 후 새 envKey Additive 로드) · SetCurrentMap · PlayBgmBySceneType · PositionPlayerAtPortal
+      <span class="label">Core는 건드리지 않음. WorldMapManager가 currentEnvScene Unload 후 LoadSceneAdditiveMode(envKey)만 수행.</span>
+      <span class="ref">CoreScreen.LoadNewEnv · WorldMapManager.LoadMapEnv</span>
+    </div>
+  </div>
+
+  <div class="note">
+    <strong>한 줄 요약 (면접용)</strong>
+    <p style="margin: 0.5rem 0 0 0;">인게임 진입 시 Core 씬만 Single로 로드하고, 공통 HUD·전역 시스템은 Core에 둡니다. 마을/필드 던전은 맵 ID별 Env 씬(village_{id}, fielddungeon_{id}, town_{id}, map_{id})을 Additive로 로드하며, 맵 전환 시에는 기존 Env Unload 후 새 Env만 Additive 로드해 Core는 유지합니다. 비정상 종료 시에는 “어디서 나갔는지”(일반/레이드 등)에 따라 스폰 지점을 다르게 두고, 레이드 중 이탈 시 레이드 대기 씬으로 스폰되도록 설계·연동 예정입니다.</p>
+  </div>
+  <div class="note pending">
+    <strong>비정상 종료 시 스폰 (설계·연동 예정)</strong>
+    <ul>
+      <li>일반 필드/마을: 마지막 저장 위치 또는 기본 마을(24000) 스폰.</li>
+      <li>레이드/던전 중 이탈: 해당 콘텐츠 대기 씬(예: 레이드 대기 씬)으로 스폰.</li>
+    </ul>
+    <p style="margin: 0.5rem 0 0 0;">서버에서 마지막 맵 ID·위치·비정상 종료 여부·컨텍스트 전달 시, 클라이언트가 스폰 맵 ID·위치 결정.</p>
+  </div>
+  <div class="note pending">
+    <strong>기타 연동 예정 (미구현)</strong>
+    <ul>
+      <li>서버에서 로컬 플레이어 마지막 씬 ID·위치 수신 → CurrentMapId/스폰 위치 설정.</li>
+    </ul>
+  </div>
+</body>
+</html>

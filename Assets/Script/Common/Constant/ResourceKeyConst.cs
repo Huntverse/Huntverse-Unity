@@ -22,6 +22,7 @@ namespace Hunt
     public static class ResourceKeyConst
     {
         public static readonly string Ks_Mainmenu = "mainmenu@scene";
+        public static readonly string Ks_Core = "core@scene";
         public static readonly string Ks_Village = "village@scene";
         public static readonly string Ks_FieldDungeon = "fielddungeon@scene";
 

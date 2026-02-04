@@ -1,6 +1,7 @@
 using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
+using UnityEngine.ResourceManagement.ResourceProviders;
 
 namespace Hunt
 {
@@ -8,64 +9,75 @@ namespace Hunt
     public class WorldMapManager : MonoBehaviourSingleton<WorldMapManager>
     {
         private FieldTransitionInfo? currentTransition;
+        private SceneInstance currentEnvScene;
+        private GameObject currentMapNameUI;
+        private bool isLoadingEnv;
 
-        
         protected override bool DontDestroy => true;
 
-        /// <summary> 맵 Env 로드 </summary>
-        public async UniTask<GameObject> LoadMapEnv(Transform envRoot, uint mapId, SceneType sceneType)
+        /// <summary> 맵 Env 로드 (Additive Scene). 맵 이름 UI는 InGameHud 하위에 생성·교체 </summary>
+        public async UniTask LoadMapEnv(uint mapId, SceneType sceneType)
         {
-            this.DLog($"MapId : {mapId} , SceneType : {sceneType}");
-            if (envRoot == null)
-            {
-                "[WorldMapManager] EnvRoot가 null".DError();
-                return null;
-            }
+            if (isLoadingEnv) return;
+            isLoadingEnv = true;
 
-           
-            foreach (Transform child in envRoot)
-            {
-                Destroy(child.gameObject);
-            }
-            await UniTask.Yield();
-
-       
-            string envKey = GetEnvKey(mapId, sceneType);
-            var envPrefab = await AbLoader.Shared.LoadInstantiateAsync(envKey);
-            envPrefab.SetActive(true);
-            envPrefab.transform.SetParent(envRoot);
-            if (envPrefab == null)
-            {
-                $"[WorldMapManager] Env 로드 실패: {envKey}".DError();
-                return null;
-            }
-
-            $"[WorldMapManager] 맵 Env 로드 완료: {mapId}".DLog();
             try
             {
-                var common = await AbLoader.Shared.LoadInstantiateAsync(ResourceKeyConst.Kp_MapNameInfoUI);
-                common.transform.SetParent(envRoot);
-                common.GetComponentInChildren<TextMeshProUGUI>().text = BindKeyConst.GetMapNameByMapId(mapId);
-                InGameHud.Shared.StagePanel.UpdateStagePanel(mapId);
+                this.DLog($"MapId : {mapId} , SceneType : {sceneType}");
 
+                if (currentMapNameUI != null)
+                {
+                    Destroy(currentMapNameUI);
+                    currentMapNameUI = null;
+                }
+                await UniTask.Yield();
+
+                if (currentEnvScene.Scene.IsValid())
+                {
+                    await SceneLoadHelper.Shared.UnloadSceneAdditive(currentEnvScene);
+                }
+
+                string envKey = GetEnvKey(mapId, sceneType);
+                try
+                {
+                    currentEnvScene = await SceneLoadHelper.Shared.LoadSceneAdditiveMode(envKey);
+                }
+                catch (System.Exception e)
+                {
+                    this.DError($"Env 씬 로드 실패: {envKey}, {e.Message}");
+                    return;
+                }
+
+                $"[WorldMapManager] 맵 Env 로드 완료: {mapId}".DLog();
+                try
+                {
+                    var mapNameGo = await AbLoader.Shared.LoadInstantiateAsync(ResourceKeyConst.Kp_MapNameInfoUI);
+                    if (mapNameGo == null) return;
+                    var tmp = mapNameGo.GetComponentInChildren<TMPro.TextMeshProUGUI>();
+                    if (tmp != null) tmp.text = BindKeyConst.GetMapNameByMapId(mapId);
+                    currentMapNameUI = mapNameGo;
+                    InGameHud.Shared?.StagePanel?.UpdateStagePanel(mapId);
+                }
+                catch (System.Exception e)
+                {
+                    this.DError($"MapName UI 생성 실패: {e.Message}");
+                }
             }
-            catch
+            finally
             {
-                this.DError($"MapName Instance Error");
+                isLoadingEnv = false;
             }
-            
-            return envPrefab;
         }
 
-        /// <summary> 씬 타입별 Env 키 생성 </summary>
+        /// <summary> mapId에 맞는 Env 씬 키 (ID값으로 씬 갈아끼움) </summary>
         private string GetEnvKey(uint mapId, SceneType sceneType)
         {
             return sceneType switch
             {
-                SceneType.FieldDungeon => $"fielddungeon_{mapId}@scene_env",
-                SceneType.Village => $"village_{mapId}@scene_env",
-                SceneType.Town => $"town_{mapId}@scene_env",
-                _ => $"map_{mapId}@scene_env"
+                SceneType.Village => $"village_{mapId}@scene",
+                SceneType.FieldDungeon => $"fielddungeon_{mapId}@scene",
+                SceneType.Town => $"town_{mapId}@scene",
+                _ => $"map_{mapId}@scene"
             };
         }
 
@@ -75,7 +87,7 @@ namespace Hunt
         public void SetTransitionInfo(FieldTransitionInfo info)
         {
             currentTransition = info;
-            $"[WorldMapManager] 전환 정보 저장: {info.entryDirection} → {info.spawnDirection}".DLog();
+            this.DLog($"전환 정보 저장: {info.entryDirection} → {info.spawnDirection}");
         }
 
         /// <summary> 전환 정보 가져오고 초기화 </summary>
@@ -85,9 +97,6 @@ namespace Hunt
             currentTransition = null;
             return info;
         }
-
-        /// <summary> 전환 정보 존재 여부 </summary>
-        public bool HasTransitionInfo => currentTransition.HasValue;
 
         #endregion
     }

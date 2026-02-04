@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -61,15 +63,29 @@ namespace Hades.Tool
             {
                 SceneHelper.OpenScene("MainMenu");
             }
-            if (GUILayout.Button(new GUIContent("Village", "open Village scene"), commandButtonStyle))
+            if (GUILayout.Button(new GUIContent("Core", "open Core scene"), commandButtonStyle))
             {
-                SceneHelper.OpenScene("Village");
+                SceneHelper.OpenScene("Core");
             }
-            if (GUILayout.Button(new GUIContent("FieldDungeon", "open FieldDungeon scene"), commandButtonStyle))
-            {
-                SceneHelper.OpenScene("FieldDungeon");
-            }
+            DrawSceneDropdown("Village", "open Village scene");
+            DrawSceneDropdown("FieldDungeon", "open FieldDungeon scene");
             GUILayout.FlexibleSpace();
+        }
+
+        static void DrawSceneDropdown(string label, string tooltip)
+        {
+            if (!GUILayout.Button(new GUIContent(label, tooltip), commandButtonStyle))
+                return;
+            var menu = new GenericMenu();
+            var sceneNames = SceneHelper.GetSceneNamesByPrefix(label);
+            foreach (var sceneName in sceneNames)
+            {
+                var name = sceneName;
+                menu.AddItem(new GUIContent(sceneName), false, () => SceneHelper.OpenScene(name));
+            }
+            if (sceneNames.Length == 0)
+                menu.AddDisabledItem(new GUIContent("(No scenes found)"));
+            menu.ShowAsContext();
         }
     }
 
@@ -116,6 +132,20 @@ namespace Hades.Tool
                 }
             }
             sceneToOpen = null;
+        }
+
+        /// <summary>접두사로 검색한 씬 이름 목록 반환.</summary>
+        public static string[] GetSceneNamesByPrefix(string prefix)
+        {
+            var guids = AssetDatabase.FindAssets("t:scene " + prefix, null);
+            var list = new List<string>();
+            foreach (var guid in guids)
+            {
+                var path = AssetDatabase.GUIDToAssetPath(guid);
+                if (path.EndsWith(".unity"))
+                    list.Add(Path.GetFileNameWithoutExtension(path));
+            }
+            return list.OrderBy(x => x).ToArray();
         }
 
         public static void OpenScene(string sceneName)

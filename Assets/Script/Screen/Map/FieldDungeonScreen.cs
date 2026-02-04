@@ -8,8 +8,8 @@ namespace Hunt
     /// <summary> 필드 던전 씬 관리 </summary>
     public class FieldDungeonScreen : MonoBehaviour
     {
-        [SerializeField] private Transform envRoot;
         [SerializeField] private CinemachineCamera cinemaCam;
+
         private void Awake()
         {
             InGameService.OnMapChangeResponse += OnMapChangeResponse;
@@ -33,17 +33,16 @@ namespace Hunt
             
             Vector3 initialPos =  Vector3.zero;
             var player = await GameSession.Shared.SpawnLocalPlayer(initialPos);
-            
-            if (player != null && cinemaCam != null)
+            if (player == null)
+            {
+                this.DError("플레이어 스폰 실패.");
+                return;
+            }
+            if (cinemaCam != null)
             {
                 cinemaCam.Target.TrackingTarget = player.transform;
             }
-            else
-            {
-                this.DError("플레이어 스폰 실패 또는 카메라 없음.");
-                return;
-            }
-            await WorldMapManager.Shared.LoadMapEnv(envRoot, currentMapId, SceneType.FieldDungeon);
+            await WorldMapManager.Shared.LoadMapEnv(currentMapId, SceneType.FieldDungeon);
             GameSession.Shared?.SetCurrentMap(currentMapId);
             
             RefreshHUD();
@@ -56,25 +55,17 @@ namespace Hunt
         {
             if (errorType != ErrorType.ErrNon)
             {
-                $"[FieldDungeonScreen] 맵 변경 실패: {errorType}".DError();
+                this.DError($"맵 변경 실패: {errorType}");
                 return;
             }
             
-            $"[FieldDungeonScreen] 맵 변경 승인: {newMapId}".DLog();
+            this.DLog($"맵 변경 승인: {newMapId}");
             
             // 씬 타입 확인
             var targetSceneType = GameSession.Shared.GetSceneTypeByMapId(newMapId);
             
-            if (targetSceneType == SceneType.FieldDungeon)
-            {
-                // 같은 씬 타입 -> Env만 교체
-                LoadNewEnv(newMapId).Forget();
-            }
-            else
-            {
-                // 다른 씬 타입 -> 씬 전환
-                LoadNewScene(newMapId).Forget();
-            }
+            LoadNewScene(newMapId).Forget();
+            
         }
 
         /// <summary> HUD 강제 업데이트 </summary>
@@ -112,15 +103,6 @@ namespace Hunt
             }
         }
 
-        /// <summary> 같은 씬 내에서 Env만 교체 </summary>
-        private async UniTaskVoid LoadNewEnv(uint mapId)
-        {
-            await WorldMapManager.Shared.LoadMapEnv(envRoot, mapId, SceneType.FieldDungeon);
-            GameSession.Shared?.SetCurrentMap(mapId);
-            
-            // 포털 위치로 이동
-            PositionPlayerAtPortal();
-        }
 
         /// <summary> 다른 씬으로 전환 (Village 등) </summary>
         private async UniTaskVoid LoadNewScene(uint mapId)
