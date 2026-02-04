@@ -9,6 +9,8 @@ namespace Hunt
         private Action onReturnPool;
         private IVfxMover mover;
         public string returnOnClipName = "";
+        [SerializeField] private Vector3 spawnPosition;
+        public Vector3 SpawnPosition => spawnPosition;
         public void Init(Action returnCallback)
         {
             onReturnPool = returnCallback;

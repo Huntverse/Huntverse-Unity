@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Hades.Tool
+namespace Hunt.Tool
 {
     [Serializable]
     public class HandPositionData

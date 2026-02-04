@@ -1,4 +1,4 @@
-﻿using Cysharp.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using System;
 using UnityEngine;
 
@@ -71,9 +71,7 @@ namespace Hunt
             
             WeaponSpriteController weaponController = model.GetComponent<WeaponSpriteController>();
             if (weaponController == null)
-            {
                 weaponController = model.AddComponent<WeaponSpriteController>();
-            }
         }
         public bool IsLocalPlayer()
         {

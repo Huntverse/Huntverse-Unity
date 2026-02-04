@@ -9,7 +9,8 @@ public class AttackBehaviour : StateMachineBehaviour
         var player = animator.GetComponentInParent<UserCharLoco>();
         if (player != null)
         {
-            player.isAttacking=true;
+            player.isAttacking = true;
+            player.SetCurrentActionType(AnimationActionType.Attack);
         }
     }
 
@@ -26,6 +27,7 @@ public class AttackBehaviour : StateMachineBehaviour
         if (player != null)
         {
             player.isAttacking = false;
+            player.SetCurrentActionType(AnimationActionType.None);
         }
     }
 

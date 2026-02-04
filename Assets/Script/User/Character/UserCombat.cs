@@ -12,31 +12,21 @@ namespace Hunt
         [SerializeField] private float baseDamage = 10f;
         [SerializeField] private LayerMask enemyLayer;
 
-        public async UniTask<VfxHandle> SpawnAttackVfx(string vfxKey, Vector3 position, Quaternion rotation, Vector3? scale = null)
+        /// <summary>키 + 위치 + 시간 구간으로 스폰 후 Hit 감지 부착. 부모가 Animator 정규화 시간 알 때 사용.</summary>
+        public async UniTask<VfxHandle> SpawnVfx(string key, Vector3 position, Quaternion rotation, Transform parent, float startTime, float endTime)
         {
-            if (VfxManager.Shared == null)
-            {
-                $"⚔️ [UserCombat] VfxManager.Shared가 null!".DError();
-                return null;
-            }
+            if (VfxManager.Shared == null) return null;
+            var handle = await VfxManager.Shared.PlayOneShot(key, position, rotation, parent, startTime, endTime);
+            if (handle != null && handle.IsVaild)
+                SetupHitDetectorFor(handle.vfxObject);
+            return handle;
+        }
 
-            var facingX = GetComponent<UserCharLoco>()?.FacingScaleX ?? transform.localScale.x;
-            var vfxScale = scale ?? new Vector3(facingX, 1f, 1f);
-
-            var vfxHandle = await VfxManager.Shared.PlayOneShot(
-                vfxKey,
-                position,
-                rotation,
-                this.transform,
-                vfxScale
-            );
-
-            if (vfxHandle != null && vfxHandle.IsVaild)
-            {
-                SetupHitDetector(vfxHandle.vfxObject, position);
-            }
-
-            return vfxHandle;
+        /// <summary>스폰된 VFX에 Hit 감지 부착. VfxManager.PlayOneShot 후 호출.</summary>
+        public void SetupHitDetectorFor(VfxObject vfxObject)
+        {
+            if (vfxObject == null) return;
+            SetupHitDetector(vfxObject, vfxObject.transform.position);
         }
 
         private void SetupHitDetector(VfxObject vfxObject, Vector3 hitPosition)
@@ -44,20 +34,15 @@ namespace Hunt
             var hitDetector = vfxObject.GetComponent<AttackHitDetector>();
             if (hitDetector == null)
             {
-                var collider = vfxObject.GetComponent<Collider2D>();
-                if (collider == null)
+                if (vfxObject.GetComponent<Collider2D>() == null)
                 {
                     var boxCollider = vfxObject.gameObject.AddComponent<BoxCollider2D>();
                     boxCollider.size = new Vector2(1f, 1f);
                     boxCollider.isTrigger = true;
-                    $"⚔️ [UserCombat] Collider2D 추가: {vfxObject.gameObject.name}".DLog();
                 }
                 hitDetector = vfxObject.gameObject.AddComponent<AttackHitDetector>();
-                $"⚔️ [UserCombat] AttackHitDetector 추가: {vfxObject.gameObject.name}".DLog();
             }
-
             hitDetector.Initialize(this, baseDamage, enemyLayer);
-            $"⚔️ [UserCombat] HitDetector 초기화 완료, EnemyLayer: {enemyLayer.value}".DLog();
         }
 
         /// <summary>
@@ -65,13 +50,7 @@ namespace Hunt
         /// </summary>
         public void OnHitDetected(IDamageable target, float damage, Vector3 hitPosition)
         {
-            if (target == null)
-            {
-                $"⚔️ [UserCombat] OnHitDetected: target이 null".DError();
-                return;
-            }
-
-            $"⚔️ [UserCombat] 데미지 적용: {target.GetTransform().name}, 데미지: {damage}".DLog();
+            if (target == null) return;
             target.TakeDamage(damage, hitPosition);
             SpawnDamageText(damage, hitPosition).Forget();
         }

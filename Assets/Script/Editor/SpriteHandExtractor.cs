@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
-using Hades.Tool;
+using Hunt.Tool;
 
 namespace Hades.Tool
 {

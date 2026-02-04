@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
-using Hades.Tool;
+using Hunt.Tool;
 
 namespace Hunt
 {
@@ -10,7 +10,7 @@ namespace Hunt
     {
         [SerializeField] private string weaponPrefabKey;
         [SerializeField] private List<SpriteHandPositionData> handPositionDataList = new List<SpriteHandPositionData>();
-        
+
         private Animator animator;
         private SpriteRenderer characterRenderer;
         private Dictionary<string, List<HandPositionData>> animationHandData = new Dictionary<string, List<HandPositionData>>();
@@ -59,7 +59,10 @@ namespace Hunt
             currentWeaponInstance = Instantiate(weaponPrefab, transform);
             currentWeaponInstance.transform.localPosition = Vector3.zero;
             currentWeaponInstance.transform.localRotation = Quaternion.identity;
-            
+
+            if (currentWeaponInstance.GetComponent<SwordTrailEffect>() == null)
+                currentWeaponInstance.AddComponent<SwordTrailEffect>();
+
             SpriteRenderer[] weaponRenderers = currentWeaponInstance.GetComponentsInChildren<SpriteRenderer>();
             if (characterRenderer != null)
             {
@@ -383,7 +386,47 @@ namespace Hunt
             handPositionDataList = dataList ?? new List<SpriteHandPositionData>();
             BuildAnimationData();
         }
-        
+
+        /// <summary>런타임에 붙은 무기 기준 검날 시작(그립) 월드 좌표.</summary>
+        public bool TryGetBladeStartWorld(out Vector3 worldPos)
+        {
+            worldPos = Vector3.zero;
+            var weapon = currentWeaponInstance != null ? currentWeaponInstance.transform : (transform.childCount > 0 ? transform.GetChild(0) : null);
+            if (weapon == null) return false;
+            var sr = weapon.GetComponentInChildren<SpriteRenderer>();
+            if (sr == null || sr.sprite == null) return false;
+            float extentY = sr.sprite.bounds.extents.y;
+            worldPos = weapon.TransformPoint(0f, -extentY, 0f);
+            return true;
+        }
+
+        /// <summary>런타임에 붙은 무기 기준 검날 끝(선단) 월드 좌표.</summary>
+        public bool TryGetBladeEndWorld(out Vector3 worldPos)
+        {
+            worldPos = Vector3.zero;
+            var weapon = currentWeaponInstance != null ? currentWeaponInstance.transform : (transform.childCount > 0 ? transform.GetChild(0) : null);
+            if (weapon == null) return false;
+            var sr = weapon.GetComponentInChildren<SpriteRenderer>();
+            if (sr == null || sr.sprite == null) return false;
+            float extentY = sr.sprite.bounds.extents.y;
+            worldPos = weapon.TransformPoint(0f, extentY, 0f);
+            return true;
+        }
+
+        /// <summary>애니메이션 이벤트용. 무기에 붙은 SwordTrailEffect로 전달.</summary>
+        public void OnTrailBegin()
+        {
+            if (currentWeaponInstance != null)
+                currentWeaponInstance.GetComponent<SwordTrailEffect>()?.OnTrailBegin();
+        }
+
+        /// <summary>애니메이션 이벤트용. 무기에 붙은 SwordTrailEffect로 전달.</summary>
+        public void OnTrailEnd()
+        {
+            if (currentWeaponInstance != null)
+                currentWeaponInstance.GetComponent<SwordTrailEffect>()?.OnTrailEnd();
+        }
+
         private void OnDestroy()
         {
             if (currentWeaponInstance != null)
