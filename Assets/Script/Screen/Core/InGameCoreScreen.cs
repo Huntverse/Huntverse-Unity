@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Hunt
 {
     /// <summary> core@scene 단일 로드 후, village_xxxx / fielddungeon_xxxx Env를 Additive로 전환. 카메라는 각 Env 씬에서 처리 </summary>
-    public class CoreScreen : MonoBehaviour
+    public class InGameCoreScreen : MonoBehaviour
     {
         private void Awake()
         {
@@ -46,7 +46,7 @@ namespace Hunt
             PositionPlayerAtPortal();
         }
 
-        /// <summary> 서버 맵 변경 응답 — mapId에 맞는 씬으로 Single 교체 </summary>
+        /// <summary> 서버 맵 변경 응답 — Core 유지, Env만 교체 </summary>
         private void OnMapChangeResponse(ErrorType errorType, uint newMapId)
         {
             if (errorType != ErrorType.ErrNon)
@@ -55,7 +55,7 @@ namespace Hunt
                 return;
             }
             $"[CoreScreen] 맵 변경 승인: {newMapId}".DLog();
-            ReplaceSceneByMapId(newMapId).Forget();
+            ReplaceEnvByMapId(newMapId).Forget();
         }
 
         private void PlayBgmBySceneType(SceneType sceneType)
@@ -94,12 +94,15 @@ namespace Hunt
             }
         }
 
-        /// <summary> mapId에 맞는 씬으로 Single 교체 </summary>
-        private async UniTaskVoid ReplaceSceneByMapId(uint mapId)
+        /// <summary> Core는 유지하고, mapId에 맞는 Env만 Additive로 교체 </summary>
+        private async UniTaskVoid ReplaceEnvByMapId(uint mapId)
         {
-            string sceneKey = GameSession.Shared.GetSceneNameByMapId(mapId);
-            await SceneLoadHelper.Shared.LoadSceneSingleMode(sceneKey, isfadeactive: true);
+            var sceneType = GameSession.Shared.GetSceneTypeByMapId(mapId);
+            await WorldMapManager.Shared.LoadMapEnv(mapId, sceneType);
             GameSession.Shared?.SetCurrentMap(mapId);
+            PlayBgmBySceneType(sceneType);
+            RefreshHUD();
+            PositionPlayerAtPortal();
         }
     }
 }

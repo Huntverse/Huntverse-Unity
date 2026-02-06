@@ -62,13 +62,40 @@ namespace Hunt
         public static readonly int k_tFail = Animator.StringToHash("tFail");
         public static readonly int k_cDancing = Animator.StringToHash("Dancing");
     }
+    [Serializable]
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum AudioType
     {
         SFX_HOVER,
         SFX_CHANNEL_SELECT,
+
+        SFX_ASTRA_ATTACK_NORMAL,
+
         BGM_MAIN,
         BGM_VILLAGE,
         BGM_FIELD,
+        None,
+    }
+
+    [Serializable]
+    [JsonConverter(typeof(StringEnumConverter))]
+    public enum VfxType
+    {
+        None,
+        Hit_Astra,
+        Hit_Seible,
+        Hit_Brunt,
+
+        Skill_Slash,
+        Skill_Shot,
+    }
+
+    [Serializable]
+    public enum ActorCategory
+    {
+        Character,
+        Monster,
+        NPC
     }
 
     public static class AudioKeyConst
@@ -79,6 +106,7 @@ namespace Hunt
             { AudioType.BGM_MAIN, "main_bgm@audio" },
             { AudioType.BGM_VILLAGE, "village_bgm@audio" },
             { AudioType.BGM_FIELD, "field_bgm_1@audio" },
+            { AudioType.SFX_ASTRA_ATTACK_NORMAL, "astra_attack_normal_sfx@audio" },
         };
 
         public static string GetSfxKey(AudioType sfxType)
@@ -230,9 +258,26 @@ namespace Hunt
         }
     }
 
-    public static class VfxKetConst
+    public static class VfxKeyConst
     {
-        public static readonly string Kp_plain_hit_astera = "astera_planhit@vfx";
+        private static readonly Dictionary<VfxType, string> vfxKeys = new Dictionary<VfxType, string>
+        {
+            { VfxType.Hit_Astra, "astera_planhit@vfx" },
+            { VfxType.Hit_Seible, "seible_hit@vfx" },
+            { VfxType.Hit_Brunt, "brunt_hit@vfx" },
+            { VfxType.Skill_Slash, "skill_slash@vfx" },
+            { VfxType.Skill_Shot, "skill_shot@vfx" },
+        };
+
+        public static string GetVfxKey(VfxType vfxType)
+        {
+            return vfxKeys.TryGetValue(vfxType, out var key) ? key : string.Empty;
+        }
+
+        public static IEnumerable<string> GetAllVfxKeys()
+        {
+            return vfxKeys.Values;
+        }
     }
 
 }

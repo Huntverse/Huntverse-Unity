@@ -50,7 +50,7 @@ namespace Hunt
             PositionPlayerAtPortal();
         }
 
-        /// <summary> 서버 맵 변경 응답 처리 </summary>
+        /// <summary> 서버 맵 변경 응답 처리. Core+Env 구조일 때는 CoreScreen만 처리하므로 스킵 </summary>
         private void OnMapChangeResponse(ErrorType errorType, uint newMapId)
         {
             if (errorType != ErrorType.ErrNon)
@@ -58,13 +58,11 @@ namespace Hunt
                 this.DError($"맵 변경 실패: {errorType}");
                 return;
             }
+            if (SceneLoadHelper.Shared != null && SceneLoadHelper.Shared.CurrentSceneKey == ResourceKeyConst.Ks_Core)
+                return;
 
             this.DLog($"맵 변경 승인: {newMapId}");
-
-            var targetSceneType = GameSession.Shared.GetSceneTypeByMapId(newMapId);
-
             LoadNewScene(newMapId).Forget();
-
         }
 
         /// <summary> HUD 강제 업데이트 </summary>
@@ -104,8 +102,9 @@ namespace Hunt
         /// <summary> 다른 씬으로 전환 (Field 등) </summary>
         private async UniTaskVoid LoadNewScene(uint mapId)
         {
+            await WorldMapManager.Shared.UnloadCurrentEnv();
             string sceneName = GameSession.Shared.GetSceneNameByMapId(mapId);
-            await SceneLoadHelper.Shared.LoadSceneSingleMode(sceneName, isfadeactive: true);
+            await SceneLoadHelper.Shared.LoadSceneAdditiveMode(sceneName, isfadeactive: true);
             GameSession.Shared?.SetCurrentMap(mapId);
         }
     }

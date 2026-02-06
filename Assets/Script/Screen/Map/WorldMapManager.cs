@@ -15,6 +15,14 @@ namespace Hunt
 
         protected override bool DontDestroy => true;
 
+        /// <summary> Single 씬 전환 전 호출. 현재 Additive Env만 언로드 </summary>
+        public async UniTask UnloadCurrentEnv()
+        {
+            if (!currentEnvScene.Scene.IsValid()) return;
+            await SceneLoadHelper.Shared.UnloadSceneAdditive(currentEnvScene);
+            currentEnvScene = default;
+        }
+
         /// <summary> 맵 Env 로드 (Additive Scene). 맵 이름 UI는 InGameHud 하위에 생성·교체 </summary>
         public async UniTask LoadMapEnv(uint mapId, SceneType sceneType)
         {
@@ -32,12 +40,19 @@ namespace Hunt
                 }
                 await UniTask.Yield();
 
+                string envKey = GetEnvKey(mapId, sceneType);
+                if (SceneLoadHelper.Shared != null && SceneLoadHelper.Shared.CurrentSceneKey == envKey)
+                {
+                    currentEnvScene = SceneLoadHelper.Shared.CurrentScene;
+                    await ApplyMapEnvUI(mapId);
+                    return;
+                }
+
                 if (currentEnvScene.Scene.IsValid())
                 {
                     await SceneLoadHelper.Shared.UnloadSceneAdditive(currentEnvScene);
                 }
 
-                string envKey = GetEnvKey(mapId, sceneType);
                 try
                 {
                     currentEnvScene = await SceneLoadHelper.Shared.LoadSceneAdditiveMode(envKey);
@@ -49,23 +64,30 @@ namespace Hunt
                 }
 
                 $"[WorldMapManager] 맵 Env 로드 완료: {mapId}".DLog();
-                try
-                {
-                    var mapNameGo = await AbLoader.Shared.LoadInstantiateAsync(ResourceKeyConst.Kp_MapNameInfoUI);
-                    if (mapNameGo == null) return;
-                    var tmp = mapNameGo.GetComponentInChildren<TMPro.TextMeshProUGUI>();
-                    if (tmp != null) tmp.text = BindKeyConst.GetMapNameByMapId(mapId);
-                    currentMapNameUI = mapNameGo;
-                    InGameHud.Shared?.StagePanel?.UpdateStagePanel(mapId);
-                }
-                catch (System.Exception e)
-                {
-                    this.DError($"MapName UI 생성 실패: {e.Message}");
-                }
+                await ApplyMapEnvUI(mapId);
             }
             finally
             {
                 isLoadingEnv = false;
+            }
+        }
+
+        private async UniTask ApplyMapEnvUI(uint mapId)
+        {
+            try
+            {
+                if (AbLoader.Shared == null) return;
+                var mapNameGo = await AbLoader.Shared.LoadInstantiateAsync(ResourceKeyConst.Kp_MapNameInfoUI);
+                if (mapNameGo == null) return;
+                var tmp = mapNameGo.GetComponentInChildren<TextMeshProUGUI>();
+                if (tmp != null) tmp.text = BindKeyConst.GetMapNameByMapId(mapId);
+                currentMapNameUI = mapNameGo;
+                if (InGameHud.Shared != null && InGameHud.Shared.StagePanel != null)
+                    InGameHud.Shared.StagePanel.UpdateStagePanel(mapId);
+            }
+            catch (System.Exception e)
+            {
+                this.DError($"MapName UI 생성 실패: {e.Message}");
             }
         }
 

@@ -15,8 +15,10 @@ namespace Hunt
         /// <summary>키 + 위치 + 시간 구간으로 스폰 후 Hit 감지 부착. 부모가 Animator 정규화 시간 알 때 사용.</summary>
         public async UniTask<VfxHandle> SpawnVfx(string key, Vector3 position, Quaternion rotation, Transform parent, float startTime, float endTime)
         {
+            this.DLog("캐릭터 공격에 의한 스폰");
+            var pointer = GetComponent<IsAttackPointer>();
             if (VfxManager.Shared == null) return null;
-            var handle = await VfxManager.Shared.PlayOneShot(key, position, rotation, parent, startTime, endTime);
+            var handle = await VfxManager.Shared.PlayOneShot(key, pointer.GetT().position, pointer.GetT().rotation, pointer.GetT(), startTime, endTime);
             if (handle != null && handle.IsVaild)
                 SetupHitDetectorFor(handle.vfxObject);
             return handle;

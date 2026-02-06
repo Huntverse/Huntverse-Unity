@@ -37,6 +37,8 @@ namespace Hunt
         private readonly Dictionary<string, VfxObject> vfxObjectPrefabs = new();
         // 키별 프리팹의 원본 scale 저장
         private readonly Dictionary<string, Vector3> prefabOriginalScales = new();
+        // 키별 프리팹의 원본 rotation 저장 (VFX가 특정 방향으로 누워있는 경우 등 대비)
+        private readonly Dictionary<string, Quaternion> prefabOriginalRotations = new();
         
         // 키별 독립적인 풀 관리 (프리팹별로 구분)
         private readonly Dictionary<string, ObjectPool<VfxObject>> pools = new();
@@ -65,6 +67,8 @@ namespace Hunt
             
             // 프리팹의 원본 scale 저장
             prefabOriginalScales[key] = prefab.transform.localScale;
+            // 프리팹의 원본 rotation 저장
+            prefabOriginalRotations[key] = prefab.transform.localRotation;
 
             var vfxObj = prefab.GetComponent<VfxObject>();
             if (vfxObj == null)
@@ -181,16 +185,36 @@ namespace Hunt
             var spawnPos = vfxObj.SpawnPosition;
             var spawnOffset = new Vector3(spawnPos.x, spawnPos.y, spawnPos.z);
 
-            if (parent != null)
+            if (prefabOriginalRotations.TryGetValue(key, out var originalRot))
             {
-                vfxInstance.transform.SetParent(parent);
-                vfxInstance.transform.localPosition = spawnOffset;
-                vfxInstance.transform.localRotation = Quaternion.Inverse(parent.rotation) * rot;
+                // 원본 회전값 반영 (PlayerRotation * PrefabRotation)
+                if (parent != null)
+                {
+                    vfxInstance.transform.SetParent(parent);
+                    vfxInstance.transform.localPosition = spawnOffset;
+                    // World Rotation = rot * originalRot
+                    // Local Rotation = Inverse(ParentRot) * WorldRot
+                    vfxInstance.transform.localRotation = Quaternion.Inverse(parent.rotation) * (rot * originalRot);
+                }
+                else
+                {
+                    vfxInstance.transform.rotation = rot * originalRot;
+                    vfxInstance.transform.position = pos + (rot * originalRot) * spawnOffset; 
+                }
             }
             else
             {
-                vfxInstance.transform.position = pos + rot * spawnOffset;
-                vfxInstance.transform.rotation = rot;
+               if (parent != null)
+                {
+                    vfxInstance.transform.SetParent(parent);
+                    vfxInstance.transform.localPosition = spawnOffset;
+                    vfxInstance.transform.localRotation = Quaternion.Inverse(parent.rotation) * rot;
+                }
+                else
+                {
+                    vfxInstance.transform.position = pos + rot * spawnOffset;
+                    vfxInstance.transform.rotation = rot;
+                }
             }
             
             if (prefabOriginalScales.TryGetValue(key, out var originalScale))

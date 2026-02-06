@@ -43,12 +43,14 @@ namespace Hunt
             else if (GameSession.Shared.SelectedCharacterModel != null)
             {
                 var model = GameSession.Shared.SelectedCharacterModel;
-                modelKey = BindKeyConst.GetModelKeyByProfession(model.classtype);
+                var classType = model.classtype;
+                modelKey = BindKeyConst.GetModelKeyByProfession(classType);
                 $"[UserCharacter] 캐릭터 스폰 (CharacterModel/Dev): {model.name}".DLog();
             }
             else
             {
-                modelKey = BindKeyConst.GetModelKeyByProfession(ClassType.Archer);
+                var classType = ClassType.Archer;
+                modelKey = BindKeyConst.GetModelKeyByProfession(classType);
                 $"[UserCharacter] ⚠ 선택된 캐릭터 없음".DError();
 
             }
@@ -118,6 +120,31 @@ namespace Hunt
                 }
 
                 InitializeWeaponController();
+
+                // VFX/SFX Controller 추가
+                var fxController = model.GetComponent<ActorFxController>();
+                if (fxController == null) fxController = model.AddComponent<ActorFxController>();
+                
+                // 프리셋 로드 (Addressable Key 규칙: "Preset_모델키" 가정)
+                // 규칙은 프로젝트 상황에 맞춰 변경 필요. 
+                // 예: astera@model -> Preset_astera@model or Preset_Sword
+                // 여기서는 모델키 앞에 "Preset_" 접두어 사용
+                string presetKey = $"Preset_{modelKey}"; 
+                $"[UserCharacter] Trying to load preset with key: {presetKey}".DLog();
+
+                var preset = await AbLoader.Shared.LoadAssetAsync<CharacterFxPreset>(presetKey);
+                
+                if (preset != null)
+                {
+                    fxController.Initialize(preset);
+                    $"[UserCharacter] Preset loaded and controller initialized: {presetKey}".DLog();
+                }
+                else
+                {
+                    // 실패 시 클래스 타입으로 시도해보기 (예비책)
+                    // var fallbackKey = $"Preset_{myChar.ClassType}"; ...
+                    $"[UserCharacter] FxPreset Load Fail: {presetKey}".DError(); 
+                }
 
                 isSetupComplete = true;
             }

@@ -139,20 +139,11 @@ public static class StringExtension
         Debug.LogWarning($"[{className}] {message}");
     }
 
+
     public static void DError(this object obj, string message)
     {
         string className = obj.GetType().Name;
         Debug.LogError($"[{className}] {message}");
     }
 
-    private static string GetClassNameFromPath(string filePath)
-    {
-        if (string.IsNullOrEmpty(filePath))
-        {
-            return "Unknown";
-        }
-
-        string fileName = System.IO.Path.GetFileNameWithoutExtension(filePath);
-        return fileName;
-    }
 }

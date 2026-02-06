@@ -262,7 +262,7 @@ namespace Hunt
                 SceneType.Village => $"village_{mapId}@scene",
                 SceneType.FieldDungeon => $"fielddungeon_{mapId}@scene",
                 SceneType.Town => $"town_{mapId}@scene",
-                _ => $"map_{mapId}@scene"
+                _ => $"village_24000@scene"
             };
         }
 

@@ -44,7 +44,6 @@ namespace Hunt
         private IInteractable currentInteractable;
         private UserCombat combat;
         private AnimationActionType _currentActionType;
-        private HashSet<string> _vfxSpanSpawned = new HashSet<string>();
         private float _facingScaleX = 1f;
         /// <summary>방향 전환 시 scale 적용 대상(기본: model만). VFX 등에서 facing 참조용</summary>
         public float FacingScaleX => _facingScaleX;
@@ -85,17 +84,17 @@ namespace Hunt
             model = characterModel;
             animator = model.GetComponent<Animator>();
             spriteRenderer = model.GetComponent<SpriteRenderer>();
+            if (model.GetComponent<AnimationVfxEventReceiver>() == null)
+                model.AddComponent<AnimationVfxEventReceiver>();
             canControl = true;
         }
         private void Update()
         {
             if (!canControl) return;
-            if (!isAttacking) _vfxSpanSpawned.Clear();
             HandleInput();
             UpdateGroundCheck();
             UpdateTimers();
             UpdateAnimator();
-            TrySpawnAttackVfxByTime();
             HandleMovement();
         }
         public void HandleInput()
@@ -155,32 +154,6 @@ namespace Hunt
         }
 
         public void SetCurrentActionType(AnimationActionType type) => _currentActionType = type;
-
-        /// <summary>현재 클립의 VFX 구간(테이블 또는 클립 이벤트)을 보고 정규화 시간이 구간 안이면 스폰. start/end는 메소드 인자로 전달.</summary>
-        private async void TrySpawnAttackVfxByTime()
-        {
-            if (!isAttacking || animator == null || hitpointer == null || combat == null || VfxManager.Shared == null) return;
-            var spans = VfxManager.Shared.GetSpansForCurrentClip(animator);
-            if (spans == null || spans.Count == 0) return;
-            var stateInfo = animator.GetCurrentAnimatorStateInfo(0);
-            float normalized = stateInfo.normalizedTime % 1f;
-            var hitT = hitpointer.GetT();
-            foreach (var span in spans)
-            {
-                if (string.IsNullOrEmpty(span.vfxKey)) continue;
-                bool inRange = span.endNormalized <= span.startNormalized
-                    ? normalized >= span.startNormalized
-                    : normalized >= span.startNormalized && normalized <= span.endNormalized;
-                string id = $"{span.startNormalized}_{span.endNormalized}_{span.vfxKey}";
-                if (inRange && !_vfxSpanSpawned.Contains(id))
-                {
-                    _vfxSpanSpawned.Add(id);
-                    var handle = await VfxManager.Shared.PlayOneShot(span.vfxKey, hitT.position, hitT.rotation, hitT, span.startNormalized, span.endNormalized);
-                    if (handle != null && handle.IsVaild)
-                        combat.SetupHitDetectorFor(handle.vfxObject);
-                }
-            }
-        }
 
         public void HandleInteract()
         {
