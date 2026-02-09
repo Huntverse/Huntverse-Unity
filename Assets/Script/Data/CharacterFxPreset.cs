@@ -13,7 +13,10 @@ namespace Hunt
         [Header("액터 정보")]
         public ActorCategory actorCategory;
         public GameObject characterPrefab;
+        
+        [HideInInspector] // Hide to use only animated preview in editor
         public Sprite previewSprite;
+        
         public ClassType classType;
 
         [Header("클립별 FX 설정")]
