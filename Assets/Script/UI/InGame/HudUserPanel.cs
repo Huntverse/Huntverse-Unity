@@ -32,7 +32,7 @@ namespace Hunt
                 {
                     if (UserPanelInfo.SlotSkills != null && UserPanelInfo.SlotSkills.TryGetValue(i, out var skillKey))
                     {
-                        UserQuickSlot.skillQuickList[i].iconImage.sprite = await AbLoader.Shared.LoadAssetAsync<Sprite>(skillKey);
+                        UserQuickSlot.SetSkillSlotIcon(i,await AbLoader.Shared.LoadAssetAsync<Sprite>(skillKey));
                     }
                 }
 
@@ -40,7 +40,7 @@ namespace Hunt
                 {
                     if (UserPanelInfo.SlotItems != null && UserPanelInfo.SlotItems.TryGetValue(i, out var itemKey))
                     {
-                        UserQuickSlot.itemQuickList[i].iconImage.sprite = await AbLoader.Shared.LoadAssetAsync<Sprite>(itemKey);
+                        UserQuickSlot.SetItemSlotIcon(i,await AbLoader.Shared.LoadAssetAsync<Sprite>(itemKey));
                     }
 
                 }
