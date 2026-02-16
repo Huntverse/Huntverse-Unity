@@ -828,7 +828,7 @@ namespace Hunt.Ed
                 return;
             }
 
-            var targetLabels = new HashSet<string> { "character", "monster", "npc" };
+            var targetLabels = new HashSet<string> { "character", "enemy", "npc" };
             int entryCount = 0;
             
             foreach (var group in settings.groups)

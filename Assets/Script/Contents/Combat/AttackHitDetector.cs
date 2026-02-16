@@ -6,7 +6,7 @@ namespace Hunt
     /// <summary>
     /// 공격 이펙트에 부착되어 히트 감지 및 데미지 처리
     /// </summary>
-    [RequireComponent(typeof(Collider2D))]
+    [RequireComponent(typeof(Collider))]
     public class AttackHitDetector : MonoBehaviour
     {
         [SerializeField] private float damage = 10f;
@@ -18,7 +18,7 @@ namespace Hunt
 
         private void Awake()
         {
-            var collider = GetComponent<Collider2D>();
+            var collider = GetComponent<Collider>();
             if (collider != null)
             {
                 collider.isTrigger = isTrigger;
@@ -33,9 +33,9 @@ namespace Hunt
             hitTargets.Clear();
         }
 
-        private void OnTriggerEnter2D(Collider2D collision)
+        private void OnTriggerEnter(Collider collision)
         {
-            $"🔍 [AttackHitDetector] OnTriggerEnter2D: {collision.gameObject.name}".DLog();
+            $"🔍 [AttackHitDetector] Trigger: {collision.gameObject.name}".DLog();
 
             if (!IsEnemyLayer(collision.gameObject))
             {

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Hunt
 {
-    [RequireComponent(typeof(CapsuleCollider2D))]
+    [RequireComponent(typeof(Collider))]
     public class NPCBase : InteractionBase
     {
         [Header("NPC DATA")]
@@ -17,7 +17,7 @@ namespace Hunt
         [Header("VISUAL")]
         [SerializeField] protected SpriteRenderer notificationIcon;
 
-        private CapsuleCollider2D detectionTrigger;
+        private Collider detectionTrigger;
         private Transform localPlayer;
         private bool isLocalPlayerInRange;
 
@@ -50,8 +50,7 @@ namespace Hunt
 
         private void InitializeTrigger()
         {
-            detectionTrigger = GetComponent<CapsuleCollider2D>();
-            detectionTrigger ??= gameObject.AddComponent<CapsuleCollider2D>();
+            detectionTrigger = GetComponent<Collider>();
 
             detectionTrigger.isTrigger = true;
 
@@ -137,7 +136,7 @@ namespace Hunt
             }
         }
 
-        private void OnTriggerEnter2D(Collider2D other)
+        private void OnTriggerEnter(Collider other)
         {
             $"[NPC] {npcData?.npcName} - Trigger Enter: {other.name}".DLog();
             if (IsLocalPlayer(other))
@@ -146,7 +145,7 @@ namespace Hunt
                 OnPlayerEnterRange();
             }
         }
-        private void OnTriggerExit2D(Collider2D other)
+        private void OnTriggerExit(Collider other)
         {
             if (IsLocalPlayer(other))
             {
@@ -155,7 +154,7 @@ namespace Hunt
             }
         }
 
-        private bool IsLocalPlayer(Collider2D collider)
+        private bool IsLocalPlayer(Collider collider)
         {
             var userChar = collider.GetComponent<UserCharacter>();
             return userChar != null && collider.transform == localPlayer;

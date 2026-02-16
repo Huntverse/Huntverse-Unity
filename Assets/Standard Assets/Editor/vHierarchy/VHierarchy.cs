@@ -602,7 +602,10 @@ namespace VHierarchy
                 if (isDefaultParentHovered)
                     EditorUtility.ClearDefaultParentObject();
                 else
+                {
+                    if (hoveredGo.scene.name == "DontDestroyOnLoad") return;
                     EditorUtility.SetDefaultParentObject(hoveredGo);
+                }
 
 
                 hoveredWindow.Repaint();

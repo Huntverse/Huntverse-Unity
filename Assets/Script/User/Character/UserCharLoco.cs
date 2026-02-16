@@ -5,8 +5,8 @@ using UnityEngine.InputSystem;
 
 namespace Hunt
 {
-    [RequireComponent(typeof(Rigidbody2D))]
-    [RequireComponent(typeof(Collider2D))]
+    [RequireComponent(typeof(Rigidbody))]
+    [RequireComponent(typeof(CapsuleCollider))]
     public class UserCharLoco : MonoBehaviour, IPlayer
     {
         [Header("MOVE")]
@@ -20,12 +20,14 @@ namespace Hunt
         [SerializeField] private float jumpBufferTime = 0.2f;
 
         [Header("GROUND CHECK")]
-        [SerializeField] private Transform groundCheckPoint;
-        [SerializeField] private float groundCheckDistance = 0.1f;
+        [Header("GROUND CHECK")]
+        [SerializeField] private float groundCheckRadius = 0.25f; // Slightly smaller than capsule radius
+        [SerializeField] private float groundCastLength = 0.5f;   // How far to cast down from the origin
         [SerializeField] private LayerMask groundLayer;
+        [SerializeField] private Vector3 groundCheckOffset = new Vector3(0, 0.5f, 0); // Start from center/knees
         #region Private Field
 
-        private Rigidbody2D rb;
+        private Rigidbody rb;
         private Animator animator;
 
         private bool canControl;
@@ -59,8 +61,12 @@ namespace Hunt
         }
         private void Start()
         {
-            rb = GetComponent<Rigidbody2D>();
-            rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
+            rb = GetComponent<Rigidbody>();
+            rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
+            
+            // Constrain rotation to keep character upright (no physics rotation)
+            rb.constraints = RigidbodyConstraints.FreezeRotation;
+
             hitpointer = GetComponentInChildren<IsAttackPointer>();
             hitpointer.SetT(new Vector3(2.0f, 0.5f, 0f), new Vector2(1,1.25f)); // Custom
             notiPoint = GetComponentInChildren<IsNotiPoint>();
@@ -140,9 +146,16 @@ namespace Hunt
         public void HandleMovement()
         {
             if (isAttacking) return;
+            
+            // Dungeon Fighter Style: 3D Movement with Physics
+            // X Axis: Lateral
             float velx = moveInput.x * moveSpeed;
-            rb.linearVelocity = new Vector2(velx, rb.linearVelocity.y);
+            
+            // Z Axis: Depth
+            float velz = moveInput.y * moveSpeed;
 
+            // Apply to Rigidbody velocity (preserving Y velocity for jump/gravity)
+            rb.linearVelocity = new Vector3(velx, rb.linearVelocity.y, velz);
         }
 
         // Sync NetWork
@@ -175,7 +188,8 @@ namespace Hunt
         {
             if (!canControl || isAttacking) return;
 
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
+            // 3D Jump: Apply force to Y axis
+            rb.linearVelocity = new Vector3(rb.linearVelocity.x, jumpForce, rb.linearVelocity.z);
             coyoteTimeCounter = 0f;
         }
         /// <summary>
@@ -255,8 +269,9 @@ namespace Hunt
         {
             if (animator == null) return;
 
-            var speed = Mathf.Abs(moveInput.x);
-            animator.SetBool(AniKeyConst.k_bMove, speed > 0.1f && isGrounded);
+            // Check if moving in either X (Horizontal) or Z (Vertical Input)
+            var moveMagnitude = moveInput.magnitude;
+            animator.SetBool(AniKeyConst.k_bMove, moveMagnitude > 0.1f && isGrounded);
         }
 
         private void UpdateTimers()
@@ -276,21 +291,28 @@ namespace Hunt
         {
             wasGrounded = isGrounded;
 
-            RaycastHit2D hit = Physics2D.Raycast(
-                groundCheckPoint.position,
-                Vector2.down,
-                groundCheckDistance,
-                groundLayer
-                );
-
-            isGrounded = hit.collider != null;
+            // SphereCast downwards from the offset position (e.g. knees/center)
+            Vector3 origin = transform.position + groundCheckOffset;
             
-
+            // Cast a sphere downwards to detect ground
+            isGrounded = Physics.SphereCast(
+                origin,
+                groundCheckRadius,
+                Vector3.down,
+                out RaycastHit hitInfo,
+                groundCastLength,
+                groundLayer,
+                QueryTriggerInteraction.Ignore // Ignore triggers to avoid false positives
+            );
+            
             animator?.SetBool(AniKeyConst.k_bGround, !isGrounded);
 
             if (isGrounded)
             {
                 coyoteTimeCounter = coyoteTime;
+                
+                // Optional: Check slope angle here using hitInfo.normal
+                // Vector3 groundNormal = hitInfo.normal;
             }
 
             if (!wasGrounded && isGrounded)
@@ -310,11 +332,15 @@ namespace Hunt
 
         private void OnDrawGizmosSelected()
         {
-            if (groundCheckPoint == null) return;
-
             Gizmos.color = isGrounded ? Color.green : Color.red;
-            Gizmos.DrawLine(groundCheckPoint.position, groundCheckPoint.position + Vector3.down * groundCheckDistance);
-            Gizmos.DrawWireSphere(groundCheckPoint.position + Vector3.down * groundCheckDistance, 0.05f);
+            Vector3 origin = transform.position + groundCheckOffset;
+            
+            // Draw SphereCast start
+            Gizmos.DrawWireSphere(origin, groundCheckRadius);
+            // Draw SphereCast end
+            Gizmos.DrawWireSphere(origin + Vector3.down * groundCastLength, groundCheckRadius);
+            // Draw centerline
+            Gizmos.DrawLine(origin, origin + Vector3.down * groundCastLength);
         }
 
         private void OnDestroy()
@@ -327,5 +353,49 @@ namespace Hunt
                 inputKey.Action.Dispose();
             }
         }
+        // ... existing code ...
+
+        #region Combat & Damage
+        public void TakeDamage(float damage)
+        {
+            if (!canControl) return; // Example check
+
+            // Hp Logic (Assuming HP exists or just visual for now)
+            // currentHp -= damage; 
+
+            // 1. Flash Effect
+            FlashEffect().Forget();
+
+            // 2. Damage Text
+            // Find Manager or Spawn Prefab directly (Simplest: Use Manager if singleton exists)
+            // Assuming DamageTextManager is set up in scene
+            var textManager = FindAnyObjectByType<DamageTextManager>();
+            if (textManager != null)
+            {
+                textManager.ShowDamage(damage, transform.position + Vector3.up, true); // True = Player Color
+            }
+            
+            this.DLog($"Player took {damage} damage!");
+        }
+
+        private async UniTaskVoid FlashEffect()
+        {
+            if (spriteRenderer == null) return;
+            
+            Color original = Color.white; 
+            // Save original if needed, but usually white is default tint
+            
+            int flashCount = 3;
+            float duration = 0.1f;
+
+            for (int i = 0; i < flashCount; i++)
+            {
+                spriteRenderer.color = Color.red;
+                await UniTask.Delay(System.TimeSpan.FromSeconds(duration));
+                spriteRenderer.color = Color.white;
+                await UniTask.Delay(System.TimeSpan.FromSeconds(duration));
+            }
+        }
+        #endregion
     }
 }

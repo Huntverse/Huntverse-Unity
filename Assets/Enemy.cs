@@ -6,153 +6,255 @@ namespace Hunt
 
     public class Enemy : MonoBehaviour, IDamageable
     {
-        private Collider2D collider;
-        [SerializeField] private GameObject enemyNameField;
-        [SerializeField] private GameObject model;
+        #region Common Components
+        protected Collider col;
+     
+        protected Animator animator;
+        protected SpriteRenderer spriteRenderer;
+        
+        [SerializeField] protected GameObject enemyNameField;
+        #endregion
 
-        [SerializeField] private float moveSpeed = 2f;
-        [SerializeField] private LayerMask groundLayer;
-        [SerializeField] private float jumpForce = 5f;
-        [SerializeField] private float jumpInterval = 2f;
-        [SerializeField] private float edgeLookAhead = 0.3f;
-        private Animator animator;
-        [SerializeField] private string jumpTriggerName = "Jump";
+        #region Common Stats
+        [Header("BASE STATS")]
+        [SerializeField] protected float moveSpeed = 2f;
+        [SerializeField] protected float maxHp = 100f;
+        [SerializeField] protected float hitStunDuration = 0.3f;
+        [SerializeField] protected float flashInterval = 0.1f;
+        protected float currentHp;
+        protected bool isHitStunned;
+        protected int moveDir = -1;
+        protected Color originalColor;
+        #endregion
 
-        [Header("COMBAT")]
-        [SerializeField] private float maxHp = 100f;
-        [SerializeField] private float hitStunDuration = 0.3f;
-        [SerializeField] private float flashInterval = 0.1f;
-        private float currentHp;
-        private bool isHitStunned;
-        private SpriteRenderer spriteRenderer;
-        private Color originalColor;
+        #region Physics & Check
+        [Header("PHYSICS & AI")]
+        [SerializeField] protected LayerMask groundLayer;
+        [SerializeField] protected LayerMask playerLayer; // Added
+        [SerializeField] protected float detectionRange = 8.0f;
+        [SerializeField] protected float stopDistance = 1.2f;
+        protected Transform target;
+        
+        protected float _detectionTimer;
+        protected const float DETECTION_INTERVAL = 0.5f;
+        #endregion
 
-        private int moveDir = -1;
-        private float jumpTimer;
-        private Rigidbody2D rb;
-        private bool wasGrounded;
-
-        private void Start()
+        protected virtual void Start()
         {
-            rb = model.GetComponent<Rigidbody2D>();
+            InitializeCommon();
+        }
 
-            collider = model.GetComponent<Collider2D>();
-            animator = model.GetComponent<Animator>();
-            spriteRenderer = model.GetComponent<SpriteRenderer>();
-            if (spriteRenderer != null)
+        protected void InitializeCommon()
+        {
+            
+            col = GetComponent<Collider>(); // Collider should be on Root for Logic/Sync
+            animator = GetComponent<Animator>();
+            spriteRenderer = GetComponent<SpriteRenderer>();
+            if (spriteRenderer != null) originalColor = spriteRenderer.color;
+
+            if (enemyNameField != null)
             {
-                originalColor = spriteRenderer.color;
-            }
+                enemyNameField.transform.SetParent(transform);
+                var position = new Vector3(0, col != null ? -(col.bounds.center.y - 1.0f) : 2.0f, 0);
+                enemyNameField.transform.localPosition = position;
 
-            enemyNameField.transform.SetParent(model.transform);
-            var position = new Vector3(
-                0,
-                -collider.bounds.max.y + 1.5f,
-                0
-            );
-            enemyNameField.transform.localPosition = position;
+                this.DLog($"NameField Position : {position}");
+            }
 
             currentHp = maxHp;
-        }
-
-        private void Update()
-        {
-            if (model == null || collider == null) return;
-            if (isHitStunned) return;
-
-            transform.Translate(Vector2.right * moveDir * moveSpeed * Time.deltaTime);
-
-            var bounds = collider.bounds;
-
-            var groundCheckOrigin = bounds.center;
-            float groundCheckDist = bounds.extents.y + 0.05f;
-            bool isGrounded = Physics2D.Raycast(groundCheckOrigin, Vector2.down, groundCheckDist, groundLayer);
-
-            // 착지 감지 (이전 프레임에 공중이었다가 지금 땅에 착지)
-            bool justLanded = !wasGrounded && isGrounded;
-
-            // 콜라이더 끝에서 진행 방향으로 조금 앞에서 체크 (플랫폼 끝 도달 전에 방향 전환)
-            float colliderEdgeX = moveDir > 0 ? bounds.max.x : bounds.min.x;
-            float edgeX = colliderEdgeX + moveDir * edgeLookAhead;
-            float edgeY = bounds.min.y + 0.05f;
-            Vector2 edgeOrigin = new Vector2(edgeX, edgeY);
-
-            float checkDistance = 0.3f;
-            bool hasGroundAhead = Physics2D.Raycast(edgeOrigin, Vector2.down, checkDistance, groundLayer);
             
-            // 디버그: 앞쪽 땅 체크 레이 그리기
-            Debug.DrawRay(edgeOrigin, Vector2.down * checkDistance, hasGroundAhead ? Color.green : Color.red, 0.1f);
+            currentHp = maxHp;
+            
+            // Target acquisition moved to Periodic Update based on LayerMask
+            target = null;
 
-            Vector2 wallOrigin = new Vector2(edgeX, bounds.center.y);
-            bool hasWallAhead = Physics2D.Raycast(wallOrigin, new Vector2(moveDir, 0f), 1.1f, groundLayer);
+            spawnPosition = transform.position;
+            wanderTarget = spawnPosition;
+        }
 
+        protected virtual void Update()
+        {
+            if (col == null) return;
+            if (isHitStunned) return; // Stun state blocks behavior
+            if (currentHp <= 0) return; // Dead
 
-            if (isGrounded)
+            // Periodic Detection Check
+            _detectionTimer += Time.deltaTime;
+            if (_detectionTimer >= DETECTION_INTERVAL)
             {
-                if (justLanded)
+                _detectionTimer = 0f;
+                DetectTarget();
+            }
+
+            ProcessBehavior();
+        }
+
+        /// <summary>
+        /// Scans for players within detection range using OverlapSphere and LayerMask.
+        /// </summary>
+        protected virtual void DetectTarget()
+        {
+            Collider[] hits = Physics.OverlapSphere(transform.position, detectionRange, playerLayer);
+            
+            Transform closest = null;
+            float minDst = float.MaxValue;
+
+            foreach (var hit in hits)
+            {
+                float dst = Vector3.Distance(transform.position, hit.transform.position);
+                if (dst < minDst)
                 {
-                    // 착지 직후에는 앞쪽 땅이 없으면 무조건 방향 전환
-                    if (!hasGroundAhead)
-                    {
-                        Flip();
-                    }
-                }
-                else
-                {
-                    // 평소에는 앞쪽 땅이 없거나 벽이 있으면 방향 전환
-                    if (!hasGroundAhead || hasWallAhead)
-                    {
-                        Flip();
-                    }
+                    minDst = dst;
+                    closest = hit.transform;
                 }
             }
 
-            wasGrounded = isGrounded;
-            var origin = model.transform.localPosition;
-            var dir = Vector2.down;
-            float distance = 1f;
+            target = closest;
+        }
 
-            if (rb != null && jumpInterval > 0f)
+        public enum EnemyState { Idle, Chase, Attack }
+
+        [Header("AI STATE")]
+        [SerializeField] protected EnemyState currentState = EnemyState.Idle;
+        [SerializeField] protected float attackRange = 1.0f;
+        [SerializeField] protected float wanderRadius = 3.0f;
+        [SerializeField] protected float wanderInterval = 3.0f;
+        
+        protected float stateTimer;
+        protected Vector3 wanderTarget;
+        protected Vector3 spawnPosition;
+
+// ... (Start Update) ...
+
+        protected virtual void ProcessBehavior()
+        {
+            // [Server/Client Sync Check can go here]
+            
+            // 1. Global Transitions (Check for Target)
+            if (target != null)
             {
-                jumpTimer += Time.deltaTime;
-                if (jumpTimer >= jumpInterval)
-                {
-                    jumpTimer = 0f;
+                float dist = Vector3.Distance(transform.position, target.position);
+                if (dist < attackRange) ChangeState(EnemyState.Attack);
+                else if (dist < detectionRange) ChangeState(EnemyState.Chase);
+                else ChangeState(EnemyState.Idle);
+            }
+            else
+            {
+                ChangeState(EnemyState.Idle);
+            }
 
-
-                    Debug.DrawRay(origin, dir * distance, Color.green, 0.1f);
-
-                    var groundHit = Physics2D.Raycast(origin, dir, distance, groundLayer);
-
-                    if (groundHit && rb != null)
-                    {
-                        $"jump!".DLog();
-                        rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
-
-                        if (animator != null && !string.IsNullOrEmpty(jumpTriggerName))
-                        {
-                            animator.SetTrigger(jumpTriggerName);
-                        }
-                    }
-                }
+            // 2. State Execution
+            switch (currentState)
+            {
+                case EnemyState.Idle:   OnIdle();   break;
+                case EnemyState.Chase:  OnChase();  break;
+                case EnemyState.Attack: OnAttack(); break;
             }
         }
 
-        private void Flip()
+        protected virtual void ChangeState(EnemyState newState)
+        {
+            if (currentState == newState) return;
+            currentState = newState;
+            stateTimer = 0f; // Reset timer on state change
+
+            switch (currentState)
+            {
+                case EnemyState.Idle:
+                    animator.SetBool(AniKeyConst.K_bChase, false);
+                    break;
+                case EnemyState.Chase:
+                    animator.SetBool(AniKeyConst.K_bChase, true);
+                    break;
+                case EnemyState.Attack:
+                    animator.SetBool(AniKeyConst.K_bChase, false);
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Wanders around the spawn point randomly.
+        /// </summary>
+        protected virtual void OnIdle()
+        {
+            // Simple timer-based wandering
+            stateTimer += Time.deltaTime;
+            
+            if (stateTimer > wanderInterval)
+            {
+                // Pick a new random point around spawn
+                Vector2 randomCircle = Random.insideUnitCircle * wanderRadius;
+                wanderTarget = spawnPosition + new Vector3(randomCircle.x, 0, randomCircle.y);
+                stateTimer = 0f; // Reset to move towards it
+            }
+
+            // Move towards wander target if far enough
+            if (Vector3.Distance(transform.position, wanderTarget) > 0.1f)
+            {
+                Vector3 dir = (wanderTarget - transform.position).normalized;
+                MoveTo(dir * 0.5f); // Move slower when wandering
+            }
+        }
+
+        protected virtual void OnChase()
+        {
+            if (target == null)
+            {
+                ChangeState(EnemyState.Idle);
+                return;
+            }
+            
+            Vector3 dir = (target.position - transform.position).normalized;
+            MoveTo(dir);
+        }
+
+        protected virtual void OnAttack()
+        {
+            // Stub: Override in child classes (e.g. MeleeEnemy)
+            // Face the target
+            if (target != null)
+            {
+                animator.SetTrigger(AniKeyConst.K_tAttack);
+                float xDiff = target.position.x - transform.position.x;
+                if (xDiff > 0 && moveDir == -1) Flip();
+                else if (xDiff < 0 && moveDir == 1) Flip();
+            }
+            
+            // Attack logic (cooldown, animation trigger) would go here
+            // Debug.Log("Attacking!"); 
+        }
+
+        /// <summary>
+        /// Common Movement Method.
+        /// </summary>
+        protected void MoveTo(Vector3 direction)
+        {
+            // [Server Sync Ready]
+            // Instead of Physics forces, we modify Transform directly.
+            // On a real Client, this would be replacing local 'pos' with 'serverPos'.
+            // On the Host/Server, this calculates the new 'pos'.
+
+            // Simple Transform Movement (No Physics/Gravity simulated here for now)
+            Vector3 moveVector = new Vector3(direction.x, 0, direction.z) * moveSpeed * Time.deltaTime;
+            transform.Translate(moveVector);
+
+            // Facing
+            if (direction.x > 0 && moveDir == -1) Flip();
+            else if (direction.x < 0 && moveDir == 1) Flip();
+        }
+
+        protected virtual void Flip()
         {
             moveDir *= -1;
-            if (model != null)
+            if (spriteRenderer != null)
             {
-                var sr = model.GetComponent<SpriteRenderer>();
-                if (sr != null)
-                {
-                    sr.flipX = !sr.flipX;
-                }
+                spriteRenderer.flipX = !spriteRenderer.flipX;
             }
         }
 
-        public void TakeDamage(float damage, Vector3 hitPosition)
+        public virtual void TakeDamage(float damage, Vector3 hitPosition)
         {
+            // TODO: [Server Sync] Validate hit on server before applying damage
             currentHp -= damage;
             if (currentHp <= 0f)
             {
@@ -164,37 +266,64 @@ namespace Hunt
             OnHit().Forget();
         }
 
-        private async UniTaskVoid OnHit()
+        [Header("FX SETTINGS")]
+        [SerializeField] protected VfxType hitVfx = VfxType.Hit_Normal;
+        [SerializeField] protected VfxType deathVfx = VfxType.None;
+        [SerializeField] protected AudioType hitSfx = AudioType.None; // Add SfxType enum if available, assuming AudioType exists based on context
+        [SerializeField] protected AudioType deathSfx = AudioType.None;
+
+        // ... existing methods ...
+
+        protected async UniTaskVoid OnHit()
         {
             isHitStunned = true;
-            int flashCount = Mathf.RoundToInt(hitStunDuration / flashInterval);
+            
+            // Use helper with configured type
+            PlayVfx(hitVfx, col.bounds.center); 
+            PlaySfx(hitSfx);
 
+            // Visual Effect only (Flash)
+            int flashCount = Mathf.RoundToInt(hitStunDuration / flashInterval);
             for (int i = 0; i < flashCount; i++)
             {
-                if (spriteRenderer != null)
-                {
-                    spriteRenderer.color = i % 2 == 0 ? Color.white : Color.black;
-                }
+                if (spriteRenderer != null) spriteRenderer.color = (i % 2 == 0) ? Color.white : Color.black;
                 await UniTask.Delay(System.TimeSpan.FromSeconds(flashInterval));
             }
-
-            if (spriteRenderer != null)
-            {
-                spriteRenderer.color = originalColor;
-            }
+            if (spriteRenderer != null) spriteRenderer.color = originalColor;
             isHitStunned = false;
         }
 
-        public Transform GetTransform()
+        protected virtual void OnDeath()
         {
-            return transform;
-        }
-
-        private void OnDeath()
-        {
+            // TODO: [Server Sync] Send death packet, spawn loot
+            PlayVfx(deathVfx, col.bounds.center);
+            PlaySfx(deathSfx);
             Destroy(gameObject);
         }
+        
+        #region FX Helpers
+        protected void PlayVfx(VfxType type, Vector3 position)
+        {
+            if (type == VfxType.None) return;
+            string key = VfxKeyConst.GetVfxKey(type);
+            if (!string.IsNullOrEmpty(key))
+            {
+                VfxManager.Shared.PlayOneShot(key, position, Quaternion.identity).Forget();
+            }
+        }
 
+        protected void PlaySfx(AudioType type)
+        {
+            if (type == AudioType.None) return;
+            string key = AudioKeyConst.GetSfxKey(type); // Assuming AudioKeyConst exists similar to VfxKeyConst
+            if (!string.IsNullOrEmpty(key))
+            {
+                AudioManager.Shared.PlaySfx(key);
+            }
+        }
+        #endregion
+
+        public Transform GetTransform() => transform;
     }
 
 }

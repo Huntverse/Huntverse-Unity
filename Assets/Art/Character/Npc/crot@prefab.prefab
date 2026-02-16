@@ -726,8 +726,8 @@ GameObject:
   - component: {fileID: 580075700689485643}
   - component: {fileID: 769232569909816086}
   - component: {fileID: 3566558241617711184}
-  - component: {fileID: 7672611100890430311}
   - component: {fileID: 7411872550229737803}
+  - component: {fileID: 7542964246891257694}
   m_Layer: 0
   m_Name: crot@prefab
   m_TagString: Untagged
@@ -830,43 +830,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!70 &7672611100890430311
-CapsuleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8846856949266074908}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_Size: {x: 1.9, y: 1.7333333}
-  m_Direction: 0
 --- !u!114 &7411872550229737803
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -887,3 +850,26 @@ MonoBehaviour:
     portaitSpriteKey: crot_port@sprite
   currentNotification: 2
   notificationIcon: {fileID: 1804215121024959333}
+--- !u!136 &7542964246891257694
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8846856949266074908}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 1.1166667
+  m_Height: 1.7833333
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}

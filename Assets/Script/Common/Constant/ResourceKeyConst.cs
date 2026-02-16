@@ -54,7 +54,8 @@ namespace Hunt
     public static class AniKeyConst
     {
         // Animate
-        public static readonly int K_tAttack = Animator.StringToHash("IsAttack");
+        public static readonly int K_tAttack = Animator.StringToHash("tAttack");
+        public static readonly int K_bChase = Animator.StringToHash("IsChase");
         public static readonly int k_bMove = Animator.StringToHash("IsMove");
         public static readonly int k_bGround = Animator.StringToHash("IsGround");
         public static readonly int k_bSelect = Animator.StringToHash("IsSelect");
@@ -68,8 +69,8 @@ namespace Hunt
     {
         SFX_HOVER,
         SFX_CHANNEL_SELECT,
-
         SFX_ASTRA_ATTACK_NORMAL,
+        SFX_HIT_NORMAL,
 
         BGM_MAIN,
         BGM_VILLAGE,
@@ -86,6 +87,8 @@ namespace Hunt
         Hit_Seible,
         Hit_Brunt,
 
+        Hit_Normal,
+
         Skill_Slash,
         Skill_Shot,
     }
@@ -94,7 +97,7 @@ namespace Hunt
     public enum ActorCategory
     {
         Character,
-        Monster,
+        Enemy,
         NPC
     }
 
@@ -107,6 +110,7 @@ namespace Hunt
             { AudioType.BGM_VILLAGE, "village_bgm@audio" },
             { AudioType.BGM_FIELD, "field_bgm_1@audio" },
             { AudioType.SFX_ASTRA_ATTACK_NORMAL, "astra_attack_normal_sfx@audio" },
+            { AudioType.SFX_HIT_NORMAL, "hit_normal@audio" },
         };
 
         public static string GetSfxKey(AudioType sfxType)
@@ -267,6 +271,7 @@ namespace Hunt
             { VfxType.Hit_Brunt, "brunt_hit@vfx" },
             { VfxType.Skill_Slash, "skill_slash@vfx" },
             { VfxType.Skill_Shot, "skill_shot@vfx" },
+            { VfxType.Hit_Normal, "hit_normal@vfx" },
         };
 
         public static string GetVfxKey(VfxType vfxType)
