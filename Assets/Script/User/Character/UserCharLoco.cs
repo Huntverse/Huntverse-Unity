@@ -20,7 +20,6 @@ namespace Hunt
         [SerializeField] private float jumpBufferTime = 0.2f;
 
         [Header("GROUND CHECK")]
-        [Header("GROUND CHECK")]
         [SerializeField] private float groundCheckRadius = 0.25f; // Slightly smaller than capsule radius
         [SerializeField] private float groundCastLength = 0.5f;   // How far to cast down from the origin
         [SerializeField] private LayerMask groundLayer;
@@ -356,26 +355,30 @@ namespace Hunt
         // ... existing code ...
 
         #region Combat & Damage
+        
         public void TakeDamage(float damage)
         {
-            if (!canControl) return; // Example check
+            if (!canControl) return; 
 
-            // Hp Logic (Assuming HP exists or just visual for now)
+            // Hp Logic
             // currentHp -= damage; 
 
             // 1. Flash Effect
             FlashEffect().Forget();
 
-            // 2. Damage Text
-            // Find Manager or Spawn Prefab directly (Simplest: Use Manager if singleton exists)
-            // Assuming DamageTextManager is set up in scene
-            var textManager = FindAnyObjectByType<DamageTextManager>();
-            if (textManager != null)
-            {
-                textManager.ShowDamage(damage, transform.position + Vector3.up, true); // True = Player Color
-            }
+            ShowDamageTextAsync(damage).Forget();
             
             this.DLog($"Player took {damage} damage!");
+        }
+
+        private async UniTaskVoid ShowDamageTextAsync(float damage)
+        {
+            var instance = await AbLoader.Shared.LoadInstantiateAsync(ResourceKeyConst.Kp_DamageText_Vfx);
+            if (instance != null)
+            {
+                var dt = instance.GetComponent<DamageText>();
+                if (dt != null) dt.Setup(damage, instance.transform.position, Color.white);
+            }
         }
 
         private async UniTaskVoid FlashEffect()

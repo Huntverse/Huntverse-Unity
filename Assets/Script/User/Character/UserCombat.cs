@@ -65,7 +65,7 @@ namespace Hunt
             if (prefab != null)
             {
                 var damageText = prefab.GetComponent<DamageText>();
-                damageText.Initialize(damage, position);
+                damageText.Setup(damage, position,Color.white);
             }
         }
 
